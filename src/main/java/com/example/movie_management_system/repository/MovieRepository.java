@@ -5,27 +5,25 @@ import com.example.movie_management_system.model.Movie;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieRepository {
-    private List<Movie> movies;
+public class MovieRepository extends Repository<Movie, String>{
 
-    public MovieRepository() {
-        movies = new ArrayList<>();
+    @Override
+    public void add(Movie entity) {
+
     }
 
-    public List<Movie> getAllMovies() {
-        return movies;
+    @Override
+    public void remove(Movie entity) {
+
     }
 
-    public Movie getMovieById(String id) {
-        for (Movie movie : movies) {
-            if (movie.getId().equals(id)) {
-                return movie;
-            }
-        }
+    @Override
+    public Movie findById(String id){
         return null;
     }
 
-    public void addMovie(Movie movie) {
-        movies.add(movie);
+    @Override
+    public List<Movie> getAll() {
+        return List.of();
     }
 }
