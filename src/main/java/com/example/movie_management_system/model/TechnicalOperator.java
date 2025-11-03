@@ -1,12 +1,20 @@
 package com.example.movie_management_system.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
+@Entity
 public class TechnicalOperator extends Staff{
+    @Enumerated(EnumType.STRING)
     private Specialization specialization;
 
     public TechnicalOperator(String id, String name, int salary, Specialization specialization) {
         super(id, name, salary);
         this.specialization = specialization;
     }
+
+    public TechnicalOperator() {}
 
     public Specialization getSpecialization() {
         return specialization;
