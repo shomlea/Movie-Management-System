@@ -36,6 +36,7 @@ public class Theatre {
     public String getCity() {
         return city;
     }
+    public int getParkingCapacity() {return parkingCapacity;}
     public List<Hall> getHalls() {
         return halls;
     }
