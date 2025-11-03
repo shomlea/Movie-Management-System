@@ -20,6 +20,10 @@ public class Customer {
         tickets = new ArrayList<>();
     }
 
+    public Customer() {
+
+    }
+
     public String getId(){
         return id;
     }

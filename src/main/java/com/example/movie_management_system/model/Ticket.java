@@ -23,6 +23,10 @@ public class Ticket {
         this.price = price;
     }
 
+    public Ticket() {
+
+    }
+
     public String getId(){
         return id;
     }

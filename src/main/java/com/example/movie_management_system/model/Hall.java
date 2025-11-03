@@ -23,6 +23,11 @@ public class Hall {
         this.theatreId = theatreId;
         this.capacity = capacity;
     }
+
+    public Hall() {
+
+    }
+
     public String getId() {
         return id;
     }

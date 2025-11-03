@@ -18,6 +18,11 @@ public class StaffAssignment {
         this.screeningId = screeningId;
         this.staffId = staffId;
     }
+
+    public StaffAssignment() {
+
+    }
+
     public String getId() {
         return id;
     }

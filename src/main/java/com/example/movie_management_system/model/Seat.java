@@ -21,6 +21,10 @@ public class Seat {
         this.seatColumn = Column;
     }
 
+    public Seat() {
+
+    }
+
     public String getId() {
         return id;
     }
