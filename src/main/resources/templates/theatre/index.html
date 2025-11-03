@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Theatre List</title>
+</head>
+<body>
+<h1>Theatres</h1>
+<ul>
+
+    <li th:each="theatre : ${theatres}">
+        <strong th:text="${theatre.name}">Name</strong> -
+        <span th:text="${theatre.city}">City</span> -
+        <span th:text="${theatre.parkingCapacity}">Parking Capacity</span> min
+        <form th:action="@{/theatres/remove/{id}(id=${theatre.id})}" method="post" style="display:inline;">
+            <button type="submit">Remove</button>
+        </form>
+
+    </li>
+    <a th:href="@{/theatres/add}">Add Theatre</a><br>
+    <a th:href="@{/}">Back to Main Menu</a>
+</ul>
+</body>
+</html>
