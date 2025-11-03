@@ -5,6 +5,7 @@ import com.example.movie_management_system.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,5 +28,8 @@ public class TicketService {
     }
     public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
+    }
+    public Optional<Ticket> findById(String id) {
+        return ticketRepository.findById(id);
     }
 }

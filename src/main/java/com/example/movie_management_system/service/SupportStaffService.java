@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.processing.RoundEnvironment;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,6 +26,9 @@ public class SupportStaffService {
     }
     public List<SupportStaff> getAllSupportStaff(String id) {
         return supportStaffRepository.findAll();
+    }
+    public Optional<SupportStaff> getById(String id) {
+        return supportStaffRepository.findById(id);
     }
 
 }
