@@ -14,11 +14,11 @@ public class Seat {
     private String seatRow; // "A,B,C,.."
     private String seatColumn; // "1,2,3.."
 
-    public Seat(String id, String hallId, String row, String Column) {
+    public Seat(String id, String hallId, String seatRow, String seatColumn) {
         this.id = id;
         this.hallId = hallId;
-        this.seatRow = row;
-        this.seatColumn = Column;
+        this.seatRow = seatRow;
+        this.seatColumn = seatColumn;
     }
 
     public Seat() {
