@@ -23,6 +23,10 @@ public class Theatre {
         this.halls = new ArrayList<>();
     }
 
+    public Theatre() {
+
+    }
+
     public String getId() {
         return id;
     }

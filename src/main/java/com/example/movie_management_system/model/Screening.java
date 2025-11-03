@@ -29,6 +29,10 @@ public class Screening {
         this.assignments = new ArrayList<>();
     }
 
+    public Screening() {
+
+    }
+
     public String getId() {
         return id;
     }
