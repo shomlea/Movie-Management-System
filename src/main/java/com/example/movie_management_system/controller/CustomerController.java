@@ -19,7 +19,7 @@ public class CustomerController {
     public String GetAllCustomers(Model model) {
         List<Customer> customers = customerService.getAllCustomers();
         model.addAttribute("customers", customers);
-        return "customers/index";
+        return "customer/index";
     }
     
     @PostMapping("/remove/{id}")
@@ -29,10 +29,10 @@ public class CustomerController {
     }
     @GetMapping("/add")
     public String showAddForm() {
-        return "customers/add"; // templates/customers/add.html
+        return "/customer/form"; // templates/customers/add.html
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public String createCustomer(@RequestParam String name) {
         customerService.addCustomer(name);
         return "redirect:/customers";

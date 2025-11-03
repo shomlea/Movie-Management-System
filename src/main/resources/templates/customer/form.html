@@ -6,13 +6,13 @@
 <body>
 <h1>Add a New Customer</h1>
 
-<form th:action="@{/customer}" method="post">
+<form th:action="@{/customers}" method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required/><br/><br/>
 
     <button type="submit">Add Customer</button>
 </form>
 
-<a th:href="@{/customer}">Back to Customer List</a>
+<a th:href="@{/customers}">Back to Customer List</a>
 </body>
 </html>
