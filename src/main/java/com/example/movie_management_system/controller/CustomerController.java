@@ -25,12 +25,16 @@ public class CustomerController {
     @PostMapping("/remove/{id}")
     public String removeCustomer(@PathVariable String id) {
         customerService.removeCustomer(id);
-        return "redirect:/Customers";
+        return "redirect:/customers";
+    }
+    @GetMapping("/add")
+    public String showAddForm() {
+        return "customers/add"; // templates/customers/add.html
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public String createCustomer(@RequestParam String name) {
         customerService.addCustomer(name);
-        return "redirect:/Customers";
+        return "redirect:/customers";
     }
 }
