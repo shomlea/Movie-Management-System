@@ -1,39 +1,37 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Movie;
-import com.example.movie_management_system.repository.Repository;
-
+import com.example.movie_management_system.repository.MovieRepository;
+import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public class MovieService extends Service<Movie, String> {
+@Service
+public class MovieService {
 
-    public MovieService(Repository<Movie, String> repository) {
-        super(repository);
+    private final MovieRepository movieRepository;
+
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
     }
 
-    @Override
-    protected void add(Movie entity) {
 
+    public Movie addMovie(String title, int durationMin, String genre) {
+        String id = UUID.randomUUID().toString();
+        Movie movie = new Movie(id, title, durationMin, genre);
+        return movieRepository.save(movie);
     }
 
-    @Override
-    protected void remove(Movie entity) {
-
+    public void removeMovie(String id) {
+        movieRepository.deleteById(id);
     }
 
-    @Override
-    protected void update(Movie entity) {
-
+    public Optional<Movie> findById(String id) {
+        return movieRepository.findById(id);
     }
 
-    @Override
-    protected List<Movie> getAll() {
-        return repository.getAll();
+    public List<Movie> getAllMovies() {
+        return movieRepository.findAll();
     }
-
-    @Override
-    protected Movie findById(String id) {
-        return repository.findById(id);
-    }
-
 }

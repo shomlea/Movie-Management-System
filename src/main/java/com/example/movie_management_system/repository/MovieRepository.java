@@ -1,29 +1,11 @@
 package com.example.movie_management_system.repository;
 
 import com.example.movie_management_system.model.Movie;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+@Repository
+public interface MovieRepository extends JpaRepository<Movie, String> {
 
-public class MovieRepository extends Repository<Movie, String>{
-
-    @Override
-    public void add(Movie entity) {
-
-    }
-
-    @Override
-    public void remove(Movie entity) {
-
-    }
-
-    @Override
-    public Movie findById(String id){
-        return null;
-    }
-
-    @Override
-    public List<Movie> getAll() {
-        return List.of();
-    }
 }

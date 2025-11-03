@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movies List</title>
+</head>
+<body>
+<h1>Movies</h1>
+<ul>
+    <!-- Loop through movies -->
+    <li th:each="movie : ${movies}">
+        <strong th:text="${movie.title}">Title</strong> -
+        <span th:text="${movie.genre}">Genre</span> -
+        <span th:text="${movie.durationMin}">Duration</span> min
+    </li>
+</ul>
+</body>
+</html>
