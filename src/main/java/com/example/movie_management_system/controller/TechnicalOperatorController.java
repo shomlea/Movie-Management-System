@@ -51,10 +51,4 @@ public class TechnicalOperatorController {
         return "redirect:/technical-operators";
     }
 
-    @GetMapping("/{id}")
-    public String viewTechnicalOperator(@PathVariable String id, Model model) {
-        Optional<TechnicalOperator> operator = technicalOperatorService.findTechnicalOperatorById(id);
-        operator.ifPresent(o -> model.addAttribute("technicalOperator", o));
-        return "technicalOperator/view";
-    }
 }

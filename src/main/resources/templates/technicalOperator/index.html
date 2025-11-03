@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Technical Operators List</title>
+</head>
+<body>
+<h1>Technical Operators</h1>
+
+<a th:href="@{/technical-operators/add}">Add New Technical Operator</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Salary</th>
+        <th>Specialization</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="operator : ${technicalOperators}">
+        <td th:text="${operator.id}"></td>
+        <td th:text="${operator.name}"></td>
+        <td th:text="${operator.salary}"></td>
+        <td th:text="${operator.specialization}"></td>
+        <td>
+            <a th:href="@{|/technical-operators/delete/${operator.id}|}"
+               onclick="return confirm('Are you sure you want to delete this operator?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
