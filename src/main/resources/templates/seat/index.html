@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Seat List</title>
+</head>
+<body>
+<h1>Seats</h1>
+<ul>
+
+    <li th:each="seat : ${seats}">
+        Hall Id: <strong th:text="${seat.hallId}">Hall Id</strong> -
+        Row: <span th:text="${seat.seatRow}">Row</span> -
+        Column: <span th:text="${seat.seatColumn}">Column</span>
+        <form th:action="@{/seats/remove/{id}(id=${seat.id})}" method="post" style="display:inline;">
+            <button type="submit">Remove</button>
+        </form>
+
+    </li>
+    <a th:href="@{/seats/add}">Add Seat</a><br>
+    <a th:href="@{/}">Back to Main Menu</a>
+</ul>
+</body>
+</html>

@@ -7,9 +7,9 @@
 <h1>Movies</h1>
 <ul>
     <li th:each="movie : ${movies}">
-        <strong th:text="${movie.title}">Title</strong> -
-        <span th:text="${movie.genre}">Genre</span> -
-        <span th:text="${movie.durationMin}">Duration</span> min
+        Title: <strong th:text="${movie.title}">Title</strong> -
+        Genre: <span th:text="${movie.genre}">Genre</span> -
+        Duration: <span th:text="${movie.durationMin}">Duration</span> min
         <form th:action="@{/movies/remove/{id}(id=${movie.id})}" method="post" style="display:inline;">
             <button type="submit">Remove</button>
         </form>
