@@ -17,9 +17,6 @@ public class MovieController {
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
-        // for testing
-        movieService.addMovie("1", 2, "1");
-        movieService.addMovie("1", 2, "1");
     }
 
     @GetMapping

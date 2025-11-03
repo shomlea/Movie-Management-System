@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Screening</title>
+</head>
+<body>
+<h1>Add a New Screening</h1>
+
+<form th:action="@{/screenings}" method="post">
+    <label for="hallId">Hall Id:</label>
+    <input type="text" id="hallId" name="hallId" required/><br/><br/>
+
+    <label for="movieId">Movie Id:</label>
+    <input type="text" id="movieId" name="movieId" required/><br/><br/>
+
+    <label for="date">Date:</label>
+    <input type="text" id="date" name="date" required/><br/><br/>
+
+    <button type="submit">Add Screening</button>
+</form>
+
+<a th:href="@{/theatres}">Back to Screening List</a>
+</body>
+</html>

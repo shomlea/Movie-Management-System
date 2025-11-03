@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Seat</title>
+</head>
+<body>
+<h1>Add a New Seat</h1>
+
+<form th:action="@{/seats}" method="post">
+    <label for="hallId">Hall Id:</label>
+    <input type="text" id="hallId" name="hallId" required/><br/><br/>
+
+    <label for="seatRow">Row:</label>
+    <input type="text" id="seatRow" name="seatRow" required/><br/><br/>
+
+    <label for="seatColumn">Column:</label>
+    <input type="text" id="seatColumn" name="seatColumn" required/><br/><br/>
+
+    <button type="submit">Add Seat</button>
+</form>
+
+<a th:href="@{/theatres}">Back to Seat List</a>
+</body>
+</html>

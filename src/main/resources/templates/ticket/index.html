@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ticket List</title>
+</head>
+<body>
+<h1>Tickets</h1>
+<ul>
+
+    <li th:each="ticket : ${tickets}">
+        Screening Id: <strong th:text="${ticket.screeningId}">Screening Id</strong> -
+        Customer Id: <span th:text="${ticket.customerId}">Customer Id</span> -
+        Seat Id: <span th:text="${ticket.seatId}">Seat id</span> -
+        Price: <span th:text="${ticket.price}">Price </span>
+        <form th:action="@{/tickets/remove/{id}(id=${ticket.id})}" method="post" style="display:inline;">
+            <button type="submit">Remove</button>
+        </form>
+
+    </li>
+    <a th:href="@{/tickets/add}">Add Ticket</a><br>
+    <a th:href="@{/}">Back to Main Menu</a>
+</ul>
+</body>
+</html>

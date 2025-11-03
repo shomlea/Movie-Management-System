@@ -17,7 +17,7 @@ public class TicketService {
     }
 
 
-    public Ticket addTicket(String screeningID,String customerId, String seatId, int price) {
+    public Ticket addTicket(String screeningID,String customerId, String seatId, double price) {
         String id = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(id, screeningID, customerId, seatId, price);
         return ticketRepository.save(ticket);

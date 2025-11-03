@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Screening List</title>
+</head>
+<body>
+<h1>Screenings</h1>
+<ul>
+
+    <li th:each="screening : ${screenings}">
+        Hall Id: <strong th:text="${screening.hallId}">Hall Id</strong> -
+        Movie Id: <span th:text="${screening.movieId}">Movie Id</span> -
+        Date: <span th:text="${screening.date}">Date</span>
+        <form th:action="@{/screenings/remove/{id}(id=${screening.id})}" method="post" style="display:inline;">
+            <button type="submit">Remove</button>
+        </form>
+
+    </li>
+    <a th:href="@{/screenings/add}">Add Screening</a><br>
+    <a th:href="@{/}">Back to Main Menu</a>
+</ul>
+</body>
+</html>

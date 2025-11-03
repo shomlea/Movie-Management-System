@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Hall</title>
+</head>
+<body>
+<h1>Add a New Hall</h1>
+
+<form th:action="@{/halls}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required/><br/><br/>
+
+    <label for="theatreId">Theatre Id:</label>
+    <input type="text" id="theatreId" name="theatreId" required/><br/><br/>
+
+    <label for="capacity">Capacity:</label>
+    <input type="number" id="capacity" name="capacity" required/><br/><br/>
+
+    <button type="submit">Add Hall</button>
+</form>
+
+<a th:href="@{/theatres}">Back to Hall List</a>
+</body>
+</html>
