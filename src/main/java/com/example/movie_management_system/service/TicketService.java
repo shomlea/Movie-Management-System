@@ -22,8 +22,8 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    public void removeTicket(Ticket ticket) {
-        ticketRepository.delete(ticket);
+    public void removeTicket(String id) {
+        ticketRepository.deleteById(id);
     }
     public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
