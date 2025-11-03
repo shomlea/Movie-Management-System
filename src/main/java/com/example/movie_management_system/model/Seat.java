@@ -31,10 +31,10 @@ public class Seat {
     public String getHallId() {
         return hallId;
     }
-    public String getRow() {
+    public String getSeatRow() {
         return seatRow;
     }
-    public String getColumn() {
+    public String getSeatColumn() {
         return seatColumn;
     }
 }
