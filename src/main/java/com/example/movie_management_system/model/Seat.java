@@ -1,16 +1,24 @@
 package com.example.movie_management_system.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Seat {
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String hallId;
-    private String row; // "A,B,C,.."
-    private String column; // "1,2,3.."
+    private String seatRow; // "A,B,C,.."
+    private String seatColumn; // "1,2,3.."
 
     public Seat(String id, String hallId, String row, String Column) {
         this.id = id;
         this.hallId = hallId;
-        this.row = row;
-        this.column = Column;
+        this.seatRow = row;
+        this.seatColumn = Column;
     }
 
     public String getId() {
@@ -20,9 +28,9 @@ public class Seat {
         return hallId;
     }
     public String getRow() {
-        return row;
+        return seatRow;
     }
     public String getColumn() {
-        return column;
+        return seatColumn;
     }
 }

@@ -1,13 +1,20 @@
 package com.example.movie_management_system.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
+@Entity
 public class Hall {
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String name;
     private String theatreId;
     private int capacity;
+    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL)
     private List<Seat> seats;
+    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL)
     private List<Screening> screenings;
 
     public Hall(String id, String name, String theatreId, int capacity) {

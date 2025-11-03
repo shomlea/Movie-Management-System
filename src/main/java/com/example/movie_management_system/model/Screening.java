@@ -1,21 +1,30 @@
 package com.example.movie_management_system.model;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Screening {
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String hallId;
-    private String MovieId;
+    private String movieId;
     private String date;
+    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
+    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
     private List<StaffAssignment> assignments;
+
 
     public Screening(String id, String hallId, String movieId, String date) {
         this.id = id;
         this.hallId = hallId;
-        this.MovieId = movieId;
+        this.movieId = movieId;
         this.date = date;
+
         this.tickets = new ArrayList<>();
         this.assignments = new ArrayList<>();
     }
@@ -27,7 +36,7 @@ public class Screening {
         return hallId;
     }
     public String getMovieId() {
-        return MovieId;
+        return movieId;
     }
     public String getDate() {
         return date;
