@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Assignments List</title>
+</head>
+<body>
+<h1>Staff Assignments</h1>
+
+<a th:href="@{/staff-assignments/add}">Add New Assignment</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Screening ID</th>
+        <th>Staff ID</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignment : ${staffAssignments}">
+        <td th:text="${assignment.id}"></td>
+        <td th:text="${assignment.screeningId}"></td>
+        <td th:text="${assignment.staffId}"></td>
+        <td>
+            <a th:href="@{|/staff-assignments/delete/${assignment.id}|}"
+               onclick="return confirm('Are you sure you want to delete this assignment?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
