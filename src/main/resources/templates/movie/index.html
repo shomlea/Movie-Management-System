@@ -6,12 +6,17 @@
 <body>
 <h1>Movies</h1>
 <ul>
-    <!-- Loop through movies -->
     <li th:each="movie : ${movies}">
         <strong th:text="${movie.title}">Title</strong> -
         <span th:text="${movie.genre}">Genre</span> -
         <span th:text="${movie.durationMin}">Duration</span> min
+        <form th:action="@{/movies/remove/{id}(id=${movie.id})}" method="post" style="display:inline;">
+            <button type="submit">Remove</button>
+        </form>
+
     </li>
+    <a th:href="@{/movies/add}">Add Movie</a><br>
+    <a th:href="@{/}">Back to Main Menu</a>
 </ul>
 </body>
 </html>
