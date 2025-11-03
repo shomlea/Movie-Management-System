@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Support Staff List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Support Staff</h1>
+
+<a th:href="@{/support-staff/add}">Add New Support Staff</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Salary</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="staff : ${supportStaff}">
+        <td th:text="${staff.id}"></td>
+        <td th:text="${staff.name}"></td>
+        <td th:text="${staff.salary}"></td>
+        <td th:text="${staff.role}"></td>
+        <td>
+            <a th:href="@{|/support-staff/${staff.id}|}">View</a> |
+            <a th:href="@{|/support-staff/delete/${staff.id}|}"
+               onclick="return confirm('Are you sure you want to delete this staff member?');">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
