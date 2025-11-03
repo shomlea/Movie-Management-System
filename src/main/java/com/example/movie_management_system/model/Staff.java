@@ -27,4 +27,5 @@ public abstract class Staff {
     public String getName() {
         return name;
     }
+    public int getSalary() {return salary;}
 }

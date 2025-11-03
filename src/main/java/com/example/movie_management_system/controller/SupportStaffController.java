@@ -27,17 +27,17 @@ public class SupportStaffController {
     public String listAll(Model model) {
         List<SupportStaff> staffList = supportStaffService.getAllSupportStaff(null);
         model.addAttribute("supportStaff", staffList);
-        return "supportStaff/index"; // Thymeleaf view: src/main/resources/templates/supportStaff/index.html
+        return "supportStaff/index";
     }
 
-    // Show form to add new staff
+    // Show form to add new staff (template renamed to form.html)
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("roles", Role.values());
-        return "supportStaff/add";
+        return "supportStaff/form"; // <-- changed from add to form
     }
 
-    // Add new staff (no getSalary() used)
+    // Add new staff
     @PostMapping("/add")
     public String addSupportStaff(
             @RequestParam("name") String name,

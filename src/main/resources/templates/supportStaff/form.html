@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Support Staff</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Add New Support Staff</h1>
+
+<form th:action="@{/support-staff/add}" method="post">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="salary">Salary:</label><br>
+    <input type="number" id="salary" name="salary" required><br><br>
+
+    <label for="role">Role:</label><br>
+    <select id="role" name="role" required>
+        <option th:each="role : ${roles}"
+                th:value="${role}"
+                th:text="${role}">
+        </option>
+    </select><br><br>
+
+    <button type="submit">Add</button>
+</form>
+
+<br>
+<a th:href="@{/support-staff}">Back to List</a>
+
+</body>
+</html>
