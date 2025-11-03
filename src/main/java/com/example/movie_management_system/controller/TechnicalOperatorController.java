@@ -4,52 +4,57 @@ import com.example.movie_management_system.model.Specialization;
 import com.example.movie_management_system.model.TechnicalOperator;
 import com.example.movie_management_system.service.TechnicalOperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/technical-operators")
 public class TechnicalOperatorController {
 
+    private final TechnicalOperatorService technicalOperatorService;
+
     @Autowired
-    private TechnicalOperatorService technicalOperatorService;
+    public TechnicalOperatorController(TechnicalOperatorService technicalOperatorService) {
+        this.technicalOperatorService = technicalOperatorService;
+    }
 
-    // Adaugă un Technical Operator
+    @GetMapping
+    public String listAll(Model model) {
+        List<TechnicalOperator> operators = technicalOperatorService.getAllTechnicalOperator();
+        model.addAttribute("technicalOperators", operators);
+        return "technicalOperator/index"; // template: templates/technicalOperator/index.html
+    }
+
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("specializations", Specialization.values());
+        return "technicalOperator/form"; // template: templates/technicalOperator/form.html
+    }
+
     @PostMapping("/add")
-    public TechnicalOperator addTechnicalOperator(
-            @RequestParam String name,
-            @RequestParam int salary,
-            @RequestParam Specialization specialization
+    public String addTechnicalOperator(
+            @RequestParam("name") String name,
+            @RequestParam("salary") int salary,
+            @RequestParam("specialization") Specialization specialization
     ) {
-        return technicalOperatorService.addTechnicalOperator(name, salary, specialization);
+        technicalOperatorService.addTechnicalOperator(name, salary, specialization);
+        return "redirect:/technical-operators";
     }
 
-    // Listează toți Technical Operatorii
-    @GetMapping("/all")
-    public List<TechnicalOperator> getAllTechnicalOperators() {
-        return technicalOperatorService.getAllTechnicalOperator();
-    }
-
-    // Caută un Technical Operator după ID
-    @GetMapping("/{id}")
-    public Optional<TechnicalOperator> getTechnicalOperatorById(@PathVariable String id) {
-        return technicalOperatorService.findTechnicalOperatorById(id);
-    }
-
-    // Șterge un Technical Operator după ID
-    @DeleteMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteTechnicalOperator(@PathVariable String id) {
         technicalOperatorService.removeTechnicalOperator(id);
-        return "Technical Operator with ID " + id + " has been deleted.";
+        return "redirect:/technical-operators";
     }
 
-    // GET Salary by Technical Operator ID
-    @GetMapping("/{id}/salary")
-    public int getSalary(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public String viewTechnicalOperator(@PathVariable String id, Model model) {
         Optional<TechnicalOperator> operator = technicalOperatorService.findTechnicalOperatorById(id);
-        return operator.map(TechnicalOperator::getSalary).orElse(0);
+        operator.ifPresent(o -> model.addAttribute("technicalOperator", o));
+        return "technicalOperator/view";
     }
-
 }
