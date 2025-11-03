@@ -25,8 +25,9 @@ public class TestController {
     public String hello(Model model) {
         List<Movie> movies = movieService.getAllMovies();
         model.addAttribute("movies", movies);
-        return "movies"; // returns movies.html
+        return "movies";
     }
+
 
 
 }
