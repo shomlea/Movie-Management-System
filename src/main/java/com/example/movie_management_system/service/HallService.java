@@ -16,21 +16,21 @@ public class HallService {
         this.hallRepository = hallRepository;
     }
 
-    public Hall addHall(String name, String theatreId, int capacity){
+    public Hall save(String name, String theatreId, int capacity){
         String id = UUID.randomUUID().toString();
         Hall hall = new Hall(id, name, theatreId, capacity);
         return hallRepository.save(hall);
     }
 
-    public void removeHall(String hallId){
-        hallRepository.deleteById(hallId);
+    public void remove(String hallId){
+        hallRepository.remove(hallId);
     }
 
     public Optional<Hall> findById(String id) {
         return hallRepository.findById(id);
     }
 
-    public List<Hall> getAllHalls() {
-        return hallRepository.findAll();
+    public List<Hall> getAll() {
+        return hallRepository.getAll();
     }
 }
