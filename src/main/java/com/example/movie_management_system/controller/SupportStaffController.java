@@ -41,7 +41,7 @@ public class SupportStaffController {
             @RequestParam("salary") int salary,
             @RequestParam("role") Role role
     ) {
-        supportStaffService.save(name, salary, role);
+        supportStaffService.add(name, salary, role);
         return "redirect:/support-staff";
     }
 

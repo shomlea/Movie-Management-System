@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.StaffAssignment;
-import com.example.movie_management_system.repository.StaffAssignmentRepository;
+import com.example.movie_management_system.repository.StaffAssignmentRepositoryInMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +11,16 @@ import java.util.UUID;
 
 @Service
 public class StaffAssignmentService {
-    private final StaffAssignmentRepository staffAssignmentRepository;
+    private final StaffAssignmentRepositoryInMemory staffAssignmentRepository;
 
-    public StaffAssignmentService(StaffAssignmentRepository staffAssignmentRepository) {
+    public StaffAssignmentService(StaffAssignmentRepositoryInMemory staffAssignmentRepository) {
         this.staffAssignmentRepository = staffAssignmentRepository;
     }
 
-    public StaffAssignment save(String screeningId, String staffId) {
+    public void add(String screeningId, String staffId) {
         String id = UUID.randomUUID().toString();
         StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
-        return staffAssignmentRepository.save(staffAssignment);
+        staffAssignmentRepository.add(staffAssignment);
     }
 
     public void remove(String id) {

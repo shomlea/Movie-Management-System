@@ -2,7 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Role;
 import com.example.movie_management_system.model.SupportStaff;
-import com.example.movie_management_system.repository.SupportStaffRepository;
+import com.example.movie_management_system.repository.SupportStaffRepositoryInMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,16 @@ import java.util.UUID;
 @Service
 public class SupportStaffService {
     @Autowired
-    private SupportStaffRepository supportStaffRepository;
+    private SupportStaffRepositoryInMemory supportStaffRepository;
 
-    public SupportStaff save(String name, int salary, Role role) {
+    public SupportStaffService(SupportStaffRepositoryInMemory supportStaffRepository) {
+        this.supportStaffRepository = supportStaffRepository;
+    }
+
+    public void add(String name, int salary, Role role) {
         String id = UUID.randomUUID().toString();
         SupportStaff supportStaff = new SupportStaff(id, name, salary, role);
-        return supportStaffRepository.save(supportStaff);
+        supportStaffRepository.add(supportStaff);
     }
     public void remove(String id) {
         supportStaffRepository.remove(id);
