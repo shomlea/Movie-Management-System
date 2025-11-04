@@ -45,7 +45,7 @@ public class TechnicalOperatorController {
         return "redirect:/technical-operators";
     }
 
-    @GetMapping("/remove/{id}")
+    @PostMapping("/remove/{id}")
     public String removeTechnicalOperator(@PathVariable String id) {
         technicalOperatorService.removeTechnicalOperator(id);
         return "redirect:/technical-operators";
