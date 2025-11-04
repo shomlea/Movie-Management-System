@@ -8,8 +8,8 @@
 <body>
 <h1>Support Staff</h1>
 
-<a th:href="@{/support-staff/add}">Add New Support Staff</a><br>
-<a th:href="@{/}">Back to Main Menu</a>
+<a th:href="@{/}">Back to Main Menu</a><br>
+<a th:href="@{/support-staff/add}">Add New Support Staff</a>
 <br><br>
 
 <table border="1" cellpadding="6">
@@ -30,8 +30,11 @@
         <td th:text="${staff.role}"></td>
         <td>
             <a th:href="@{|/support-staff/${staff.id}|}">View</a> |
-            <a th:href="@{|/support-staff/remove/${staff.id}|}"
-               onclick="return confirm('Are you sure you want to remove this staff member?');">Remove</a>
+            <form th:action="@{|/support-staff/remove/${staff.id}|}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove this support Staff?');">
+                    Remove
+                </button>
+            </form>
         </td>
     </tr>
     </tbody>
