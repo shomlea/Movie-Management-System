@@ -18,14 +18,14 @@ public class SeatController {
 
     @GetMapping
     public String getAllSeats(Model model) {
-        List<Seat> seats = seatService.getAllSeats();
+        List<Seat> seats = seatService.getAll();
         model.addAttribute("seats", seats);
         return "seat/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeSeat(@PathVariable String id){
-        seatService.removeSeat(id);
+        seatService.remove(id);
         return "redirect:/seats";
     }
 
@@ -36,7 +36,7 @@ public class SeatController {
 
     @PostMapping
     public String createSeat(@RequestParam String hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
-        seatService.addSeat(hallId, seatRow, seatColumn);
+        seatService.save(hallId, seatRow, seatColumn);
         return "redirect:/seats";
     }
 

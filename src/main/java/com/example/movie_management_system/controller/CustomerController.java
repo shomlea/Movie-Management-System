@@ -17,14 +17,14 @@ public class CustomerController {
     }
     @GetMapping
     public String GetAllCustomers(Model model) {
-        List<Customer> customers = customerService.getAllCustomers();
+        List<Customer> customers = customerService.getAll();
         model.addAttribute("customers", customers);
         return "customer/index";
     }
     
     @PostMapping("/remove/{id}")
     public String removeCustomer(@PathVariable String id) {
-        customerService.removeCustomer(id);
+        customerService.remove(id);
         return "redirect:/customers";
     }
     @GetMapping("/add")
@@ -34,7 +34,7 @@ public class CustomerController {
 
     @PostMapping
     public String createCustomer(@RequestParam String name) {
-        customerService.addCustomer(name);
+        customerService.add(name);
         return "redirect:/customers";
     }
 }

@@ -24,7 +24,7 @@ public class TechnicalOperatorController {
 
     @GetMapping
     public String listAll(Model model) {
-        List<TechnicalOperator> operators = technicalOperatorService.getAllTechnicalOperator();
+        List<TechnicalOperator> operators = technicalOperatorService.getAll();
         model.addAttribute("technicalOperators", operators);
         return "technicalOperator/index";
     }
@@ -41,13 +41,13 @@ public class TechnicalOperatorController {
             @RequestParam("salary") int salary,
             @RequestParam("specialization") Specialization specialization
     ) {
-        technicalOperatorService.addTechnicalOperator(name, salary, specialization);
+        technicalOperatorService.add(name, salary, specialization);
         return "redirect:/technical-operators";
     }
 
     @PostMapping("/remove/{id}")
     public String removeTechnicalOperator(@PathVariable String id) {
-        technicalOperatorService.removeTechnicalOperator(id);
+        technicalOperatorService.remove(id);
         return "redirect:/technical-operators";
     }
 

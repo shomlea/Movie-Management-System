@@ -15,18 +15,18 @@ public class TechnicalOperatorService {
     @Autowired
     TechnicalOperatorRepository technicalOperatorRepository;
 
-    public TechnicalOperator addTechnicalOperator(String name, int salary, Specialization specialization) {
+    public TechnicalOperator add(String name, int salary, Specialization specialization) {
         String id = UUID.randomUUID().toString();
         TechnicalOperator technicalOperator = new TechnicalOperator(id, name, salary, specialization);
-        return technicalOperatorRepository.save(technicalOperator);
+        return technicalOperatorRepository.add(technicalOperator);
     }
-    public List<TechnicalOperator> getAllTechnicalOperator() {
+    public List<TechnicalOperator> getAll() {
         return technicalOperatorRepository.findAll();
     }
     public Optional<TechnicalOperator> findTechnicalOperatorById(String id) {
-        return technicalOperatorRepository.findById(id);
+        return technicalOperatorRepository.getAll(id);
     }
-    public void removeTechnicalOperator(String id) {
-        technicalOperatorRepository.deleteById(id);
+    public void remove(String id) {
+        technicalOperatorRepository.remove(id);
     }
 }

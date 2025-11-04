@@ -19,14 +19,14 @@ public class ScreeningController {
 
     @GetMapping
     public String getAllScreenings(Model model) {
-        List<Screening> screenings = screeningService.getAllScreenings();
+        List<Screening> screenings = screeningService.getAll();
         model.addAttribute("screenings", screenings);
         return "screening/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeScreening(@PathVariable String id) {
-        screeningService.removeScreening(id);
+        screeningService.remove(id);
         return "redirect:/screenings";
     }
 
@@ -37,7 +37,7 @@ public class ScreeningController {
 
     @PostMapping
     public String createScreening(@RequestParam String hallId, @RequestParam String movieId, @RequestParam String date) {
-        screeningService.addScreening(hallId, movieId, date);
+        screeningService.add(hallId, movieId, date);
         return "redirect:/screenings";
     }
 }

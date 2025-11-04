@@ -16,21 +16,21 @@ public class ScreeningService {
         this.screeningRepository = screeningRepository;
     }
 
-    public Screening addScreening(String hallId, String movieId, String date) {
+    public Screening add(String hallId, String movieId, String date) {
         String id = UUID.randomUUID().toString();
         Screening screening = new Screening(id, hallId, movieId, date);
-        return screeningRepository.save(screening);
+        return screeningRepository.add(screening);
     }
 
-    public void removeScreening(String id) {
-        screeningRepository.deleteById(id);
+    public void remove(String id) {
+        screeningRepository.remove(id);
     }
 
     public Optional<Screening> findById(String id) {
         return screeningRepository.findById(id);
     }
 
-    public List<Screening> getAllScreenings() {
-        return screeningRepository.findAll();
+    public List<Screening> getAll() {
+        return screeningRepository.getAll();
     }
 }

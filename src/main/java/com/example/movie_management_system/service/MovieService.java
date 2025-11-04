@@ -17,21 +17,21 @@ public class MovieService {
     }
 
 
-    public Movie addMovie(String title, int durationMin, String genre) {
+    public Movie add(String title, int durationMin, String genre) {
         String id = UUID.randomUUID().toString();
         Movie movie = new Movie(id, title, durationMin, genre);
-        return movieRepository.save(movie);
+        return movieRepository.add(movie);
     }
 
-    public void removeMovie(String id) {
-        movieRepository.deleteById(id);
+    public void remove(String id) {
+        movieRepository.remove(id);
     }
 
     public Optional<Movie> findById(String id) {
         return movieRepository.findById(id);
     }
 
-    public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+    public List<Movie> getAll() {
+        return movieRepository.getAll();
     }
 }

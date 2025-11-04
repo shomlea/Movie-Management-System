@@ -14,22 +14,22 @@ public class TheatreService {
         this.theatreRepository = theatreRepository;
     }
 
-    public Theatre addTheatre(String name, String city, int parkingCapacity) {
+    public Theatre add(String name, String city, int parkingCapacity) {
         String id = UUID.randomUUID().toString();
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
-        return theatreRepository.save(theatre);
+        return theatreRepository.add(theatre);
     }
 
-    public void removeTheatre(String id) {
-        theatreRepository.deleteById(id);
+    public void remove(String id) {
+        theatreRepository.remove(id);
     }
 
     public Optional<Theatre> findById(String id) {
         return theatreRepository.findById(id);
     }
 
-    public List<Theatre> getAllTheatres() {
-        return theatreRepository.findAll();
+    public List<Theatre> getAll() {
+        return theatreRepository.getAll();
     }
 
 }
