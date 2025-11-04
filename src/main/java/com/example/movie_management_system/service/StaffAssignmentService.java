@@ -17,22 +17,22 @@ public class StaffAssignmentService {
         this.staffAssignmentRepository = staffAssignmentRepository;
     }
 
-    public StaffAssignment createStaffAssignment(String screeningId, String staffId) {
+    public StaffAssignment save(String screeningId, String staffId) {
         String id = UUID.randomUUID().toString();
         StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
         return staffAssignmentRepository.save(staffAssignment);
     }
 
-    public void removeStaffAssignment(String id) {
-        staffAssignmentRepository.deleteById(id);
+    public void remove(String id) {
+        staffAssignmentRepository.remove(id);
     }
 
     public Optional<StaffAssignment> findById(String id) {
         return staffAssignmentRepository.findById(id);
     }
 
-    public List<StaffAssignment> findAllStaffAssignments()
+    public List<StaffAssignment> getAll()
     {
-        return staffAssignmentRepository.findAll();
+        return staffAssignmentRepository.getAll();
     }
 }
