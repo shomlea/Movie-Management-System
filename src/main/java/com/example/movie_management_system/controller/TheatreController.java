@@ -23,14 +23,14 @@ public class TheatreController {
 
     @GetMapping
     public String getAllTheatres(Model model) {
-        List<Theatre> theatres = theatreService.getAllTheatres();
+        List<Theatre> theatres = theatreService.getAll();
         model.addAttribute("theatres", theatres);
         return "theatre/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeTheatre(@PathVariable String id) {
-        theatreService.removeTheatre(id);
+        theatreService.remove(id);
         return "redirect:/theatres";
     }
 
@@ -41,7 +41,7 @@ public class TheatreController {
 
     @PostMapping
     public String createTheatre(@RequestParam String name, @RequestParam String city, @RequestParam int parkingCapacity) {
-        theatreService.addTheatre(name,city, parkingCapacity);
+        theatreService.add(name,city, parkingCapacity);
         return "redirect:/theatres";
     }
 
