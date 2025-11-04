@@ -21,14 +21,14 @@ public class MovieController {
 
     @GetMapping
     public String getAllMovies(Model model) {
-        List<Movie> movies = movieService.getAllMovies();
+        List<Movie> movies = movieService.getAll();
         model.addAttribute("movies", movies);
         return "movie/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeMovie(@PathVariable String id) {
-        movieService.removeMovie(id);
+        movieService.remove(id);
         return "redirect:/movies";
     }
 
@@ -39,7 +39,7 @@ public class MovieController {
 
     @PostMapping
     public String createMovie(@RequestParam String title, @RequestParam String genre, @RequestParam int durationMin) {
-        movieService.addMovie(title, durationMin, genre);
+        movieService.save(title, durationMin, genre);
         return "redirect:/movies";
     }
 
