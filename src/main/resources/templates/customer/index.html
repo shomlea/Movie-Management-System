@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Customer List</title>
 </head>
 <body>
 <h1>Customers</h1>
 
-<ul>
-    <li th:each="customer : ${customers}">
-        Name: <strong th:text="${customer.name}">Name</strong> -
-        <form th:action="@{/customers/remove/{id}(id=${customer.id})}" method="post" style="display:inline;">
-            <button type="submit">Remove</button>
-        </form>
-    </li>
-</ul>
+<a th:href="@{/}">Back to Main Menu</a><br><br>
 
-<a th:href="@{/customers/add}">Add Customer</a><br>
-<a th:href="@{/}">Back to Main Menu</a>
+<a th:href="@{/customers/add}">Add a New Customer</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.name}"></td>
+        <td>
+            <a th:href="@{|/customers/${customer.id}|}">View</a> |
+            <form th:action="@{|/customers/remove/${customer.id}|}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove this customer?');">
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>

@@ -1,22 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Movies List</title>
+    <meta charset="UTF-8">
+    <title>Movie List</title>
 </head>
 <body>
 <h1>Movies</h1>
-<ul>
-    <li th:each="movie : ${movies}">
-        Title: <strong th:text="${movie.title}">Title</strong> -
-        Genre: <span th:text="${movie.genre}">Genre</span> -
-        Duration: <span th:text="${movie.durationMin}">Duration</span> min
-        <form th:action="@{/movies/remove/{id}(id=${movie.id})}" method="post" style="display:inline;">
-            <button type="submit">Remove</button>
-        </form>
 
-    </li>
-    <a th:href="@{/movies/add}">Add Movie</a><br>
-    <a th:href="@{/}">Back to Main Menu</a>
-</ul>
+<a th:href="@{/}">Back to Main Menu</a><br><br>
+
+
+<a th:href="@{/movies/add}">Add a New Movie</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Duration (Min)</th>
+        <th>Genre</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="movie : ${movies}">
+        <td th:text="${movie.id}"></td>
+        <td th:text="${movie.title}"></td>
+        <td th:text="${movie.durationMin}"></td>
+        <td th:text="${movie.genre}"></td>
+        <td>
+            <a th:href="@{|/movies/${movie.id}|}">View</a> |
+            <form th:action="@{|/movies/remove/${movie.id}|}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove this movie?');">
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>

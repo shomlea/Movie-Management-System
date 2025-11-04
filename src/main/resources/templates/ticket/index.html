@@ -1,24 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Ticket List</title>
 </head>
 <body>
 <h1>Tickets</h1>
-<ul>
 
-    <li th:each="ticket : ${tickets}">
-        Screening Id: <strong th:text="${ticket.screeningId}">Screening Id</strong> -
-        Customer Id: <span th:text="${ticket.customerId}">Customer Id</span> -
-        Seat Id: <span th:text="${ticket.seatId}">Seat id</span> -
-        Price: <span th:text="${ticket.price}">Price </span>
-        <form th:action="@{/tickets/remove/{id}(id=${ticket.id})}" method="post" style="display:inline;">
-            <button type="submit">Remove</button>
-        </form>
+<a th:href="@{/}">Back to Main Menu</a><br><br>
 
-    </li>
-    <a th:href="@{/tickets/add}">Add Ticket</a><br>
-    <a th:href="@{/}">Back to Main Menu</a>
-</ul>
+
+<a th:href="@{/tickets/add}">Add a New Ticket</a>
+<br><br>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Screening Id</th>
+        <th>Customer Id</th>
+        <th>Seat Id</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.id}"></td>
+        <td th:text="${ticket.screeningId}"></td>
+        <td th:text="${ticket.customerId}"></td>
+        <td th:text="${ticket.seatId}"></td>
+        <td th:text="${ticket.price}"></td>
+        <td>
+            <a th:href="@{|/tickets/${ticket.id}|}">View</a> |
+            <form th:action="@{|/tickets/remove/${ticket.id}|}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove this ticket?');">
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>
