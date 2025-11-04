@@ -2,6 +2,7 @@ package com.example.movie_management_system.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class Screening {
     private String id;
     private String hallId;
     private String movieId;
-    private String date;
+    private LocalDate date;
     @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
     @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
@@ -23,8 +24,7 @@ public class Screening {
         this.id = id;
         this.hallId = hallId;
         this.movieId = movieId;
-        this.date = date;
-
+        this.date = LocalDate.parse(date); // date parsing
         this.tickets = new ArrayList<>();
         this.assignments = new ArrayList<>();
     }
@@ -42,7 +42,7 @@ public class Screening {
     public String getMovieId() {
         return movieId;
     }
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
     public List<Ticket> getTickets() {
