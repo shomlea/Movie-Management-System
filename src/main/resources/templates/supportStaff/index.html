@@ -29,8 +29,8 @@
         <td th:text="${staff.role}"></td>
         <td>
             <a th:href="@{|/support-staff/${staff.id}|}">View</a> |
-            <a th:href="@{|/support-staff/delete/${staff.id}|}"
-               onclick="return confirm('Are you sure you want to delete this staff member?');">Delete</a>
+            <a th:href="@{|/support-staff/remove/${staff.id}|}"
+               onclick="return confirm('Are you sure you want to remove this staff member?');">Remove</a>
         </td>
     </tr>
     </tbody>

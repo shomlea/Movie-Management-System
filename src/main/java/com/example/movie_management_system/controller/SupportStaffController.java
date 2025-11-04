@@ -49,8 +49,8 @@ public class SupportStaffController {
     }
 
     // Delete staff by ID
-    @GetMapping("/delete/{id}")
-    public String deleteSupportStaff(@PathVariable String id) {
+    @GetMapping("/remove/{id}")
+    public String removeSupportStaff(@PathVariable String id) {
         supportStaffService.removeSupportStaff(id);
         return "redirect:/support-staff";
     }
