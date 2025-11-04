@@ -38,7 +38,7 @@ public class StaffAssignmentController {
             @RequestParam("screeningId") String screeningId,
             @RequestParam("staffId") String staffId
     ) {
-        staffAssignmentService.save(screeningId, staffId);
+        staffAssignmentService.add(screeningId, staffId);
         return "redirect:/staff-assignments";
     }
 

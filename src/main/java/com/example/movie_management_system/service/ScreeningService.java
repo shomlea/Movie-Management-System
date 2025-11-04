@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Screening;
-import com.example.movie_management_system.repository.ScreeningRepository;
+import com.example.movie_management_system.repository.ScreeningRepositoryInMemory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,16 +10,16 @@ import java.util.UUID;
 
 @Service
 public class ScreeningService {
-    private ScreeningRepository screeningRepository;
+    private ScreeningRepositoryInMemory screeningRepository;
 
-    public ScreeningService(ScreeningRepository screeningRepository) {
+    public ScreeningService(ScreeningRepositoryInMemory screeningRepository) {
         this.screeningRepository = screeningRepository;
     }
 
-    public Screening add(String hallId, String movieId, String date) {
+    public void add(String hallId, String movieId, String date) {
         String id = UUID.randomUUID().toString();
         Screening screening = new Screening(id, hallId, movieId, date);
-        return screeningRepository.add(screening);
+        screeningRepository.add(screening);
     }
 
     public void remove(String id) {

@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Seat;
-import com.example.movie_management_system.repository.SeatRepository;
+import com.example.movie_management_system.repository.SeatRepositoryInMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,16 @@ import java.util.UUID;
 @Service
 public class SeatService {
     @Autowired
-    private SeatRepository seatRepository;
+    private SeatRepositoryInMemory seatRepository;
 
-    public Seat save(String hallId, String seatRow, String seatColumn ) {
+    public SeatService(SeatRepositoryInMemory seatRepository) {
+        this.seatRepository = seatRepository;
+    }
+
+    public void save(String hallId, String seatRow, String seatColumn ) {
         String id = UUID.randomUUID().toString();
         Seat seat = new Seat(id, hallId, seatRow, seatColumn);
-        return seatRepository.save(seat);
+        seatRepository.add(seat);
     }
     public void remove(String id) {
         seatRepository.remove(id);

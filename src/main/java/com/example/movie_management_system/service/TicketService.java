@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Ticket;
-import com.example.movie_management_system.repository.TicketRepository;
+import com.example.movie_management_system.repository.TicketRepositoryInMemory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,17 +10,17 @@ import java.util.UUID;
 
 @Service
 public class TicketService {
-    private final TicketRepository ticketRepository;
+    private final TicketRepositoryInMemory ticketRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    public TicketService(TicketRepositoryInMemory ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 
 
-    public Ticket add(String screeningID,String customerId, String seatId, double price) {
+    public void add(String screeningID,String customerId, String seatId, double price) {
         String id = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(id, screeningID, customerId, seatId, price);
-        return ticketRepository.add(ticket);
+        ticketRepository.add(ticket);
     }
 
     public void remove(String id) {

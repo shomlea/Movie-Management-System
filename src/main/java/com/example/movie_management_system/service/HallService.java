@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
-import com.example.movie_management_system.repository.HallRepository;
+import com.example.movie_management_system.repository.HallRepositoryInMemory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,16 +10,16 @@ import java.util.UUID;
 
 @Service
 public class HallService {
-    private final HallRepository hallRepository;
+    private final HallRepositoryInMemory hallRepository;
 
-    public HallService(HallRepository hallRepository) {
+    public HallService(HallRepositoryInMemory hallRepository) {
         this.hallRepository = hallRepository;
     }
 
-    public Hall add(String name, String theatreId, int capacity){
+    public void add(String name, String theatreId, int capacity){
         String id = UUID.randomUUID().toString();
         Hall hall = new Hall(id, name, theatreId, capacity);
-        return hallRepository.add(hall);
+        hallRepository.add(hall);
     }
 
     public void remove(String hallId){
