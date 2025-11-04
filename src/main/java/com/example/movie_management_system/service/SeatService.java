@@ -14,16 +14,16 @@ public class SeatService {
     @Autowired
     private SeatRepository seatRepository;
 
-    public Seat addSeat(String hallId, String seatRow, String seatColumn ) {
+    public Seat save(String hallId, String seatRow, String seatColumn ) {
         String id = UUID.randomUUID().toString();
         Seat seat = new Seat(id, hallId, seatRow, seatColumn);
         return seatRepository.save(seat);
     }
-    public void removeSeat(String id) {
-        seatRepository.deleteById(id);
+    public void remove(String id) {
+        seatRepository.remove(id);
     }
-    public List<Seat> getAllSeats() {
-        return seatRepository.findAll();
+    public List<Seat> getAll() {
+        return seatRepository.getAll();
     }
     public Optional<Seat> findById(String id) {
         return seatRepository.findById(id);
