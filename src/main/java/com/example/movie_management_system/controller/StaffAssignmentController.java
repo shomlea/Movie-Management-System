@@ -20,7 +20,6 @@ public class StaffAssignmentController {
         this.staffAssignmentService = staffAssignmentService;
     }
 
-    // List all staff assignments
     @GetMapping
     public String listAll(Model model) {
         List<StaffAssignment> assignments = staffAssignmentService.findAllStaffAssignments();
@@ -28,13 +27,12 @@ public class StaffAssignmentController {
         return "staffAssignment/index"; // template: templates/staffAssignment/index.html
     }
 
-    // Show form to create new staff assignment
     @GetMapping("/add")
     public String showAddForm() {
         return "staffAssignment/form"; // template: templates/staffAssignment/form.html
     }
 
-    // Create new staff assignment
+
     @PostMapping("/add")
     public String addStaffAssignment(
             @RequestParam("screeningId") String screeningId,
@@ -44,9 +42,8 @@ public class StaffAssignmentController {
         return "redirect:/staff-assignments";
     }
 
-    // Delete assignment by ID
-    @GetMapping("/delete/{id}")
-    public String deleteStaffAssignment(@PathVariable String id) {
+    @PostMapping("/remove/{id}")
+    public String removeStaffAssignment(@PathVariable String id) {
         staffAssignmentService.removeStaffAssignment(id);
         return "redirect:/staff-assignments";
     }

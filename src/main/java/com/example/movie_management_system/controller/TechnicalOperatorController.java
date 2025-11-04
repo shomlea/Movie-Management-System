@@ -26,13 +26,13 @@ public class TechnicalOperatorController {
     public String listAll(Model model) {
         List<TechnicalOperator> operators = technicalOperatorService.getAllTechnicalOperator();
         model.addAttribute("technicalOperators", operators);
-        return "technicalOperator/index"; // template: templates/technicalOperator/index.html
+        return "technicalOperator/index";
     }
 
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("specializations", Specialization.values());
-        return "technicalOperator/form"; // template: templates/technicalOperator/form.html
+        return "technicalOperator/form";
     }
 
     @PostMapping("/add")
@@ -45,8 +45,8 @@ public class TechnicalOperatorController {
         return "redirect:/technical-operators";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteTechnicalOperator(@PathVariable String id) {
+    @PostMapping("/remove/{id}")
+    public String removeTechnicalOperator(@PathVariable String id) {
         technicalOperatorService.removeTechnicalOperator(id);
         return "redirect:/technical-operators";
     }

@@ -22,7 +22,6 @@ public class SupportStaffController {
         this.supportStaffService = supportStaffService;
     }
 
-    // Display all support staff
     @GetMapping
     public String listAll(Model model) {
         List<SupportStaff> staffList = supportStaffService.getAllSupportStaff(null);
@@ -30,14 +29,12 @@ public class SupportStaffController {
         return "supportStaff/index";
     }
 
-    // Show form to add new staff (template renamed to form.html)
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("roles", Role.values());
         return "supportStaff/form"; // <-- changed from add to form
     }
 
-    // Add new staff
     @PostMapping("/add")
     public String addSupportStaff(
             @RequestParam("name") String name,
@@ -48,14 +45,12 @@ public class SupportStaffController {
         return "redirect:/support-staff";
     }
 
-    // Delete staff by ID
-    @GetMapping("/delete/{id}")
-    public String deleteSupportStaff(@PathVariable String id) {
+    @PostMapping("/remove/{id}")
+    public String removeSupportStaff(@PathVariable String id) {
         supportStaffService.removeSupportStaff(id);
         return "redirect:/support-staff";
     }
 
-    // View single staff member
     @GetMapping("/{id}")
     public String viewSupportStaff(@PathVariable String id, Model model) {
         Optional<SupportStaff> supportStaff = supportStaffService.getById(id);
