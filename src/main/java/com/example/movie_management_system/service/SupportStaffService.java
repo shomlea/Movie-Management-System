@@ -16,18 +16,18 @@ public class SupportStaffService {
     @Autowired
     private SupportStaffRepository supportStaffRepository;
 
-    public SupportStaff addSupportStaff(String name, int salary, Role role) {
+    public SupportStaff save(String name, int salary, Role role) {
         String id = UUID.randomUUID().toString();
         SupportStaff supportStaff = new SupportStaff(id, name, salary, role);
         return supportStaffRepository.save(supportStaff);
     }
-    public void removeSupportStaff(String id) {
-        supportStaffRepository.deleteById(id);
+    public void remove(String id) {
+        supportStaffRepository.remove(id);
     }
-    public List<SupportStaff> getAllSupportStaff(String id) {
-        return supportStaffRepository.findAll();
+    public List<SupportStaff> getAll(String id) {
+        return supportStaffRepository.getAll();
     }
-    public Optional<SupportStaff> getById(String id) {
+    public Optional<SupportStaff> findById(String id) {
         return supportStaffRepository.findById(id);
     }
 
