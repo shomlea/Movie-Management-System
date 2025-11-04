@@ -9,7 +9,7 @@ public class SupportStaff extends Staff{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public SupportStaff(String id, String name,int salary, Role role) {
+    public SupportStaff(String id, String name,double salary, Role role) {
         super(id, name, salary);
         this.role = role;
     }

@@ -9,9 +9,9 @@ public abstract class Staff {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String name;
-    private int salary; // added attribute
+    private double salary; // added attribute
 
-    public Staff(String id, String name, int salary){
+    public Staff(String id, String name, double salary){
         this.id = id;
         this.name = name;
         this.salary = salary;
@@ -27,5 +27,5 @@ public abstract class Staff {
     public String getName() {
         return name;
     }
-    public int getSalary() {return salary;}
+    public double getSalary() {return salary;}
 }

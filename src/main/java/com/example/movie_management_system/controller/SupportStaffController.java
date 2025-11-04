@@ -38,7 +38,7 @@ public class SupportStaffController {
     @PostMapping("/add")
     public String addSupportStaff(
             @RequestParam("name") String name,
-            @RequestParam("salary") int salary,
+            @RequestParam("salary") double salary,
             @RequestParam("role") Role role
     ) {
         supportStaffService.add(name, salary, role);

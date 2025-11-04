@@ -15,7 +15,7 @@ public class TechnicalOperatorService {
     @Autowired
     TechnicalOperatorRepositoryInMemory technicalOperatorRepository;
 
-    public void add(String name, int salary, Specialization specialization) {
+    public void add(String name, double salary, Specialization specialization) {
         String id = UUID.randomUUID().toString();
         TechnicalOperator technicalOperator = new TechnicalOperator(id, name, salary, specialization);
         technicalOperatorRepository.add(technicalOperator);
