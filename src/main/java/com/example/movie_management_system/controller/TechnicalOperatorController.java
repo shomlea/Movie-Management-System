@@ -38,7 +38,7 @@ public class TechnicalOperatorController {
     @PostMapping("/add")
     public String addTechnicalOperator(
             @RequestParam("name") String name,
-            @RequestParam("salary") int salary,
+            @RequestParam("salary") double salary,
             @RequestParam("specialization") Specialization specialization
     ) {
         technicalOperatorService.add(name, salary, specialization);

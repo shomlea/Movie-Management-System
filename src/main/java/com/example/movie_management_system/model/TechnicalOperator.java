@@ -9,7 +9,7 @@ public class TechnicalOperator extends Staff{
     @Enumerated(EnumType.STRING)
     private Specialization specialization;
 
-    public TechnicalOperator(String id, String name, int salary, Specialization specialization) {
+    public TechnicalOperator(String id, String name, double salary, Specialization specialization) {
         super(id, name, salary);
         this.specialization = specialization;
     }

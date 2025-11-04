@@ -20,7 +20,7 @@ public class SupportStaffService {
         this.supportStaffRepository = supportStaffRepository;
     }
 
-    public void add(String name, int salary, Role role) {
+    public void add(String name, double salary, Role role) {
         String id = UUID.randomUUID().toString();
         SupportStaff supportStaff = new SupportStaff(id, name, salary, role);
         supportStaffRepository.add(supportStaff);
