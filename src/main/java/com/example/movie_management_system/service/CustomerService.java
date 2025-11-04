@@ -17,21 +17,21 @@ public class CustomerService {
     }
 
 
-    public Customer addCustomer(String name) {
+    public Customer save(String name) {
         String id = UUID.randomUUID().toString();
         Customer customer = new Customer(id, name);
         return customerRepository.save(customer);
     }
 
-    public void removeCustomer(String id) {
-        customerRepository.deleteById(id);
+    public void remove(String id) {
+        customerRepository.remove(id);
     }
 
     public Optional<Customer> findById(String id) {
         return customerRepository.findById(id);
     }
 
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<Customer> getAll() {
+        return customerRepository.getall();
     }
 }
