@@ -17,17 +17,17 @@ public class TicketService {
     }
 
 
-    public Ticket addTicket(String screeningID,String customerId, String seatId, double price) {
+    public Ticket add(String screeningID,String customerId, String seatId, double price) {
         String id = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(id, screeningID, customerId, seatId, price);
-        return ticketRepository.save(ticket);
+        return ticketRepository.add(ticket);
     }
 
-    public void removeTicket(String id) {
-        ticketRepository.deleteById(id);
+    public void remove(String id) {
+        ticketRepository.remove(id);
     }
-    public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll();
+    public List<Ticket> getAll() {
+        return ticketRepository.getAll();
     }
     public Optional<Ticket> findById(String id) {
         return ticketRepository.findById(id);

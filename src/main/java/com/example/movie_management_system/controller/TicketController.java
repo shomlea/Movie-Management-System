@@ -21,14 +21,14 @@ public class TicketController {
 
     @GetMapping
     public String getAllTickets(Model model) {
-        List<Ticket> tickets = ticketService.getAllTickets();
+        List<Ticket> tickets = ticketService.getAll();
         model.addAttribute("tickets", tickets);
         return "ticket/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeTicket(@PathVariable String id) {
-        ticketService.removeTicket(id);
+        ticketService.remove(id);
         return "redirect:/tickets";
     }
 
@@ -39,7 +39,7 @@ public class TicketController {
 
     @PostMapping
         public String createTicket(@RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
-        ticketService.addTicket(screeningId, customerId, seatId, price);
+        ticketService.add(screeningId, customerId, seatId, price);
         return "redirect:/tickets";
     }
 
