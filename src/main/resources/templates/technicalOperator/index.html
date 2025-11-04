@@ -7,7 +7,8 @@
 <body>
 <h1>Technical Operators</h1>
 
-<a th:href="@{/technical-operators/add}">Add New Technical Operator</a>
+<a th:href="@{/technical-operators/add}">Add New Technical Operator</a><br>
+<a th:href="@{/}">Back to Main Menu</a>
 <br><br>
 
 <table border="1" cellpadding="6">
@@ -27,8 +28,8 @@
         <td th:text="${operator.salary}"></td>
         <td th:text="${operator.specialization}"></td>
         <td>
-            <a th:href="@{|/technical-operators/delete/${operator.id}|}"
-               onclick="return confirm('Are you sure you want to delete this operator?');">Delete</a>
+            <a th:href="@{|/technical-operators/remove/${operator.id}|}"
+               onclick="return confirm('Are you sure you want to remove this operator?');">Remove</a>
         </td>
     </tr>
     </tbody>
