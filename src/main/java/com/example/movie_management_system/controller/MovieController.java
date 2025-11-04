@@ -39,7 +39,7 @@ public class MovieController {
 
     @PostMapping
     public String createMovie(@RequestParam String title, @RequestParam String genre, @RequestParam int durationMin) {
-        movieService.save(title, durationMin, genre);
+        movieService.add(title, durationMin, genre);
         return "redirect:/movies";
     }
 

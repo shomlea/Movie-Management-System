@@ -17,10 +17,10 @@ public class CustomerService {
     }
 
 
-    public Customer save(String name) {
+    public Customer add(String name) {
         String id = UUID.randomUUID().toString();
         Customer customer = new Customer(id, name);
-        return customerRepository.save(customer);
+        return customerRepository.add(customer);
     }
 
     public void remove(String id) {

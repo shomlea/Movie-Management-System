@@ -16,10 +16,10 @@ public class ScreeningService {
         this.screeningRepository = screeningRepository;
     }
 
-    public Screening save(String hallId, String movieId, String date) {
+    public Screening add(String hallId, String movieId, String date) {
         String id = UUID.randomUUID().toString();
         Screening screening = new Screening(id, hallId, movieId, date);
-        return screeningRepository.save(screening);
+        return screeningRepository.add(screening);
     }
 
     public void remove(String id) {

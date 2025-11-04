@@ -17,10 +17,10 @@ public class MovieService {
     }
 
 
-    public Movie save(String title, int durationMin, String genre) {
+    public Movie add(String title, int durationMin, String genre) {
         String id = UUID.randomUUID().toString();
         Movie movie = new Movie(id, title, durationMin, genre);
-        return movieRepository.save(movie);
+        return movieRepository.add(movie);
     }
 
     public void remove(String id) {

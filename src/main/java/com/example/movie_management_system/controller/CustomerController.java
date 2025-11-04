@@ -34,7 +34,7 @@ public class CustomerController {
 
     @PostMapping
     public String createCustomer(@RequestParam String name) {
-        customerService.save(name);
+        customerService.add(name);
         return "redirect:/customers";
     }
 }

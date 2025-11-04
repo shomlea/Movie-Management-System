@@ -37,7 +37,7 @@ public class HallController {
 
     @PostMapping
     public String createHall(@RequestParam String name, @RequestParam String theatreId, @RequestParam int capacity) {
-        hallService.save(name, theatreId, capacity);
+        hallService.add(name, theatreId, capacity);
         return "redirect:/halls";
     }
 }

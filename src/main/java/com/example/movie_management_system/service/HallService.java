@@ -16,10 +16,10 @@ public class HallService {
         this.hallRepository = hallRepository;
     }
 
-    public Hall save(String name, String theatreId, int capacity){
+    public Hall add(String name, String theatreId, int capacity){
         String id = UUID.randomUUID().toString();
         Hall hall = new Hall(id, name, theatreId, capacity);
-        return hallRepository.save(hall);
+        return hallRepository.add(hall);
     }
 
     public void remove(String hallId){

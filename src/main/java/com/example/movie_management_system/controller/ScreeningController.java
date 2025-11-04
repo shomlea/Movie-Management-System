@@ -37,7 +37,7 @@ public class ScreeningController {
 
     @PostMapping
     public String createScreening(@RequestParam String hallId, @RequestParam String movieId, @RequestParam String date) {
-        screeningService.save(hallId, movieId, date);
+        screeningService.add(hallId, movieId, date);
         return "redirect:/screenings";
     }
 }
