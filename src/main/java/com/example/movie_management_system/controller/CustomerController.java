@@ -27,6 +27,7 @@ public class CustomerController {
         customerService.remove(id);
         return "redirect:/customers";
     }
+
     @GetMapping("/add")
     public String showAddForm() {
         return "/customer/form"; // templates/customers/add.html
@@ -36,5 +37,15 @@ public class CustomerController {
     public String createCustomer(@RequestParam String name) {
         customerService.add(name);
         return "redirect:/customers";
+    }
+
+    @GetMapping("view/{id}")
+    public String viewCustomer(@PathVariable String id, Model model) {
+        return customerService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("customer", customer);
+                    return "customer/view";
+                })
+                .orElse("redirect:/customers");
     }
 }
