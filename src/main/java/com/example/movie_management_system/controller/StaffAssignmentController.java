@@ -47,4 +47,13 @@ public class StaffAssignmentController {
         staffAssignmentService.remove(id);
         return "redirect:/staff-assignments";
     }
+    @GetMapping("view/{id}")
+    public String viewStaffAssignment(@PathVariable String id, Model model) {
+        return staffAssignmentService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("staffAssignment", customer);
+                    return "staffAssignment/view";
+                })
+                .orElse("redirect:/staff-assignments");
+    }
 }
