@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
@@ -32,6 +33,7 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
         this.entityType = entityType;
 
         this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         load();
     }
@@ -43,23 +45,21 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
             parentDir.mkdirs(); // Create necessary directories
         }
 
-        try {
-            ClassPathResource resource = new ClassPathResource(filePath);
-            file = resource.getFile();
-        }
-        catch (IOException e) {
-            //if (!file.exists() || file.length() == 0) {
-                System.out.println("File does not exist or is empty. Starting with an empty file.");
-                try {
-                    if (file.createNewFile()) {
-                        System.out.println("Created new data file: " + file.getAbsolutePath());
-                    }
-                } catch (IOException f) {
+        if (!(file.exists())) {
 
-                    throw new RuntimeException("Could not ensure data file exists: " + filePath, e);
+            System.out.println("File " + filePath + " does not exist or is empty. Creating new data file.");
+            try {
+                if (file.createNewFile()) {
+                    System.out.println("Created new data file: " + file.getAbsolutePath());
                 }
-                return;
-           // }
+            } catch (IOException e) {
+                throw new RuntimeException("Could not ensure data file exists: " + filePath, e);
+            }
+            return;
+        }
+        if(!(file.length() > 0)) {
+            System.out.println("No data to read from " + filePath);
+            return;
         }
 
         try (Reader reader = Files.newBufferedReader(file.toPath())) {
@@ -69,11 +69,10 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
             System.out.println("Data loaded successfully from " + file);
         } catch (FileNotFoundException e) {
 
-            System.err.println("File not found: " + e.getMessage());
+            System.err.println("File " + filePath + " not found: " + e.getMessage());
             entities = new HashMap<>();
         } catch (IOException e) {
-            System.err.println("Error loading data from file: " + e.getMessage());
-
+            System.err.println("Error loading data from file " + filePath + ": " + e.getMessage());
             entities = new HashMap<>();
         }
 
@@ -83,15 +82,8 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
         File file = new File(filePath);
         File parentDir = file.getParentFile();
         if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs(); // Create necessary directories
+            parentDir.mkdirs();
         }
-//        try {
-//            ClassPathResource resource = new ClassPathResource("data/halls.json");
-//            file = resource.getFile();
-//        }
-//        catch (IOException e) {
-//            throw new RuntimeException("Could not ensure data file exists: " + filePath, e);
-//        }
 
 
         try (Writer writer = Files.newBufferedWriter(file.toPath())) {
