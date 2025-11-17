@@ -32,4 +32,14 @@ public class StaffAssignment {
     public String getStaffId() {
         return staffId;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setScreeningId(String screeningId) {
+        this.screeningId = screeningId;
+    }
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
 }

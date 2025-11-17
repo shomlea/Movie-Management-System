@@ -1,5 +1,6 @@
 package com.example.movie_management_system.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -13,11 +14,12 @@ public class Screening {
     private String id;
     private String hallId;
     private String movieId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
     @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();
     @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
-    private List<StaffAssignment> assignments;
+    private List<StaffAssignment> assignments = new ArrayList<>();
 
 
     public Screening(String id, String hallId, String movieId, String date) {
@@ -45,6 +47,20 @@ public class Screening {
     public LocalDate getDate() {
         return date;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setHallId(String hallId) {
+        this.hallId = hallId;
+    }
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
+    public void setDate(String date) {
+        this.date = LocalDate.parse(date);
+    }
+
     public List<Ticket> getTickets() {
         return tickets;
     }
@@ -54,9 +70,49 @@ public class Screening {
 
 
     public void addTicket(Ticket ticket){
-        tickets.add(ticket);
+        this.tickets.add(ticket);
+    }
+
+    public boolean removeTicket(String ticketId){
+        return this.tickets.removeIf(ticket -> ticket.getId().equals(ticketId));
+    }
+
+    public boolean updateTicket(String id, Ticket ticket){
+        int index = -1;
+        for (int i = 0; i < tickets.size(); i++) {
+            if (id.equals(tickets.get(i).getId())) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            tickets.set(index, ticket);
+            return true;
+        }
+        return false;
     }
     public void addAssignment(StaffAssignment assignment){
-        assignments.add(assignment);
+        this.assignments.add(assignment);
+    }
+
+    public boolean removeAssignment(String assignmentId){
+        return this.assignments.removeIf(assignment -> assignment.getId().equals(assignmentId));
+    }
+
+    public boolean updateAssignment(String id, StaffAssignment assignment){
+        int index = -1;
+        for (int i = 0; i < assignments.size(); i++) {
+            if (id.equals(assignments.get(i).getId())) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            assignments.set(index, assignment);
+            return true;
+        }
+        return false;
     }
 }
