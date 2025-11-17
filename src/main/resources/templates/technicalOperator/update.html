@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Technical Operators</title>
+</head>
+<body>
+
+<h1>Edit Technical Operators</h1>
+
+<form th:action="@{|/technical-operators/update/${technicalOperator.id}|}" method="post">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${technicalOperator.name}" required>
+    <br><br>
+
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" name="salary" th:value="${technicalOperator.salary}" required>
+    <br><br>
+
+    <label for="specialization">Specialization:</label>
+    <select id="specialization" name="specialization" required>
+        <option th:each="s : ${specializations}"
+                th:value="${s}"
+                th:text="${s}"
+                th:selected="${s == technicalOperator.specialization}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<br>
+<a th:href="@{/technical-operators}">Back</a>
+
+</body>
+</html>
