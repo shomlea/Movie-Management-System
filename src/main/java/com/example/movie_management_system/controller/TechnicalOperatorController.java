@@ -1,5 +1,6 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.model.Role;
 import com.example.movie_management_system.model.Specialization;
 import com.example.movie_management_system.model.TechnicalOperator;
 import com.example.movie_management_system.service.TechnicalOperatorService;
@@ -59,6 +60,27 @@ public class TechnicalOperatorController {
                     return "technicalOperator/view";
                 })
                 .orElse("redirect:/technical-operators");
+    }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return technicalOperatorService.findById(id)
+                .map(staff -> {
+                    model.addAttribute("technicalOperator", staff);
+                    model.addAttribute("specializations", Specialization.values());
+                    return "technicalOperator/update";
+                })
+                .orElse("redirect:/technical-operators");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSupportStaff(
+            @PathVariable String id,
+            @RequestParam String name,
+            @RequestParam double salary,
+            @RequestParam Specialization specialization) {
+
+        technicalOperatorService.update(id, name, salary, specialization);
+        return "redirect:/technical-operators";
     }
 
 }

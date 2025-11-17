@@ -48,4 +48,23 @@ public class CustomerController {
                 })
                 .orElse("redirect:/customers");
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return customerService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("customer", customer);
+                    return "customer/update";
+                })
+                .orElse("redirect:/customers");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateCustomer(@PathVariable String id, @RequestParam String name) {
+        customerService.update(id, name);
+        return "redirect:/customers";
+    }
+
 }
+
+
+

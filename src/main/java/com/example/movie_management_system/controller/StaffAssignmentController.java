@@ -56,4 +56,23 @@ public class StaffAssignmentController {
                 })
                 .orElse("redirect:/staff-assignments");
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return staffAssignmentService.findById(id)
+                .map(staffAssignment -> {
+                    model.addAttribute("staffAssignment", staffAssignment);
+                    return "staffAssignment/update";
+                })
+                .orElse("redirect:/staff-assignments");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSeat(
+            @PathVariable String id,
+            @RequestParam String screeningId,
+            @RequestParam String staffId) {
+
+        staffAssignmentService.update(id, screeningId, staffId);
+        return "redirect:/staff-assignments";
+    }
 }

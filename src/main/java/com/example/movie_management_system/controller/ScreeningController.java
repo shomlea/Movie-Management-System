@@ -41,13 +41,36 @@ public class ScreeningController {
         return "redirect:/screenings";
     }
 
-    @GetMapping("view/{id}")
-    public String viewCustomer(@PathVariable String id, Model model) {
+    // View a single screening
+    @GetMapping("/view/{id}")
+    public String viewScreening(@PathVariable String id, Model model) {
         return screeningService.findById(id)
-                .map(customer -> {
-                    model.addAttribute("screening", customer);
+                .map(screening -> {
+                    model.addAttribute("screening", screening);
                     return "screening/view";
                 })
                 .orElse("redirect:/screenings");
     }
+
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return screeningService.findById(id)
+                .map(screening -> {
+                    model.addAttribute("screening", screening);
+                    return "screening/update";
+                })
+                .orElse("redirect:/screenings");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateScreening(
+            @PathVariable String id,
+            @RequestParam String hallId,
+            @RequestParam String movieId,
+            @RequestParam String date) {
+
+        screeningService.update(id, hallId, movieId, date);
+        return "redirect:/screenings";
+    }
 }
+

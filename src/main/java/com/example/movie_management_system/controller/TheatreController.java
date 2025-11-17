@@ -1,5 +1,6 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.model.Specialization;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.service.TheatreService;
 import org.springframework.ui.Model;
@@ -54,6 +55,28 @@ public class TheatreController {
                 })
                 .orElse("redirect:/theatres");
     }
+
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return theatreService.findById(id)
+                .map(theatre -> {
+                    model.addAttribute("theatre", theatre);
+                    return "theatre/update";
+                })
+                .orElse("redirect:/theatres");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSupportStaff(
+            @PathVariable String id,
+            @RequestParam String name,
+            @RequestParam String city,
+            @RequestParam int parkingCapacity) {
+
+        theatreService.update(id, name, city, parkingCapacity);
+        return "redirect:/theatres";
+    }
+
 
 
 

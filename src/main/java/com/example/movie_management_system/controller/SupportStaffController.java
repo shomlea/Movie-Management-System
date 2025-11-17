@@ -61,4 +61,25 @@ public class SupportStaffController {
             return "redirect:/support-staff";
         }
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return supportStaffService.findById(id)
+                .map(staff -> {
+                    model.addAttribute("supportStaff", staff);
+                    model.addAttribute("roles", Role.values());
+                    return "supportStaff/update";
+                })
+                .orElse("redirect:/support-staff");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSupportStaff(
+            @PathVariable String id,
+            @RequestParam String name,
+            @RequestParam double salary,
+            @RequestParam Role role) {
+
+        supportStaffService.update(id, name, salary, role);
+        return "redirect:/support-staff";
+    }
 }

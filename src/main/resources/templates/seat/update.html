@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Seat</title>
+</head>
+<body>
+
+<h1>Edit Seat</h1>
+
+<form th:action="@{|/seats/update/${seat.id}|}" method="post">
+
+    <label for="hallId">Hall Id:</label>
+    <input type="text" id="hallId" name="hallId" th:value="${seat.hallId}" required>
+    <br><br>
+
+    <label for="seatRow">Seat Row:</label>
+    <input type="text" id="seatRow" name="seatRow" th:value="${seat.seatRow}" required>
+    <br><br>
+
+    <label for="seatColumn">Seat Column:</label>
+    <input type="text" id="seatColumn" name="seatColumn" th:value="${seat.seatColumn}" required>
+    <br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<br>
+<a th:href="@{/seats}">Back</a>
+
+</body>
+</html>

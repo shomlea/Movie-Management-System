@@ -49,5 +49,25 @@ public class SeatController {
                 })
                 .orElse("redirect:/seats");
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return seatService.findById(id)
+                .map(seat -> {
+                    model.addAttribute("seat", seat);
+                    return "seat/update";
+                })
+                .orElse("redirect:/seats");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateSeat(
+            @PathVariable String id,
+            @RequestParam String hallId,
+            @RequestParam String seatRow,
+            @RequestParam String seatColumn) {
+
+        seatService.update(id, hallId, seatRow, seatColumn);
+        return "redirect:/seats";
+    }
 
 }

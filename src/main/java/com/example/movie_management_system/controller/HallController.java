@@ -50,4 +50,21 @@ public class HallController {
                 })
                 .orElse("redirect:/halls");
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return hallService.findById(id)
+                .map(hall -> {
+                    model.addAttribute("hall", hall);
+                    return "hall/update";
+                })
+                .orElse("redirect:/halls");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateCustomer(@PathVariable String id, @RequestParam String name, @RequestParam String theatreId, @RequestParam int capacity) {
+        hallService.update(id, name, theatreId, capacity);
+        return "redirect:/halls";
+    }
+
+
 }

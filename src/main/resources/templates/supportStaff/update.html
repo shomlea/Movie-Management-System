@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Support Staff</title>
+</head>
+<body>
+
+<h1>Edit Support Staff</h1>
+
+<form th:action="@{|/support-staff/update/${supportStaff.id}|}" method="post">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${supportStaff.name}" required>
+    <br><br>
+
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" name="salary" th:value="${supportStaff.salary}" required>
+    <br><br>
+
+    <label for="role">Role:</label>
+    <select id="role" name="role" required>
+        <option th:each="r : ${roles}"
+                th:value="${r}"
+                th:text="${r}"
+                th:selected="${r == supportStaff.role}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<br>
+<a th:href="@{/support-staff}">Back</a>
+
+</body>
+</html>

@@ -51,6 +51,21 @@ public class MovieController {
                 })
                 .orElse("redirect:/movies");
     }
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable String id, Model model) {
+        return movieService.findById(id)
+                .map(movie -> {
+                    model.addAttribute("movie", movie);
+                    return "movie/update";
+                })
+                .orElse("redirect:/movies");
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateCustomer(@PathVariable String id, @RequestParam String title, @RequestParam int durationMin, @RequestParam String genre) {
+        movieService.update(id, title, durationMin, genre);
+        return "redirect:/movies";
+    }
 
 
 
