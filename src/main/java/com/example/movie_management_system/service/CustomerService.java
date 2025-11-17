@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Customer;
-import com.example.movie_management_system.repository.CustomerRepositoryInMemory;
+import com.example.movie_management_system.repository.CustomerRepositoryInFile;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +10,9 @@ import java.util.UUID;
 @Service
 public class CustomerService {
 
-    private final CustomerRepositoryInMemory customerRepository;
+    private final CustomerRepositoryInFile customerRepository;
 
-    public CustomerService(CustomerRepositoryInMemory customerRepository) {
+    public CustomerService(CustomerRepositoryInFile customerRepository) {
         this.customerRepository = customerRepository;
     }
 
@@ -21,6 +21,11 @@ public class CustomerService {
         String id = UUID.randomUUID().toString();
         Customer customer = new Customer(id, name);
         customerRepository.add(customer);
+    }
+
+    public boolean update(String id, String name) {
+        Customer customer = new Customer(id, name);
+        return customerRepository.update(id, customer);
     }
 
     public void remove(String id) {
