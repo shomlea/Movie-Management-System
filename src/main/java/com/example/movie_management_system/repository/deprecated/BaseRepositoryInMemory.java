@@ -1,4 +1,6 @@
-package com.example.movie_management_system.repository;
+package com.example.movie_management_system.repository.deprecated;
+
+import com.example.movie_management_system.repository.AbstractRepository;
 
 import java.util.ArrayList;
 import java.util.List;
