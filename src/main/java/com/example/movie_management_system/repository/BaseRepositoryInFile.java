@@ -63,9 +63,21 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
         }
 
         try (Reader reader = Files.newBufferedReader(file.toPath())) {
-            TypeReference<Map<ID, T>> typeRef = new TypeReference<>() {};
+//            TypeReference<Map<ID, T>> typeRef = new TypeReference<>() {};
+//
+//            entities = objectMapper.readValue(reader, typeRef);
 
-            entities = objectMapper.readValue(reader, typeRef);
+            com.fasterxml.jackson.databind.JavaType keyType = objectMapper.getTypeFactory().constructType(String.class);
+
+            com.fasterxml.jackson.databind.JavaType valueType = objectMapper.getTypeFactory().constructType(entityType);
+
+            com.fasterxml.jackson.databind.JavaType mapType = objectMapper.getTypeFactory()
+                    .constructMapType(HashMap.class, keyType, valueType);
+
+//            @SuppressWarnings("unchecked")
+
+            entities = objectMapper.readValue(reader, mapType);
+
             System.out.println("Data loaded successfully from " + file);
         } catch (FileNotFoundException e) {
 
