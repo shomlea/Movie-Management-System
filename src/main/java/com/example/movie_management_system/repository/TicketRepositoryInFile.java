@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Primary
-public class TicketRepositoryInMemory extends BaseRepositoryInMemory<Ticket, String> {
-    public TicketRepositoryInMemory() {
-        super(Ticket::getId);
+public class TicketRepositoryInFile extends BaseRepositoryInFile<Ticket, String>{
+    public TicketRepositoryInFile() {
+        super(Ticket::getId, "data/tickets.json", Ticket.class);
     }
 }
