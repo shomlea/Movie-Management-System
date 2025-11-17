@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Theatres</title>
+</head>
+<body>
+<h1>Theatre Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${theatre.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${theatre.name}"></span></p>
+<p><strong>City:</strong> <span th:text="${theatre.city}"></span></p>
+<p><strong>Parking Capacity:</strong> <span th:text="${theatre.parkingCapacity}"></span></p>
+
+<br>
+<a th:href="@{/theatres}">Back to theatre List</a>
+
+</body>
+</html>

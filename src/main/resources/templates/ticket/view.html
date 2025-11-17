@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Tickets</title>
+</head>
+<body>
+<h1>Tickets Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
+<p><strong>Screening ID:</strong> <span th:text="${ticket.screeningId}"></span></p>
+<p><strong>Customer ID:</strong> <span th:text="${ticket.customerId}"></span></p>
+<p><strong>Seat ID:</strong> <span th:text="${ticket.seatId}"></span></p>
+<p><strong>Price:</strong> <span th:text="${ticket.price}"></span></p>
+
+<br>
+<a th:href="@{/tickets}">Back to ticket List</a>
+
+</body>
+</html>

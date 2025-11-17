@@ -40,4 +40,14 @@ public class HallController {
         hallService.add(name, theatreId, capacity);
         return "redirect:/halls";
     }
+
+    @GetMapping("view/{id}")
+    public String viewHall(@PathVariable String id, Model model) {
+        return hallService.findById(id)
+                .map(hall -> {
+                    model.addAttribute("hall", hall);
+                    return "hall/view";
+                })
+                .orElse("redirect:/halls");
+    }
 }

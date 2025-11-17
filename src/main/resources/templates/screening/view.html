@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Screening</title>
+</head>
+<body>
+<h1>Screening Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${screening.id}"></span></p>
+<p><strong>Hall ID:</strong> <span th:text="${screening.hallId}"></span></p>
+<p><strong>Date:</strong> <span th:text="${screening.date}"></span></p>
+<p><strong>Movie ID:</strong> <span th:text="${screening.movieId}"></span></p>
+
+<br>
+<a th:href="@{/screenings}">Back to screening List</a>
+
+</body>
+</html>

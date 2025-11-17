@@ -100,4 +100,14 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
+    @GetMapping("view/{id}")
+    public String viewSeat(@PathVariable String id, Model model) {
+        return ticketService.findById(id)
+                .map(ticket -> {
+                    model.addAttribute("ticket", ticket);
+                    return "ticket/view";
+                })
+                .orElse("redirect:/tickets");
+    }
+
 }

@@ -51,4 +51,14 @@ public class TechnicalOperatorController {
         return "redirect:/technical-operators";
     }
 
+    @GetMapping("view/{id}")
+    public String viewSeat(@PathVariable String id, Model model) {
+        return technicalOperatorService.findById(id)
+                .map(technicalOperator -> {
+                    model.addAttribute("technicalOperator", technicalOperator);
+                    return "technicalOperator/view";
+                })
+                .orElse("redirect:/technical-operators");
+    }
+
 }

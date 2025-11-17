@@ -42,6 +42,17 @@ public class MovieController {
         movieService.add(title, durationMin, genre);
         return "redirect:/movies";
     }
+    @GetMapping("view/{id}")
+    public String viewMovie(@PathVariable String id, Model model) {
+        return movieService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("movie", customer);
+                    return "movie/view";
+                })
+                .orElse("redirect:/movies");
+    }
+
+
 
 
 

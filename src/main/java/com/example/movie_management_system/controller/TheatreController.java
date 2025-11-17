@@ -45,6 +45,16 @@ public class TheatreController {
         return "redirect:/theatres";
     }
 
+    @GetMapping("view/{id}")
+    public String viewSeat(@PathVariable String id, Model model) {
+        return theatreService.findById(id)
+                .map(theatre -> {
+                    model.addAttribute("theatre", theatre);
+                    return "theatre/view";
+                })
+                .orElse("redirect:/theatres");
+    }
+
 
 
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Support Staff</title>
+</head>
+<body>
+<h1>Support Staff Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${supportStaff.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${supportStaff.name}"></span></p>
+<p><strong>Salary:</strong> <span th:text="${supportStaff.salary}"></span></p>
+<p><strong>Role:</strong> <span th:text="${supportStaff.role}"></span></p>
+
+<br>
+<a th:href="@{/support-staff}">Back to support staff List</a>
+
+</body>
+</html>

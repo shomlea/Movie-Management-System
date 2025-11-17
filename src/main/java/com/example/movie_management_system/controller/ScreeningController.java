@@ -40,4 +40,14 @@ public class ScreeningController {
         screeningService.add(hallId, movieId, date);
         return "redirect:/screenings";
     }
+
+    @GetMapping("view/{id}")
+    public String viewCustomer(@PathVariable String id, Model model) {
+        return screeningService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("screening", customer);
+                    return "screening/view";
+                })
+                .orElse("redirect:/screenings");
+    }
 }

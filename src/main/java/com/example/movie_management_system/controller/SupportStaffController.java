@@ -51,7 +51,7 @@ public class SupportStaffController {
         return "redirect:/support-staff";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("view/{id}")
     public String viewSupportStaff(@PathVariable String id, Model model) {
         Optional<SupportStaff> supportStaff = supportStaffService.findById(id);
         if (supportStaff.isPresent()) {
