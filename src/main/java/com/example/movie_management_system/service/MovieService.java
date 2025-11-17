@@ -1,9 +1,12 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Movie;
+import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.repository.MovieRepositoryInFile;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +33,42 @@ public class MovieService {
 
     public void remove(String id) {
         movieRepository.remove(id);
+    }
+
+    @Transactional
+    public void addScreening(String id, Screening screening){
+        Optional<Movie> optionalMovie = movieRepository.findById(id);
+        if (!optionalMovie.isPresent()){
+            throw new NoSuchElementException("Movie with id " + id + " not found");
+        }
+        Movie movie = optionalMovie.get();
+        movie.addScreening(screening);
+        movieRepository.update(id, movie);
+    }
+
+    @Transactional
+    public boolean removeScreening(String id, String screeningId){
+        Optional<Movie> optionalMovie = movieRepository.findById(id);
+        if (!optionalMovie.isPresent()){
+            throw new NoSuchElementException("Movie with id " + id + " not found");
+        }
+        Movie movie = optionalMovie.get();
+        movie.removeScreening(screeningId);
+        movieRepository.update(id, movie);
+
+        return true;
+    }
+
+    @Transactional
+    public boolean updateScreening(String id, String screeningId, Screening screening){
+        Optional<Movie> optionalMovie = movieRepository.findById(id);
+        if (!optionalMovie.isPresent()){
+            throw new NoSuchElementException("Movie with id " + id + " not found");
+        }
+        Movie movie = optionalMovie.get();
+        movie.updateScreening(screeningId, screening);
+        movieRepository.update(id, movie);
+        return true;
     }
 
     public Optional<Movie> findById(String id) {

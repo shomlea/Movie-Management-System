@@ -1,9 +1,12 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.TheatreRepositoryInFile;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,6 +26,42 @@ public class TheatreService {
     public boolean update(String id, String name, String city, int parkingCapacity) {
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
         return theatreRepository.update(id, theatre);
+    }
+
+    @Transactional
+    public void addHall(String theatreId, Hall hall) {
+        Theatre theatre = theatreRepository.findById(theatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+
+        theatre.addHall(hall);
+
+        theatreRepository.update(theatreId, theatre);
+    }
+
+    @Transactional
+    public boolean removeHall(String theatreId, String hallId) {
+        Theatre theatre = theatreRepository.findById(theatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+
+        boolean removed = theatre.removeHall(hallId);
+
+        if (removed) {
+            theatreRepository.update(theatreId, theatre);
+        }
+        return removed;
+    }
+
+    @Transactional
+    public boolean updateHall(String theatreId, String hallId, Hall updatedHall) {
+        Theatre theatre = theatreRepository.findById(theatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+
+        boolean updated = theatre.updateHall(hallId, updatedHall);
+
+        if (updated) {
+            theatreRepository.update(theatreId, theatre);
+        }
+        return updated;
     }
 
     public void remove(String id) {

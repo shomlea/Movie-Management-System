@@ -11,4 +11,5 @@ public class CustomerRepositoryInFile extends BaseRepositoryInFile<Customer, Str
     public CustomerRepositoryInFile() {
         super(Customer::getId, "data/customers.json", Customer.class);
     }
+
 }
