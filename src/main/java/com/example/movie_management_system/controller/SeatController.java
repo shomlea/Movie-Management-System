@@ -36,7 +36,7 @@ public class SeatController {
 
     @PostMapping
     public String createSeat(@RequestParam String hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
-        seatService.save(hallId, seatRow, seatColumn);
+        seatService.add(hallId, seatRow, seatColumn);
         return "redirect:/seats";
     }
 
