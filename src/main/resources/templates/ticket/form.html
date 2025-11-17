@@ -7,11 +7,27 @@
 <h1>Add a new Ticket</h1>
 
 <form th:action="@{/tickets}" method="post">
-    <label for="screeningId">Screening Id:</label>
-    <input type="text" id="screeningId" name="screeningId" required/><br/><br/>
+
+    <label for="screeningId">Screening:</label>
+    <select id="screeningId" name="screeningId" required
+            onchange="fetchAvailableSeats(this.value)">
+        <option value="">-- Select a Screening --</option>
+        <option th:each="screening : ${availableScreenings}"
+                th:value="${screening.id}"
+                th:text="${screening.movieId}">
+            Movie Title @ 10:00
+        </option>
+    </select><br/><br/>
 
     <label for="customerId">Customer Id:</label>
-    <input type="text" id="customerId" name="customerId" required/><br/><br/>
+    <select id="customerId" name="customerId" required>
+        <option value="">-- Select a Customer --</option>
+        <option th:each="customer : ${availableCustomers}"
+                th:value="${customer.id}"
+                th:text="${customer.name}">
+            101
+        </option>
+    </select><br/><br/>
 
     <label for="seatId">Seat Id:</label>
     <input type="text" id="seatId" name="seatId" required/><br/><br/>
@@ -25,3 +41,4 @@
 <a th:href="@{/tickets}">Back to Ticket List</a>
 </body>
 </html>
+

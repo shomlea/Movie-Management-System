@@ -37,4 +37,17 @@ public class Seat {
     public String getSeatColumn() {
         return seatColumn;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setHallId(String hallId) {
+        this.hallId = hallId;
+    }
+    public void setSeatRow(String seatRow) {
+        this.seatRow = seatRow;
+    }
+    public void setSeatColumn(String seatColumn) {
+        this.seatColumn = seatColumn;
+    }
 }

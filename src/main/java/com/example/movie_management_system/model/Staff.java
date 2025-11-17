@@ -28,4 +28,12 @@ public abstract class Staff {
         return name;
     }
     public double getSalary() {return salary;}
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setSalary(double salary) {this.salary = salary;}
 }

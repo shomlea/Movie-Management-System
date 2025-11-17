@@ -5,9 +5,11 @@ import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.repository.TicketRepositoryInFile;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,11 +27,15 @@ public class TicketService {
         this.seatService = seatService;
     }
 
-
+    @Transactional
     public void add(String screeningID,String customerId, String seatId, double price) {
         String id = UUID.randomUUID().toString();
         Ticket ticket = new Ticket(id, screeningID, customerId, seatId, price);
-        ticketRepository.add(ticket);
+        if(screeningService.findById(screeningID).isPresent() && customerService.findById(customerId).isPresent() && seatService.findById(seatId).isPresent()) {
+            ticketRepository.add(ticket);
+            //screeningService.addTicket(screeningId, ticket);
+            customerService.addTicket(customerId, ticket);
+        }
     }
 
     public List<Screening> getAvailableScreenings() {
@@ -43,14 +49,25 @@ public class TicketService {
     public List<Seat> getAvailableSeats(String screeningID) {
         return seatService.getAll().stream().filter(screening -> screening.getId().equals(screeningID)).toList();
     }
-
-    public boolean update(String id, String screeningId, String customerId, String seatId, double price) {
+    @Transactional
+    public void update(String id, String screeningId, String customerId, String seatId, double price) {
         Ticket ticket = new Ticket(id, screeningId, customerId, seatId, price);
-        return ticketRepository.update(id, ticket);
+        ticketRepository.update(id, ticket);
+        customerService.updateTicket(customerId, id, ticket);
+
     }
 
-    public void remove(String id) {
+    @Transactional
+    public boolean remove(String id) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+        if (!ticket.isPresent()) {
+            throw new NoSuchElementException("Ticket with id " + id + " not found");
+        }
+        customerService.removeTicket(ticket.get().getCustomerId(), id);
         ticketRepository.remove(id);
+
+        return true;
+
     }
     public List<Ticket> getAll() {
         return ticketRepository.getAll();

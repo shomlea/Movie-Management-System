@@ -42,4 +42,17 @@ public class Ticket {
     public double getPrice(){
         return price;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setScreeningId(String screeningId) {
+        this.screeningId = screeningId;
+    }
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+    public void setSeatId(String seatId) {
+        this.seatId = seatId;
+    }
 }

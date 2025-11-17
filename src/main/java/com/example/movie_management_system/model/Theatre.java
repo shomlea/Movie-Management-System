@@ -37,11 +37,45 @@ public class Theatre {
         return city;
     }
     public int getParkingCapacity() {return parkingCapacity;}
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
+    public void setParkingCapacity(int parkingCapacity) {
+        this.parkingCapacity = parkingCapacity;
+    }
+
     public List<Hall> getHalls() {
         return halls;
     }
 
     public void addHall(Hall hall) {
         this.halls.add(hall);
+    }
+
+    public boolean removeHall(String hallId) {
+        return this.halls.removeIf(hall -> hall.getId().equals(hallId));
+    }
+
+    public boolean updateHall(String id, Hall hall) {
+        int index = -1;
+        for (int i = 0; i < halls.size(); i++) {
+            if (id.equals(halls.get(i).getId())) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            halls.set(index, hall);
+            return true;
+        }
+        return false;
     }
 }

@@ -139,14 +139,33 @@ public class BaseRepositoryInFile<T, ID> implements AbstractRepository<T, ID> {
 
     @Override
     public boolean update(ID id, T updated) {
+//        if(updated == null)
+//            throw new IllegalArgumentException("updated entity is null");
+//        ID updatedId = idExtractor.apply(updated);
+//        if(updatedId == null)
+//            throw new IllegalArgumentException("updated entity ID cannot be null");
+//        if(!updatedId.equals(id))
+//            throw new IllegalArgumentException("updated entity id must match path id");
+//        save();
+//        return entities.replace(id, updated) != null;
+
         if(updated == null)
             throw new IllegalArgumentException("updated entity is null");
+
         ID updatedId = idExtractor.apply(updated);
         if(updatedId == null)
             throw new IllegalArgumentException("updated entity ID cannot be null");
         if(!updatedId.equals(id))
             throw new IllegalArgumentException("updated entity id must match path id");
-        return entities.replace(id, updated) != null;
+
+        boolean replaced = entities.replace(id, updated) != null;
+
+
+        if (replaced) {
+            save();
+        }
+
+        return replaced;
     }
 
     @Override

@@ -1,16 +1,11 @@
 package com.example.movie_management_system.service;
 
-import com.example.movie_management_system.model.Screening;
-import com.example.movie_management_system.model.Staff;
-import com.example.movie_management_system.model.StaffAssignment;
-import com.example.movie_management_system.model.SupportStaff;
+import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.repository.StaffAssignmentRepositoryInFile;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class StaffAssignmentService {
@@ -19,11 +14,7 @@ public class StaffAssignmentService {
     private final TechnicalOperatorService technicalOperatorService;
     private final ScreeningService screeningService;
 
-    public void add(String screeningId, String staffId) {
-        String id = UUID.randomUUID().toString();
-        StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
-        staffAssignmentRepository.add(staffAssignment);
-    }
+
 
     public StaffAssignmentService(StaffAssignmentRepositoryInFile staffAssignmentRepository,  SupportStaffService supportStaffService, TechnicalOperatorService technicalOperatorService, ScreeningService screeningService) {
         this.staffAssignmentRepository = staffAssignmentRepository;
@@ -31,10 +22,33 @@ public class StaffAssignmentService {
         this.technicalOperatorService = technicalOperatorService;
         this.screeningService = screeningService;
     }
-
+    @Transactional
+    public void add(String screeningId, String staffId) {
+        String id = UUID.randomUUID().toString();
+        StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
+        if(screeningService.findById(screeningId).isPresent() && (supportStaffService.findById(staffId).isPresent() ||  technicalOperatorService.findById(staffId).isPresent())) {
+            staffAssignmentRepository.add(staffAssignment);
+            screeningService.addStaffAssignment(screeningId, staffAssignment);
+        }
+    }
+    @Transactional
     public boolean update(String id, String screeningId, String staffId){
         StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
-        return staffAssignmentRepository.update(id, staffAssignment);
+        screeningService.removeStaffAssignment(screeningId, id);
+        staffAssignmentRepository.update(id, staffAssignment);
+        return true;
+    }
+
+    @Transactional
+    public boolean remove(String id) {
+        Optional<StaffAssignment> staffAssignment = staffAssignmentRepository.findById(id);
+        if (!staffAssignment.isPresent()) {
+            throw new NoSuchElementException("StaffAssignment with id " + id + " not found");
+        }
+        screeningService.removeStaffAssignment(staffAssignment.get().getScreeningId(), id);
+        staffAssignmentRepository.remove(id);
+
+        return true;
     }
 
     public List<Staff> getAvailableStaff(){
@@ -47,9 +61,7 @@ public class StaffAssignmentService {
         return screeningService.getAll();
     }
 
-    public void remove(String id) {
-        staffAssignmentRepository.remove(id);
-    }
+
 
     public Optional<StaffAssignment> findById(String id) {
         return staffAssignmentRepository.findById(id);
