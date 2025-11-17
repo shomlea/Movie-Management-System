@@ -24,7 +24,7 @@ public class SupportStaffController {
 
     @GetMapping
     public String listAll(Model model) {
-        List<SupportStaff> staffList = supportStaffService.getAll(null);
+        List<SupportStaff> staffList = supportStaffService.getAll();
         model.addAttribute("supportStaff", staffList);
         return "supportStaff/index";
     }

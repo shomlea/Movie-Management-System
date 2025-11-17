@@ -1,13 +1,13 @@
 package com.example.movie_management_system.controller;
 
-import com.example.movie_management_system.model.Movie;
-import com.example.movie_management_system.model.Ticket;
+import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.service.TicketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tickets")
@@ -33,9 +33,66 @@ public class TicketController {
     }
 
     @GetMapping("/add")
-    public String createForm(){
+    public String createForm(Model model){
+        List<Screening> availableScreenings = ticketService.getAvailableScreenings();
+        model.addAttribute("screenings", availableScreenings);
+
+        List<Customer> availableCustomers = ticketService.getAvailableCustomers();
+        model.addAttribute("customers", availableCustomers);
+
+
         return "ticket/form";
     }
+
+    // TODO implement with dynamic http
+
+//    @GetMapping
+//    public void fetchAvailableSeats(@RequestParam String screeningId, Model model) {
+//        List<Seat> availableSeats = ticketService.getAvailableSeats(screeningId);
+//        model.addAttribute("seats", availableSeats);
+//    }
+
+    // TODO create html page for view
+
+
+    @GetMapping("/view/{id}")
+    public String viewTicket(Model model, @PathVariable String id) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        if(ticket.isPresent()) {
+            model.addAttribute("ticket", ticket.get());
+            return "ticket/view";
+        }
+        return "redirect:/tickets";
+
+    }
+
+    // TODO create html page for edit
+
+    @GetMapping("/update/{id}")
+    public String createUpdateForm(Model model, @PathVariable String id) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        if(ticket.isPresent()) {
+            model.addAttribute("ticket", ticket.get());
+            return "ticket/edit";
+        }
+        return "redirect:/tickets";
+
+    }
+
+    // TODO create update function
+
+    @PostMapping("/update/{id}")
+    public String updateTicket(@PathVariable String id, @RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
+        Optional<Ticket> ticket = ticketService.findById(id);
+        if(ticketService.update(id, screeningId, customerId, seatId, price))
+            System.out.println("ticket updated successfully");
+        else  {
+            System.err.println("ticket not found");
+            // show error
+        }
+        return "redirect:/tickets";
+    }
+
 
     @PostMapping
         public String createTicket(@RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
