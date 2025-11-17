@@ -54,8 +54,8 @@ public class TechnicalOperatorController {
     @GetMapping("view/{id}")
     public String viewSeat(@PathVariable String id, Model model) {
         return technicalOperatorService.findById(id)
-                .map(customer -> {
-                    model.addAttribute("technicalOperator", customer);
+                .map(technicalOperator -> {
+                    model.addAttribute("technicalOperator", technicalOperator);
                     return "technicalOperator/view";
                 })
                 .orElse("redirect:/technical-operators");
