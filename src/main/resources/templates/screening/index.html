@@ -19,7 +19,7 @@
         <th>ID</th>
         <th>Hall Id</th>
         <th>Movie Id</th>
-        <th>Date (YYYY/MM/DD)</th>
+        <th>Date (YYYY-MM-DD)</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -30,7 +30,7 @@
         <td th:text="${screening.movieId}"></td>
         <td th:text="${screening.date}"></td>
         <td>
-            <a th:href="@{|/screenings/${screening.id}|}">View</a> |
+            <a th:href="@{|/screenings/view/${screening.id}|}">View</a> |
             <form th:action="@{|/screenings/remove/${screening.id}|}" method="post" style="display:inline;">
                 <button type="submit" onclick="return confirm('Are you sure you want to remove this screening?');">
                     Remove
