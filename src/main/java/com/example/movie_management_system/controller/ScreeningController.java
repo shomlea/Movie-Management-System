@@ -52,7 +52,6 @@ public class ScreeningController {
                 .orElse("redirect:/screenings");
     }
 
-    // Show update form
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable String id, Model model) {
         return screeningService.findById(id)
@@ -63,7 +62,6 @@ public class ScreeningController {
                 .orElse("redirect:/screenings");
     }
 
-    // Submit update
     @PostMapping("/update/{id}")
     public String updateScreening(
             @PathVariable String id,
