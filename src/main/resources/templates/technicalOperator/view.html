@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Technical operators</title>
+</head>
+<body>
+<h1>Technical operators Details</h1>
+
+<p><strong>ID:</strong> <span th:text="${technicalOperator.id}"></span></p>
+<p><strong>Name:</strong> <span th:text="${technicalOperator.name}"></span></p>
+<p><strong>Salary:</strong> <span th:text="${technicalOperator.salary}"></span></p>
+<p><strong>Specialization:</strong> <span th:text="${technicalOperator.specialization}"></span></p>
+
+<br>
+<a th:href="@{/technical-operators}">Back to technical operators List</a>
+
+</body>
+</html>
