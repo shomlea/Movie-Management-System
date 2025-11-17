@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/tickets")
-
 public class TicketController {
     private final TicketService ticketService;
 
@@ -55,16 +54,16 @@ public class TicketController {
     // TODO create html page for view
 
 
-    @GetMapping("/view/{id}")
-    public String viewTicket(Model model, @PathVariable String id) {
-        Optional<Ticket> ticket = ticketService.findById(id);
-        if(ticket.isPresent()) {
-            model.addAttribute("ticket", ticket.get());
-            return "ticket/view";
-        }
-        return "redirect:/tickets";
-
-    }
+//    @GetMapping("/view/{id}")
+//    public String viewTicket(Model model, @PathVariable String id) {
+//        Optional<Ticket> ticket = ticketService.findById(id);
+//        if(ticket.isPresent()) {
+//            model.addAttribute("ticket", ticket.get());
+//            return "ticket/view";
+//        }
+//        return "redirect:/tickets";
+//
+//    }
 
     // TODO create html page for edit
 
@@ -109,5 +108,6 @@ public class TicketController {
                 })
                 .orElse("redirect:/tickets");
     }
+
 
 }
