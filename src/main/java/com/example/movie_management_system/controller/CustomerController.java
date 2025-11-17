@@ -30,7 +30,7 @@ public class CustomerController {
 
     @GetMapping("/add")
     public String showAddForm() {
-        return "/customer/form"; // templates/customers/add.html
+        return "/customer/form";
     }
 
     @PostMapping
