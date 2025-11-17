@@ -30,7 +30,7 @@
         <td th:text="${seat.seatRow}"></td>
         <td th:text="${seat.seatColumn}"></td>
         <td>
-            <a th:href="@{|/seats/${seat.id}|}">View</a> |
+            <a th:href="@{|/seats/view/${seat.id}|}">View</a> |
             <form th:action="@{|/seats/remove/${seat.id}|}" method="post" style="display:inline;">
                 <button type="submit" onclick="return confirm('Are you sure you want to remove this seat?');">
                     Remove

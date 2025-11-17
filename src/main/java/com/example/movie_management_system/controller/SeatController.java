@@ -40,4 +40,14 @@ public class SeatController {
         return "redirect:/seats";
     }
 
+    @GetMapping("view/{id}")
+    public String viewSeat(@PathVariable String id, Model model) {
+        return seatService.findById(id)
+                .map(customer -> {
+                    model.addAttribute("seat", customer);
+                    return "seat/view";
+                })
+                .orElse("redirect:/seats");
+    }
+
 }
