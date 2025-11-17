@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/tickets")
+
 public class TicketController {
     private final TicketService ticketService;
 
@@ -51,9 +52,9 @@ public class TicketController {
 //        model.addAttribute("seats", availableSeats);
 //    }
 
-    // TODO create html page for view
-
-
+//    // TODO create html page for view
+//
+//
 //    @GetMapping("/view/{id}")
 //    public String viewTicket(Model model, @PathVariable String id) {
 //        Optional<Ticket> ticket = ticketService.findById(id);
@@ -64,31 +65,26 @@ public class TicketController {
 //        return "redirect:/tickets";
 //
 //    }
-
-    // TODO create html page for edit
-
-    @GetMapping("/update/{id}")
-    public String createUpdateForm(Model model, @PathVariable String id) {
-        Optional<Ticket> ticket = ticketService.findById(id);
-        if(ticket.isPresent()) {
-            model.addAttribute("ticket", ticket.get());
-            return "ticket/edit";
-        }
-        return "redirect:/tickets";
-
-    }
+//
+//    // TODO create html page for edit
+//
+//    @GetMapping("/update/{id}")
+//    public String createUpdateForm(Model model, @PathVariable String id) {
+//        Optional<Ticket> ticket = ticketService.findById(id);
+//        if(ticket.isPresent()) {
+//            model.addAttribute("ticket", ticket.get());
+//            return "ticket/edit";
+//        }
+//        return "redirect:/tickets";
+//
+//    }
 
     // TODO create update function
 
     @PostMapping("/update/{id}")
     public String updateTicket(@PathVariable String id, @RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
         Optional<Ticket> ticket = ticketService.findById(id);
-        if(ticketService.update(id, screeningId, customerId, seatId, price))
-            System.out.println("ticket updated successfully");
-        else  {
-            System.err.println("ticket not found");
-            // show error
-        }
+        ticketService.update(id, screeningId, customerId, seatId, price);
         return "redirect:/tickets";
     }
 
@@ -100,7 +96,7 @@ public class TicketController {
     }
 
     @GetMapping("view/{id}")
-    public String viewSeat(@PathVariable String id, Model model) {
+    public String viewTicket(@PathVariable String id, Model model) {
         return ticketService.findById(id)
                 .map(ticket -> {
                     model.addAttribute("ticket", ticket);
@@ -108,6 +104,5 @@ public class TicketController {
                 })
                 .orElse("redirect:/tickets");
     }
-
 
 }
