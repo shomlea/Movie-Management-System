@@ -1,0 +1,90 @@
+{
+  "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u" : {
+    "id" : "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "hallId" : "e3f4g5h6-i7j8-9k0l-1m2n-3o4p5q6r7s8t",
+    "movieId" : "4d5e6f7a-8b9c-0123-4567-890abcdef123",
+    "date" : "2025-11-19",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "a0b1c2d3-e4f5-6789-a1b2-c3d4e5f6g7h8" : {
+    "id" : "a0b1c2d3-e4f5-6789-a1b2-c3d4e5f6g7h8",
+    "hallId" : "j8k9l0m1-n2o3-4p5q-6r7s-8t9u0v1w2x3y",
+    "movieId" : "9c0d1e2f-3a4b-5678-90bc-def123456789",
+    "date" : "2025-11-22",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v" : {
+    "id" : "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "hallId" : "f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u",
+    "movieId" : "5e6f7a8b-9c0d-1234-5678-90abcdef1234",
+    "date" : "2025-11-20",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r" : {
+    "id" : "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "hallId" : "b88367f4-8422-4e38-90a7-80f628f965b1",
+    "movieId" : "1a2b3c4d-5e6f-7890-1234-567890abcdef",
+    "date" : "2025-11-18",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t" : {
+    "id" : "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "hallId" : "d2e3f4g5-h6i7-8j9k-0l1m-2n3o4p5q6r7s",
+    "movieId" : "3c4d5e6f-7a8b-9012-3456-7890abcdef12",
+    "date" : "2025-11-19",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x" : {
+    "id" : "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "hallId" : "h6i7j8k9-l0m1-2n3o-4p5q-6r7s8t9u0v1w",
+    "movieId" : "7a8b9c0d-1e2f-3456-7890-abcdef123456",
+    "date" : "2025-11-21",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "10825b89-a29b-48fa-97f2-ef1b66bebaa3" : {
+    "id" : "10825b89-a29b-48fa-97f2-ef1b66bebaa3",
+    "hallId" : "a20d23a6-caf4-416a-949d-ebac081fb818",
+    "movieId" : "e03df297-2eee-4dcd-9211-8c64b1722f51",
+    "date" : "2025-11-05",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s" : {
+    "id" : "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "hallId" : "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r",
+    "movieId" : "2b3c4d5e-6f7a-8901-2345-67890abcdef1",
+    "date" : "2025-11-18",
+    "tickets" : [ ],
+    "assignments" : [ {
+      "id" : "77d25736-41ac-422d-a364-d39e27371c7d",
+      "screeningId" : "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+      "staffId" : "4c6e80a2-3b5d-7f91-a0c2-e4f68g0h2i4j"
+    } ]
+  },
+  "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y" : {
+    "id" : "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y",
+    "hallId" : "i7j8k9l0-m1n2-3o4p-5q6r-7s8t9u0v1w2x",
+    "movieId" : "8b9c0d1e-2f3a-4567-890b-cdef12345678",
+    "date" : "2025-11-21",
+    "tickets" : [ ],
+    "assignments" : [ ]
+  },
+  "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w" : {
+    "id" : "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "hallId" : "g5h6i7j8-k9l0-1m2n-3o4p-5q6r7s8t9u0v",
+    "movieId" : "6f7a8b9c-0d1e-2345-6789-0abcdef12345",
+    "date" : "2025-11-20",
+    "tickets" : [ ],
+    "assignments" : [ {
+      "id" : "0af25fa0-559c-4efc-8a13-dab24864330b",
+      "screeningId" : "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+      "staffId" : "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x"
+    } ]
+  }
+}

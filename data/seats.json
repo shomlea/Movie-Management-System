@@ -1,0 +1,62 @@
+{
+  "51bfaa15-2ae7-45d3-8a51-69aa5ff34b76" : {
+    "id" : "51bfaa15-2ae7-45d3-8a51-69aa5ff34b76",
+    "hallId" : "afb2a239-62af-4eaf-b160-d028815f0d7a",
+    "seatRow" : "A",
+    "seatColumn" : "1"
+  },
+  "0a2a53e8-0c9e-4bbf-aafa-4916ea1b9dd0" : {
+    "id" : "0a2a53e8-0c9e-4bbf-aafa-4916ea1b9dd0",
+    "hallId" : "123",
+    "seatRow" : "A",
+    "seatColumn" : "1"
+  },
+  "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r" : {
+    "id" : "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r",
+    "hallId" : "afb2a239-62af-4eaf-b160-d028815f0d7a",
+    "seatRow" : "A",
+    "seatColumn" : "2"
+  },
+  "d2e3f4g5-h6i7-8j9k-0l1m-2n3o4p5q6r7s" : {
+    "id" : "d2e3f4g5-h6i7-8j9k-0l1m-2n3o4p5q6r7s",
+    "hallId" : "123",
+    "seatRow" : "B",
+    "seatColumn" : "5"
+  },
+  "e3f4g5h6-i7j8-9k0l-1m2n-3o4p5q6r7s8t" : {
+    "id" : "e3f4g5h6-i7j8-9k0l-1m2n-3o4p5q6r7s8t",
+    "hallId" : "afb2a239-62af-4eaf-b160-d028815f0d7a",
+    "seatRow" : "C",
+    "seatColumn" : "3"
+  },
+  "f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u" : {
+    "id" : "f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u",
+    "hallId" : "123",
+    "seatRow" : "D",
+    "seatColumn" : "8"
+  },
+  "g5h6i7j8-k9l0-1m2n-3o4p-5q6r7s8t9u0v" : {
+    "id" : "g5h6i7j8-k9l0-1m2n-3o4p-5q6r7s8t9u0v",
+    "hallId" : "afb2a239-62af-4eaf-b160-d028815f0d7a",
+    "seatRow" : "E",
+    "seatColumn" : "10"
+  },
+  "h6i7j8k9-l0m1-2n3o-4p5q-6r7s8t9u0v1w" : {
+    "id" : "h6i7j8k9-l0m1-2n3o-4p5q-6r7s8t9u0v1w",
+    "hallId" : "123",
+    "seatRow" : "F",
+    "seatColumn" : "2"
+  },
+  "i7j8k9l0-m1n2-3o4p-5q6r-7s8t9u0v1w2x" : {
+    "id" : "i7j8k9l0-m1n2-3o4p-5q6r-7s8t9u0v1w2x",
+    "hallId" : "afb2a239-62af-4eaf-b160-d028815f0d7a",
+    "seatRow" : "G",
+    "seatColumn" : "7"
+  },
+  "j8k9l0m1-n2o3-4p5q-6r7s-8t9u0v1w2x3y" : {
+    "id" : "j8k9l0m1-n2o3-4p5q-6r7s-8t9u0v1w2x3y",
+    "hallId" : "123",
+    "seatRow" : "H",
+    "seatColumn" : "4"
+  }
+}

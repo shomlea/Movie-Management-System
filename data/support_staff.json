@@ -1,0 +1,62 @@
+{
+  "7e8dbc44-2898-4da9-8a8f-f50113f52f46" : {
+    "id" : "7e8dbc44-2898-4da9-8a8f-f50113f52f46",
+    "name" : "Bob",
+    "salary" : 1234.00,
+    "role" : "USHER"
+  },
+  "d8e72580-96b1-4acb-a402-4a0ffe307aa1" : {
+    "id" : "d8e72580-96b1-4acb-a402-4a0ffe307aa1",
+    "name" : "Dob",
+    "salary" : 2383.00,
+    "role" : "CLEANING"
+  },
+  "0c1a2b3c-4d5e-6f70-8a9b-c0d1e2f3g4h5" : {
+    "id" : "0c1a2b3c-4d5e-6f70-8a9b-c0d1e2f3g4h5",
+    "name" : "Alice",
+    "salary" : 2500.50,
+    "role" : "SECURITY"
+  },
+  "a1b2c3d4-e5f6-7890-1234-567890abcdef" : {
+    "id" : "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "name" : "Charlie",
+    "salary" : 1850.00,
+    "role" : "USHER"
+  },
+  "f1e2d3c4-b5a6-9870-6543-210fedcba987" : {
+    "id" : "f1e2d3c4-b5a6-9870-6543-210fedcba987",
+    "name" : "Diana",
+    "salary" : 3200.75,
+    "role" : "SECURITY"
+  },
+  "13579bdf-2468-ace0-f0e1-d2c3b4a597e8" : {
+    "id" : "13579bdf-2468-ace0-f0e1-d2c3b4a597e8",
+    "name" : "Ethan",
+    "salary" : 1900.00,
+    "role" : "CLEANING"
+  },
+  "2a4c6e80-1b3d-5f79-8h0j-2k4l6m8n0pqr" : {
+    "id" : "2a4c6e80-1b3d-5f79-8h0j-2k4l6m8n0pqr",
+    "name" : "Fiona",
+    "salary" : 1250.00,
+    "role" : "USHER"
+  },
+  "3b5d7f91-2a4c-6e80-9g1i-3k5m7o9p1r3t" : {
+    "id" : "3b5d7f91-2a4c-6e80-9g1i-3k5m7o9p1r3t",
+    "name" : "George",
+    "salary" : 2800.00,
+    "role" : "SECURITY"
+  },
+  "4c6e80a2-3b5d-7f91-a0c2-e4f68g0h2i4j" : {
+    "id" : "4c6e80a2-3b5d-7f91-a0c2-e4f68g0h2i4j",
+    "name" : "Hannah",
+    "salary" : 1550.25,
+    "role" : "CLEANING"
+  },
+  "5d7f91b3-4c6e-80a2-b1d3-f5g79h1j3k5m" : {
+    "id" : "5d7f91b3-4c6e-80a2-b1d3-f5g79h1j3k5m",
+    "name" : "Isaac",
+    "salary" : 3500.00,
+    "role" : "SECURITY"
+  }
+}
