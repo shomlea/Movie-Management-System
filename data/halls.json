@@ -1,0 +1,89 @@
+{
+  "a20d23a6-caf4-416a-949d-ebac081fb818" : {
+    "id" : "a20d23a6-caf4-416a-949d-ebac081fb818",
+    "name" : "Test Hall Alpha",
+    "theatreId" : "3e9df004-13fc-4cc4-8de3-9df73bbe7f45",
+    "capacity" : 123,
+    "seats" : [ ],
+    "screenings" : [ {
+      "id" : "10825b89-a29b-48fa-97f2-ef1b66bebaa3",
+      "hallId" : "a20d23a6-caf4-416a-949d-ebac081fb818",
+      "movieId" : "e03df297-2eee-4dcd-9211-8c64b1722f51",
+      "date" : "2025-11-05",
+      "tickets" : [ ],
+      "assignments" : [ ]
+    } ]
+  },
+  "g5h6i7j8-k9l0-1m2n-3o4p-5q6r7s8t9u0v" : {
+    "id" : "g5h6i7j8-k9l0-1m2n-3o4p-5q6r7s8t9u0v",
+    "name" : "Retro Hall 5",
+    "theatreId" : "e5f6g7h8-c9d0-1234-5678-90abcdef1234",
+    "capacity" : 100,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "d2e3f4g5-h6i7-8j9k-0l1m-2n3o4p5q6r7s" : {
+    "id" : "d2e3f4g5-h6i7-8j9k-0l1m-2n3o4p5q6r7s",
+    "name" : "Balcony View",
+    "theatreId" : "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+    "capacity" : 150,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "h6i7j8k9-l0m1-2n3o-4p5q-6r7s8t9u0v1w" : {
+    "id" : "h6i7j8k9-l0m1-2n3o-4p5q-6r7s8t9u0v1w",
+    "name" : "Luxury Lounge",
+    "theatreId" : "f6g7h8i9-d0e1-2345-6789-0abcdef12345",
+    "capacity" : 50,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "i7j8k9l0-m1n2-3o4p-5q6r-7s8t9u0v1w2x" : {
+    "id" : "i7j8k9l0-m1n2-3o4p-5q6r-7s8t9u0v1w2x",
+    "name" : "Main Hall 3",
+    "theatreId" : "g7h8i9j0-e1f2-3456-7890-abcdef123456",
+    "capacity" : 220,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "e3f4g5h6-i7j8-9k0l-1m2n-3o4p5q6r7s8t" : {
+    "id" : "e3f4g5h6-i7j8-9k0l-1m2n-3o4p5q6r7s8t",
+    "name" : "Imax Hall",
+    "theatreId" : "c3d4e5f6-a7b8-9012-3456-7890abcdef12",
+    "capacity" : 450,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "j8k9l0m1-n2o3-4p5q-6r7s-8t9u0v1w2x3y" : {
+    "id" : "j8k9l0m1-n2o3-4p5q-6r7s-8t9u0v1w2x3y",
+    "name" : "Screening Room 2",
+    "theatreId" : "h8i9j0k1-f2g3-4567-890a-bcdef1234567",
+    "capacity" : 90,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "b88367f4-8422-4e38-90a7-80f628f965b1" : {
+    "id" : "b88367f4-8422-4e38-90a7-80f628f965b1",
+    "name" : "Main Stage 1",
+    "theatreId" : "3e9df004-13fc-4cc4-8de3-9df73bbe7f45",
+    "capacity" : 200,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r" : {
+    "id" : "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r",
+    "name" : "Premier Screen",
+    "theatreId" : "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    "capacity" : 300,
+    "seats" : [ ],
+    "screenings" : [ ]
+  },
+  "f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u" : {
+    "id" : "f4g5h6i7-j8k9-0l1m-2n3o-4p5q6r7s8t9u",
+    "name" : "Small Auditorium",
+    "theatreId" : "d4e5f6g7-b8c9-0123-4567-890abcdef123",
+    "capacity" : 75,
+    "seats" : [ ],
+    "screenings" : [ ]
+  }
+}

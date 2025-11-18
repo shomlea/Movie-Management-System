@@ -35,10 +35,10 @@ public class TicketController {
     @GetMapping("/add")
     public String createForm(Model model){
         List<Screening> availableScreenings = ticketService.getAvailableScreenings();
-        model.addAttribute("screenings", availableScreenings);
+        model.addAttribute("availableScreenings", availableScreenings);
 
         List<Customer> availableCustomers = ticketService.getAvailableCustomers();
-        model.addAttribute("customers", availableCustomers);
+        model.addAttribute("availableCustomers", availableCustomers);
 
 
         return "ticket/form";

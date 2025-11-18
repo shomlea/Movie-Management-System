@@ -1,0 +1,79 @@
+{
+  "1a2b3c4d-5e6f-7890-1234-567890abcdef" : {
+    "id" : "1a2b3c4d-5e6f-7890-1234-567890abcdef",
+    "title" : "Cosmic Journey",
+    "durationMin" : 145,
+    "genre" : "Sci-Fi",
+    "screenings" : [ ]
+  },
+  "2b3c4d5e-6f7a-8901-2345-67890abcdef1" : {
+    "id" : "2b3c4d5e-6f7a-8901-2345-67890abcdef1",
+    "title" : "The Hidden City",
+    "durationMin" : 98,
+    "genre" : "Adventure",
+    "screenings" : [ ]
+  },
+  "6f7a8b9c-0d1e-2345-6789-0abcdef12345" : {
+    "id" : "6f7a8b9c-0d1e-2345-6789-0abcdef12345",
+    "title" : "The Last Laugh",
+    "durationMin" : 90,
+    "genre" : "Comedy",
+    "screenings" : [ ]
+  },
+  "5e6f7a8b-9c0d-1234-5678-90abcdef1234" : {
+    "id" : "5e6f7a8b-9c0d-1234-5678-90abcdef1234",
+    "title" : "Iron Fist",
+    "durationMin" : 130,
+    "genre" : "Action",
+    "screenings" : [ ]
+  },
+  "e03df297-2eee-4dcd-9211-8c64b1722f51" : {
+    "id" : "e03df297-2eee-4dcd-9211-8c64b1722f51",
+    "title" : "test",
+    "durationMin" : 123,
+    "genre" : "123",
+    "screenings" : [ {
+      "id" : "10825b89-a29b-48fa-97f2-ef1b66bebaa3",
+      "hallId" : "a20d23a6-caf4-416a-949d-ebac081fb818",
+      "movieId" : "e03df297-2eee-4dcd-9211-8c64b1722f51",
+      "date" : "2025-11-05",
+      "tickets" : [ ],
+      "assignments" : [ ]
+    } ]
+  },
+  "4d5e6f7a-8b9c-0123-4567-890abcdef123" : {
+    "id" : "4d5e6f7a-8b9c-0123-4567-890abcdef123",
+    "title" : "Romantic Dusk",
+    "durationMin" : 105,
+    "genre" : "Romance",
+    "screenings" : [ ]
+  },
+  "9c0d1e2f-3a4b-5678-90bc-def123456789" : {
+    "id" : "9c0d1e2f-3a4b-5678-90bc-def123456789",
+    "title" : "Lost in the Woods",
+    "durationMin" : 125,
+    "genre" : "Horror",
+    "screenings" : [ ]
+  },
+  "8b9c0d1e-2f3a-4567-890b-cdef12345678" : {
+    "id" : "8b9c0d1e-2f3a-4567-890b-cdef12345678",
+    "title" : "Digital Dream",
+    "durationMin" : 118,
+    "genre" : "Fantasy",
+    "screenings" : [ ]
+  },
+  "7a8b9c0d-1e2f-3456-7890-abcdef123456" : {
+    "id" : "7a8b9c0d-1e2f-3456-7890-abcdef123456",
+    "title" : "Historical Echo",
+    "durationMin" : 160,
+    "genre" : "Drama",
+    "screenings" : [ ]
+  },
+  "3c4d5e6f-7a8b-9012-3456-7890abcdef12" : {
+    "id" : "3c4d5e6f-7a8b-9012-3456-7890abcdef12",
+    "title" : "Silent Witness",
+    "durationMin" : 112,
+    "genre" : "Thriller",
+    "screenings" : [ ]
+  }
+}

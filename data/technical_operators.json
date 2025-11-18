@@ -1,0 +1,62 @@
+{
+  "04e0ff36-76da-4eda-b39c-f5d690497076" : {
+    "id" : "04e0ff36-76da-4eda-b39c-f5d690497076",
+    "name" : "Trey",
+    "salary" : 1233.0,
+    "specialization" : "PROJECTION"
+  },
+  "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q" : {
+    "id" : "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "name" : "Olivia",
+    "salary" : 3500.0,
+    "specialization" : "SOUND"
+  },
+  "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r" : {
+    "id" : "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "name" : "Max",
+    "salary" : 3800.50,
+    "specialization" : "PROJECTION"
+  },
+  "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s" : {
+    "id" : "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "name" : "Sophia",
+    "salary" : 3200.75,
+    "specialization" : "SOUND"
+  },
+  "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t" : {
+    "id" : "4e5f6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
+    "name" : "Liam",
+    "salary" : 4100.0,
+    "specialization" : "PROJECTION"
+  },
+  "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u" : {
+    "id" : "5f6g7h8i-9j0k-1l2m-3n4o-5p6q7r8s9t0u",
+    "name" : "Emma",
+    "salary" : 3450.25,
+    "specialization" : "SOUND"
+  },
+  "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v" : {
+    "id" : "6g7h8i9j-0k1l-2m3n-4o5p-6q7r8s9t0u1v",
+    "name" : "Noah",
+    "salary" : 3950.0,
+    "specialization" : "PROJECTION"
+  },
+  "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w" : {
+    "id" : "7h8i9j0k-1l2m-3n4o-5p6q-7r8s9t0u1v2w",
+    "name" : "Ava",
+    "salary" : 3150.99,
+    "specialization" : "SOUND"
+  },
+  "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x" : {
+    "id" : "8i9j0k1l-2m3n-4o5p-6q7r-8s9t0u1v2w3x",
+    "name" : "Elijah",
+    "salary" : 4200.0,
+    "specialization" : "PROJECTION"
+  },
+  "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y" : {
+    "id" : "9j0k1l2m-3n4o-5p6q-7r8s-9t0u1v2w3x4y",
+    "name" : "Mia",
+    "salary" : 3300.0,
+    "specialization" : "SOUND"
+  }
+}
