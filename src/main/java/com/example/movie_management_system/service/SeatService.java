@@ -82,6 +82,7 @@ public class SeatService {
         return seatRepository.findAll();
     }
 
+    @Transactional
     public Optional<Seat> findById(String id) {
         return seatRepository.findById(id);
     }
