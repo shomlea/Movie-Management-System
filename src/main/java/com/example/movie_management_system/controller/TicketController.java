@@ -21,14 +21,14 @@ public class TicketController {
 
     @GetMapping
     public String getAllTickets(Model model) {
-        List<Ticket> tickets = ticketService.getAll();
+        List<Ticket> tickets = ticketService.findAll();
         model.addAttribute("tickets", tickets);
         return "ticket/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeTicket(@PathVariable String id) {
-        ticketService.remove(id);
+        ticketService.delete(id);
         return "redirect:/tickets";
     }
 
@@ -44,42 +44,6 @@ public class TicketController {
         return "ticket/form";
     }
 
-    // TODO implement with dynamic http
-
-//    @GetMapping
-//    public void fetchAvailableSeats(@RequestParam String screeningId, Model model) {
-//        List<Seat> availableSeats = ticketService.getAvailableSeats(screeningId);
-//        model.addAttribute("seats", availableSeats);
-//    }
-
-//    // TODO create html page for view
-//
-//
-//    @GetMapping("/view/{id}")
-//    public String viewTicket(Model model, @PathVariable String id) {
-//        Optional<Ticket> ticket = ticketService.findById(id);
-//        if(ticket.isPresent()) {
-//            model.addAttribute("ticket", ticket.get());
-//            return "ticket/view";
-//        }
-//        return "redirect:/tickets";
-//
-//    }
-//
-//    // TODO create html page for edit
-//
-//    @GetMapping("/update/{id}")
-//    public String createUpdateForm(Model model, @PathVariable String id) {
-//        Optional<Ticket> ticket = ticketService.findById(id);
-//        if(ticket.isPresent()) {
-//            model.addAttribute("ticket", ticket.get());
-//            return "ticket/edit";
-//        }
-//        return "redirect:/tickets";
-//
-//    }
-
-    // TODO create update function
 
     @PostMapping("/update/{id}")
     public String updateTicket(@PathVariable String id, @RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
@@ -91,7 +55,7 @@ public class TicketController {
 
     @PostMapping
         public String createTicket(@RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
-        ticketService.add(screeningId, customerId, seatId, price);
+        ticketService.save(screeningId, customerId, seatId, price);
         return "redirect:/tickets";
     }
 

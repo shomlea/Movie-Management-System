@@ -24,7 +24,7 @@ public class SupportStaffController {
 
     @GetMapping
     public String listAll(Model model) {
-        List<SupportStaff> staffList = supportStaffService.getAll();
+        List<SupportStaff> staffList = supportStaffService.findAll();
         model.addAttribute("supportStaff", staffList);
         return "supportStaff/index";
     }
@@ -41,13 +41,13 @@ public class SupportStaffController {
             @RequestParam("salary") double salary,
             @RequestParam("role") Role role
     ) {
-        supportStaffService.add(name, salary, role);
+        supportStaffService.save(name, salary, role);
         return "redirect:/support-staff";
     }
 
     @PostMapping("/remove/{id}")
     public String removeSupportStaff(@PathVariable String id) {
-        supportStaffService.remove(id);
+        supportStaffService.delete(id);
         return "redirect:/support-staff";
     }
 

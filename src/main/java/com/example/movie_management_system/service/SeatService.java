@@ -78,11 +78,11 @@ public class SeatService {
         return hallService.findAll();
     }
 
-    public List<Seat> getAll() {
+    public List<Seat> findAll() {
         return seatRepository.findAll();
     }
 
-    @Transactional
+
     public Optional<Seat> findById(String id) {
         return seatRepository.findById(id);
     }

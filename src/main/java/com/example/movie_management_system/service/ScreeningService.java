@@ -72,7 +72,6 @@ public class ScreeningService {
         return movieService.findAll();
     }
 
-    @Transactional
     public Optional<Screening> findById(String id) {
         return screeningRepository.findById(id);
     }

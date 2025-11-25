@@ -130,7 +130,7 @@ public class HallService {
         }
     }
 
-    @Transactional
+
     public Optional<Hall> findById(String id) {
         return hallRepository.findById(id);
     }

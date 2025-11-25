@@ -39,7 +39,7 @@ public class MovieService {
     public void delete(String id) {
         movieRepository.deleteById(id);
     }
-    @Transactional
+
     public Optional<Movie> findById(String id) {
         return movieRepository.findById(id);
     }

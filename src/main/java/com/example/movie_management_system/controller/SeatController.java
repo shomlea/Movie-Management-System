@@ -18,7 +18,7 @@ public class SeatController {
 
     @GetMapping
     public String getAllSeats(Model model) {
-        List<Seat> seats = seatService.getAll();
+        List<Seat> seats = seatService.findAll();
         model.addAttribute("seats", seats);
         return "seat/index";
     }
