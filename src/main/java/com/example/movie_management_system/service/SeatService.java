@@ -4,7 +4,6 @@ import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.repository.SeatRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,51 +13,76 @@ import java.util.UUID;
 
 @Service
 public class SeatService {
-    @Autowired
+
     private final SeatRepository seatRepository;
     private final HallService hallService;
 
-    public SeatService(SeatRepository seatRepository, HallService hallService)
-    {
+    public SeatService(SeatRepository seatRepository, HallService hallService) {
         this.seatRepository = seatRepository;
         this.hallService = hallService;
     }
+
     @Transactional
-    public void save(String hallId, String seatRow, String seatColumn ) {
+    public void save(String hallId, String seatRow, String seatColumn) {
+
+        Hall hall = hallService.findById(hallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall with id " + hallId + " not found"));
+
         String id = UUID.randomUUID().toString();
         Seat seat = new Seat(id, hallId, seatRow, seatColumn);
-        if(hallService.findById(hallId).isPresent()) {
-            seatRepository.save(seat);
-            hallService.addSeat(hallId, seat);
-        }
-    }
-    @Transactional
-    public void update(String id, String hallId, String seatRow, String seatColumn) {
-        Seat seat = new Seat(id, hallId, seatRow, seatColumn);
-        hallService.updateSeat(hallId, id, seat);
+
+        // Add seat to hall (hall is the owning side logically)
+        hall.addSeat(seat);
+
+        // Persist seat
         seatRepository.save(seat);
     }
 
     @Transactional
-    public void delete(String id) {
-        Optional<Seat> seat = seatRepository.findById(id);
-        if (!seat.isPresent()) {
-            throw new NoSuchElementException("Seat with id " + id + " not found");
+    public void update(String id, String hallId, String seatRow, String seatColumn) {
+        Seat seat = seatRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Seat with id " + id + " not found"));
+
+        seat.setSeatRow(seatRow);
+        seat.setSeatColumn(seatColumn);
+
+        if (!seat.getHallId().equals(hallId)) {
+            Hall oldHall = hallService.findById(seat.getHallId())
+                    .orElseThrow(() -> new NoSuchElementException("Old hall not found"));
+
+            Hall newHall = hallService.findById(hallId)
+                    .orElseThrow(() -> new NoSuchElementException("New hall not found"));
+
+            oldHall.removeSeat(id);
+            newHall.addSeat(seat);
+
+            seat.setHallId(hallId);
         }
-        hallService.removeSeat(seat.get().getHallId(), id);
-        seatRepository.deleteById(id);
 
     }
 
-    public List<Hall> getAvailableHalls(){
+    @Transactional
+    public void delete(String id) {
+        Seat seat = seatRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Seat with id " + id + " not found"));
+
+        Hall hall = hallService.findById(seat.getHallId())
+                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
+
+        hall.removeSeat(id);
+
+        seatRepository.deleteById(id);
+    }
+
+    public List<Hall> getAvailableHalls() {
         return hallService.findAll();
     }
 
     public List<Seat> getAll() {
         return seatRepository.findAll();
     }
+
     public Optional<Seat> findById(String id) {
         return seatRepository.findById(id);
     }
 }
-

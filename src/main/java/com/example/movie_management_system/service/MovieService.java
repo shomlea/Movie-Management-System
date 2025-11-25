@@ -1,7 +1,6 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Movie;
-import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.repository.MovieRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -19,54 +18,25 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-
     public void add(String title, int durationMin, String genre) {
         String id = UUID.randomUUID().toString();
         Movie movie = new Movie(id, title, durationMin, genre);
         movieRepository.save(movie);
     }
 
-    public void update(String id, String title,  int durationMin, String genre) {
-        Movie movie = new Movie(id, title, durationMin, genre);
-        movieRepository.save(movie);
+    @Transactional
+    public void update(String id, String title, int durationMin, String genre) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Movie with id " + id + " not found"));
+
+        movie.setTitle(title);
+        movie.setDurationMin(durationMin);
+        movie.setGenre(genre);
+        // No need to call save() — JPA updates automatically
     }
 
     public void delete(String id) {
         movieRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void addScreening(String id, Screening screening){
-        Optional<Movie> optionalMovie = movieRepository.findById(id);
-        if (optionalMovie.isEmpty()){
-            throw new NoSuchElementException("Movie with id " + id + " not found");
-        }
-        Movie movie = optionalMovie.get();
-        movie.addScreening(screening);
-        movieRepository.save(movie);
-    }
-
-    @Transactional
-    public void removeScreening(String id, String screeningId){
-        Optional<Movie> optionalMovie = movieRepository.findById(id);
-        if (optionalMovie.isEmpty()){
-            throw new NoSuchElementException("Movie with id " + id + " not found");
-        }
-        Movie movie = optionalMovie.get();
-        movie.removeScreening(screeningId);
-        movieRepository.save(movie);
-
-    }
-
-    @Transactional
-    public void updateScreening(String id, String screeningId, Screening screening){
-        Optional<Movie> optionalMovie = movieRepository.findById(id);
-        if (optionalMovie.isEmpty()){
-            throw new NoSuchElementException("Movie with id " + id + " not found");
-        }
-        Movie movie = optionalMovie.get();
-        movie.updateScreening(screeningId, screening);
-        movieRepository.save(movie);
     }
 
     public Optional<Movie> findById(String id) {

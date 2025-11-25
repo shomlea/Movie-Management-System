@@ -12,54 +12,64 @@ import java.util.UUID;
 
 @Service
 public class ScreeningService {
+
     private final ScreeningRepository screeningRepository;
     private final MovieService movieService;
     private final HallService hallService;
 
-    public ScreeningService(ScreeningRepository screeningRepository, MovieService movieService, HallService hallService) {
+    public ScreeningService(ScreeningRepository screeningRepository,
+                            MovieService movieService,
+                            HallService hallService) {
         this.screeningRepository = screeningRepository;
         this.movieService = movieService;
         this.hallService = hallService;
     }
+
     @Transactional
     public void save(String hallId, String movieId, String date) {
-        String id = UUID.randomUUID().toString();
-        Screening screening = new Screening(id, hallId, movieId, date);
-        if(hallService.findById(hallId).isPresent() && movieService.findById(movieId).isPresent()) {
-            screeningRepository.save(screening);
-            movieService.addScreening(movieId, screening);
-            hallService.addScreening(hallId, screening);
-        }
+
+        hallService.findById(hallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
+
+        movieService.findById(movieId)
+                .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+
+        Screening screening = new Screening(
+                UUID.randomUUID().toString(), hallId, movieId, date
+        );
+
+        screeningRepository.save(screening);
     }
+
     @Transactional
-    public void update(String id, String hallId, String movieId, String date){
-        Screening existingScreening = screeningRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
+    public void update(String id, String hallId, String movieId, String date) {
 
-        existingScreening.setHallId(hallId);
-        existingScreening.setMovieId(movieId);
-        existingScreening.setDate(date);
+        Screening screening = screeningRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
 
-        movieService.updateScreening(existingScreening.getMovieId(), id, existingScreening);
-        hallService.updateScreening(hallId, id, existingScreening);
-        screeningRepository.save(existingScreening);
-    }
+        // Validate foreign keys again
+        hallService.findById(hallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
 
-    public List<Movie> getAvailableMovies(){
-        return movieService.findAll();
+        movieService.findById(movieId)
+                .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+
+        screening.setHallId(hallId);
+        screening.setMovieId(movieId);
+        screening.setDate(date);
+
     }
 
     @Transactional
     public void delete(String id) {
-        Optional<Screening> screening = screeningRepository.findById(id);
-        if (screening.isEmpty()) {
-            throw new NoSuchElementException("Ticket with id " + id + " not found");
-        }
-        hallService.removeScreening(screening.get().getHallId(), id);
-        movieService.removeScreening(screening.get().getMovieId(), id);
-        screeningRepository.deleteById(id);
+        Screening screening = screeningRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
 
+        screeningRepository.delete(screening);
+    }
 
+    public List<Movie> getAvailableMovies() {
+        return movieService.findAll();
     }
 
     public Optional<Screening> findById(String id) {
@@ -70,38 +80,36 @@ public class ScreeningService {
         return screeningRepository.findAll();
     }
 
+
     @Transactional
     public void addStaffAssignment(String id, StaffAssignment staffAssignment) {
+
         Screening screening = screeningRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
 
         screening.addAssignment(staffAssignment);
-
-        screeningRepository.save(screening);
+        // screeningRepository.save(screening); // Not needed if mapped correctly
     }
 
     @Transactional
     public void removeStaffAssignment(String id, String staffAssignmentId) {
+
         Screening screening = screeningRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
 
-        boolean removed = screening.removeAssignment(staffAssignmentId);
-
-        if (removed) {
-            screeningRepository.save(screening);
+        if (screening.removeAssignment(staffAssignmentId)) {
+            // auto-update inside transaction
         }
-
     }
 
     @Transactional
-    public void updateStaffAssignment(String id, String staffAssignmentId, StaffAssignment staffAssignment) {
+    public void updateStaffAssignment(String id, String staffAssignmentId, StaffAssignment updated) {
+
         Screening screening = screeningRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
 
-        boolean updated = screening.updateAssignment(staffAssignmentId, staffAssignment);
-
-        if (updated) {
-            screeningRepository.save(screening);
+        if (screening.updateAssignment(staffAssignmentId, updated)) {
+            // auto-update
         }
     }
 }
