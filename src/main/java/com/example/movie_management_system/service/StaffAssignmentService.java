@@ -38,15 +38,13 @@ public class StaffAssignmentService {
     }
 
     @Transactional
-    public boolean delete(String id) {
+    public void delete(String id) {
         Optional<StaffAssignment> staffAssignment = staffAssignmentRepository.findById(id);
         if (!staffAssignment.isPresent()) {
             throw new NoSuchElementException("StaffAssignment with id " + id + " not found");
         }
         screeningService.removeStaffAssignment(staffAssignment.get().getScreeningId(), id);
         staffAssignmentRepository.deleteById(id);
-
-        return true;
     }
 
     public List<Staff> getAvailableStaff(){
