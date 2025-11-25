@@ -94,7 +94,7 @@ public class ScreeningService {
     }
 
     @Transactional
-    public boolean updateStaffAssignment(String id, String staffAssignmentId, StaffAssignment staffAssignment) {
+    public void updateStaffAssignment(String id, String staffAssignmentId, StaffAssignment staffAssignment) {
         Screening screening = screeningRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
 
@@ -103,6 +103,5 @@ public class ScreeningService {
         if (updated) {
             screeningRepository.save(screening);
         }
-        return updated;
     }
 }
