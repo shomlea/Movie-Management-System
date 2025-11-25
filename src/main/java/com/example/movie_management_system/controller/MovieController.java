@@ -21,14 +21,14 @@ public class MovieController {
 
     @GetMapping
     public String getAllMovies(Model model) {
-        List<Movie> movies = movieService.getAll();
+        List<Movie> movies = movieService.findAll();
         model.addAttribute("movies", movies);
         return "movie/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeMovie(@PathVariable String id) {
-        movieService.remove(id);
+        movieService.delete(id);
         return "redirect:/movies";
     }
 
