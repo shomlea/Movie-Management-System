@@ -16,13 +16,13 @@ public class TheatreService {
     public TheatreService(TheatreRepository theatreRepository) {
         this.theatreRepository = theatreRepository;
     }
-
+    @Transactional
     public void save(String name, String city, int parkingCapacity) {
         String id = UUID.randomUUID().toString();
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
         theatreRepository.save(theatre);
     }
-
+    @Transactional
     public void update(String id, String name, String city, int parkingCapacity) {
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
         theatreRepository.save(theatre);
@@ -63,7 +63,7 @@ public class TheatreService {
         }
         return updated;
     }
-
+    @Transactional
     public void delete(String id) {
         theatreRepository.deleteById(id);
     }
