@@ -2,7 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Theatre;
-import com.example.movie_management_system.repository.TheatreRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.TheatreRepositoryInFile;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;

@@ -2,10 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Seat;
-import com.example.movie_management_system.model.Ticket;
-import com.example.movie_management_system.repository.HallRepositoryInFile;
-import com.example.movie_management_system.repository.SeatRepositoryInFile;
-import com.example.movie_management_system.repository.deprecated.SeatRepositoryInMemory;
+import com.example.movie_management_system.repository.deprecated.SeatRepositoryInFile;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,29 +2,22 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Ticket;
-import com.example.movie_management_system.repository.CustomerRepositoryInFile;
+import com.example.movie_management_system.repository.CustomerRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CustomerService {
 
-    private final CustomerRepositoryInFile customerRepository;
+    private final CustomerRepository customerRepository;
 
-    public CustomerService(CustomerRepositoryInFile customerRepository) {
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
 
-    public void add(String name) {
-        String id = UUID.randomUUID().toString();
-        Customer customer = new Customer(id, name);
-        customerRepository.add(customer);
-    }
 
     public void addTicket(String customerId, Ticket ticket) {
 //        customerRepository.addTicket(customerId, ticket);
@@ -33,7 +26,7 @@ public class CustomerService {
             Customer customer = optionalCustomer.get();
             customer.addTicket(ticket);
 
-            customerRepository.update(customerId, customer);
+            customerRepository.save(customer);
         }
     }
 
@@ -46,7 +39,7 @@ public class CustomerService {
             removedTicket = customer.removeTicket(ticketId);
 
             if(removedTicket)
-                customerRepository.update(customerId, customer);
+                customerRepository.save(customer);
         }
         return removedTicket;
     }
@@ -58,7 +51,7 @@ public class CustomerService {
             Customer customer = optionalCustomer.get();
             customer.updateTicket(ticketId, ticket);
 
-            customerRepository.update(customerId, customer);
+            customerRepository.save(customer);
         }
 
     }
@@ -72,13 +65,26 @@ public class CustomerService {
         return new ArrayList<>();
     }
 
-    public boolean update(String id, String name) {
+    @Transactional
+    public void add(String name) {
+        String id = UUID.randomUUID().toString();
         Customer customer = new Customer(id, name);
-        return customerRepository.update(id, customer);
+        customerRepository.save(customer);
     }
 
+    @Transactional
+    public boolean update(String id, String name) {
+//        Customer customer = new Customer(id, name);
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Customer with ID " + id + " not found."));
+        customer.setName(name);
+        customerRepository.save(customer);
+
+        return true;
+    }
+    @Transactional
     public void remove(String id) {
-        customerRepository.remove(id);
+        customerRepository.deleteById(id);
     }
 
     public Optional<Customer> findById(String id) {
@@ -86,6 +92,6 @@ public class CustomerService {
     }
 
     public List<Customer> getAll() {
-        return customerRepository.getAll();
+        return customerRepository.findAll();
     }
 }

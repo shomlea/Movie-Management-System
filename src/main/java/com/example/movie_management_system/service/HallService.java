@@ -4,8 +4,7 @@ import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Theatre;
-import com.example.movie_management_system.repository.HallRepositoryInFile;
-import com.example.movie_management_system.repository.TheatreRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.HallRepositoryInFile;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
