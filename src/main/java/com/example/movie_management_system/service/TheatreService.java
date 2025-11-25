@@ -2,7 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Theatre;
-import com.example.movie_management_system.repository.deprecated.TheatreRepositoryInFile;
+import com.example.movie_management_system.repository.TheatreRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,20 +12,20 @@ import java.util.UUID;
 
 @Service
 public class TheatreService {
-    private final TheatreRepositoryInFile theatreRepository;
-    public TheatreService(TheatreRepositoryInFile theatreRepository) {
+    private final TheatreRepository theatreRepository;
+    public TheatreService(TheatreRepository theatreRepository) {
         this.theatreRepository = theatreRepository;
     }
 
-    public void add(String name, String city, int parkingCapacity) {
+    public void save(String name, String city, int parkingCapacity) {
         String id = UUID.randomUUID().toString();
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
-        theatreRepository.add(theatre);
+        theatreRepository.save(theatre);
     }
 
-    public boolean update(String id, String name, String city, int parkingCapacity) {
+    public void update(String id, String name, String city, int parkingCapacity) {
         Theatre theatre = new Theatre(id, name, city, parkingCapacity);
-        return theatreRepository.update(id, theatre);
+        theatreRepository.save(theatre);
     }
 
     @Transactional
@@ -35,7 +35,7 @@ public class TheatreService {
 
         theatre.addHall(hall);
 
-        theatreRepository.update(theatreId, theatre);
+        theatreRepository.save(theatre);
     }
 
     @Transactional
@@ -46,7 +46,7 @@ public class TheatreService {
         boolean removed = theatre.removeHall(hallId);
 
         if (removed) {
-            theatreRepository.update(theatreId, theatre);
+            theatreRepository.save(theatre);
         }
         return removed;
     }
@@ -59,21 +59,21 @@ public class TheatreService {
         boolean updated = theatre.updateHall(hallId, updatedHall);
 
         if (updated) {
-            theatreRepository.update(theatreId, theatre);
+            theatreRepository.save(theatre);
         }
         return updated;
     }
 
-    public void remove(String id) {
-        theatreRepository.remove(id);
+    public void delete(String id) {
+        theatreRepository.deleteById(id);
     }
 
     public Optional<Theatre> findById(String id) {
         return theatreRepository.findById(id);
     }
 
-    public List<Theatre> getAll() {
-        return theatreRepository.getAll();
+    public List<Theatre> findAll() {
+        return theatreRepository.findAll();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.*;
-import com.example.movie_management_system.repository.deprecated.StaffAssignmentRepositoryInFile;
+import com.example.movie_management_system.repository.StaffAssignmentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -9,25 +9,23 @@ import java.util.*;
 
 @Service
 public class StaffAssignmentService {
-    private final StaffAssignmentRepositoryInFile staffAssignmentRepository;
+    private final StaffAssignmentRepository staffAssignmentRepository;
     private final SupportStaffService supportStaffService;
     private final TechnicalOperatorService technicalOperatorService;
     private final ScreeningService screeningService;
 
-
-
-    public StaffAssignmentService(StaffAssignmentRepositoryInFile staffAssignmentRepository,  SupportStaffService supportStaffService, TechnicalOperatorService technicalOperatorService, ScreeningService screeningService) {
+    public StaffAssignmentService(StaffAssignmentRepository staffAssignmentRepository,  SupportStaffService supportStaffService, TechnicalOperatorService technicalOperatorService, ScreeningService screeningService) {
         this.staffAssignmentRepository = staffAssignmentRepository;
         this.supportStaffService = supportStaffService;
         this.technicalOperatorService = technicalOperatorService;
         this.screeningService = screeningService;
     }
     @Transactional
-    public void add(String screeningId, String staffId) {
+    public void save(String screeningId, String staffId) {
         String id = UUID.randomUUID().toString();
         StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
         if(screeningService.findById(screeningId).isPresent() && (supportStaffService.findById(staffId).isPresent() ||  technicalOperatorService.findById(staffId).isPresent())) {
-            staffAssignmentRepository.add(staffAssignment);
+            staffAssignmentRepository.save(staffAssignment);
             screeningService.addStaffAssignment(screeningId, staffAssignment);
         }
     }
@@ -35,30 +33,30 @@ public class StaffAssignmentService {
     public boolean update(String id, String screeningId, String staffId){
         StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
         screeningService.removeStaffAssignment(screeningId, id);
-        staffAssignmentRepository.update(id, staffAssignment);
+        staffAssignmentRepository.save(staffAssignment);
         return true;
     }
 
     @Transactional
-    public boolean remove(String id) {
+    public boolean delete(String id) {
         Optional<StaffAssignment> staffAssignment = staffAssignmentRepository.findById(id);
         if (!staffAssignment.isPresent()) {
             throw new NoSuchElementException("StaffAssignment with id " + id + " not found");
         }
         screeningService.removeStaffAssignment(staffAssignment.get().getScreeningId(), id);
-        staffAssignmentRepository.remove(id);
+        staffAssignmentRepository.deleteById(id);
 
         return true;
     }
 
     public List<Staff> getAvailableStaff(){
-        List<Staff> staff = new ArrayList<>(supportStaffService.getAll());
-        staff.addAll(technicalOperatorService.getAll());
+        List<Staff> staff = new ArrayList<>(supportStaffService.findAll());
+        staff.addAll(technicalOperatorService.findAll());
         return staff;
     }
 
     public List<Screening> getAvailableScreenings(){
-        return screeningService.getAll();
+        return screeningService.findAll();
     }
 
 
@@ -67,8 +65,8 @@ public class StaffAssignmentService {
         return staffAssignmentRepository.findById(id);
     }
 
-    public List<StaffAssignment> getAll()
+    public List<StaffAssignment> findAll()
     {
-        return staffAssignmentRepository.getAll();
+        return staffAssignmentRepository.findAll();
     }
 }
