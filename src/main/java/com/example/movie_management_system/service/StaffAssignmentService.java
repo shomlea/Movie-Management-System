@@ -1,7 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.*;
-import com.example.movie_management_system.repository.StaffAssignmentRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.StaffAssignmentRepositoryInFile;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

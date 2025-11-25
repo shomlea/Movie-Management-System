@@ -2,7 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Specialization;
 import com.example.movie_management_system.model.TechnicalOperator;
-import com.example.movie_management_system.repository.TechnicalOperatorRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.TechnicalOperatorRepositoryInFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

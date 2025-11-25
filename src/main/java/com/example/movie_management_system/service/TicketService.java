@@ -4,7 +4,7 @@ import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Ticket;
-import com.example.movie_management_system.repository.TicketRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.TicketRepositoryInFile;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

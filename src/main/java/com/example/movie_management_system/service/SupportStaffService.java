@@ -2,7 +2,7 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Role;
 import com.example.movie_management_system.model.SupportStaff;
-import com.example.movie_management_system.repository.SupportStaffRepositoryInFile;
+import com.example.movie_management_system.repository.deprecated.SupportStaffRepositoryInFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

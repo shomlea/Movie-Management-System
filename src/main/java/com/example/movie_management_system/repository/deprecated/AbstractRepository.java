@@ -1,4 +1,4 @@
-package com.example.movie_management_system.repository;
+package com.example.movie_management_system.repository.deprecated;
 
 import java.util.List;
 import java.util.Optional;
