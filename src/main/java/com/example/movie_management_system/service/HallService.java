@@ -4,7 +4,7 @@ import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Theatre;
-import com.example.movie_management_system.repository.deprecated.HallRepositoryInFile;
+import com.example.movie_management_system.repository.HallRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,33 +15,51 @@ import java.util.UUID;
 
 @Service
 public class HallService {
-    private final HallRepositoryInFile hallRepository;
+
+    private final HallRepository hallRepository;
     private final TheatreService theatreService;
 
-    public HallService(HallRepositoryInFile hallRepository, TheatreService theatreService) {
+    public HallService(HallRepository hallRepository, TheatreService theatreService) {
         this.hallRepository = hallRepository;
         this.theatreService = theatreService;
     }
 
-    public void add(String name, String theatreId, int capacity){
+    // CREATE
+    @Transactional
+    public void save(String name, String theatreId, int capacity) {
         String id = UUID.randomUUID().toString();
+
+        // ensure theatre exists
+        Theatre theatre = theatreService.findById(theatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+
         Hall hall = new Hall(id, name, theatreId, capacity);
-        if(theatreService.findById(theatreId).isPresent()){
-            hallRepository.add(hall);
-        }
-
+        hallRepository.save(hall);
     }
 
-    public boolean update(String id, String name,  String theatreId, int capacity){
-        Hall hall = new Hall(id, name, theatreId, capacity);
-        return hallRepository.update(id, hall);
+    // UPDATE BASIC INFO
+    @Transactional
+    public Hall update(String id, String name, String theatreId, int capacity) {
+        Hall hall = hallRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Hall with ID " + id + " not found."));
+
+        // optional: validate theatre exists
+        theatreService.findById(theatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+
+        hall.setName(name);
+        hall.setTheatreId(theatreId);
+        hall.setCapacity(capacity);
+
+        return hallRepository.save(hall);
     }
 
-    public void remove(String hallId){
-        hallRepository.remove(hallId);
+    @Transactional
+    public void delete(String hallId) {
+        hallRepository.deleteById(hallId);
     }
 
-    public List<Theatre> getAvailableTheatres(){
+    public List<Theatre> getAvailableTheatres() {
         return theatreService.getAll();
     }
 
@@ -51,34 +69,31 @@ public class HallService {
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         hall.addSeat(seat);
-
-        hallRepository.add(hall);
+        hallRepository.save(hall);
     }
 
     @Transactional
-    public boolean removeSeat(String hallId, String seatId) {
+    public void removeSeat(String hallId, String seatId) {
         Hall hall = hallRepository.findById(hallId)
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         boolean removed = hall.removeSeat(seatId);
 
         if (removed) {
-            hallRepository.add(hall);
+            hallRepository.save(hall);
         }
-        return removed;
     }
 
     @Transactional
-    public boolean updateSeat(String hallId, String seatId, Seat updatedSeat) {
+    public void updateSeat(String hallId, String seatId, Seat updatedSeat) {
         Hall hall = hallRepository.findById(hallId)
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         boolean updated = hall.updateSeat(seatId, updatedSeat);
 
         if (updated) {
-            hallRepository.update(hallId, hall);
+            hallRepository.save(hall);
         }
-        return updated;
     }
 
 
@@ -88,41 +103,39 @@ public class HallService {
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         hall.addScreening(screening);
-
-        hallRepository.update(hallId, hall);
+        hallRepository.save(hall);
     }
 
     @Transactional
-    public boolean removeScreening(String hallId, String screeningId) {
+    public void removeScreening(String hallId, String screeningId) {
         Hall hall = hallRepository.findById(hallId)
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         boolean removed = hall.removeScreening(screeningId);
 
         if (removed) {
-            hallRepository.update(hallId, hall);
+            hallRepository.save(hall);
         }
-        return removed;
     }
 
     @Transactional
-    public boolean updateScreening(String hallId, String screeningId, Screening updatedScreening) {
+    public void updateScreening(String hallId, String screeningId, Screening updatedScreening) {
         Hall hall = hallRepository.findById(hallId)
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         boolean updated = hall.updateScreening(screeningId, updatedScreening);
 
         if (updated) {
-            hallRepository.update(hallId, hall);
+            hallRepository.save(hall);
         }
-        return updated;
     }
 
+    @Transactional
     public Optional<Hall> findById(String id) {
         return hallRepository.findById(id);
     }
 
-    public List<Hall> getAll() {
-        return hallRepository.getAll();
+    public List<Hall> findAll() {
+        return hallRepository.findAll();  // JPA method
     }
 }

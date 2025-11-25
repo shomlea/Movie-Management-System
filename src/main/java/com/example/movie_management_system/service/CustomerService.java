@@ -66,7 +66,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void add(String name) {
+    public void save(String name) {
         String id = UUID.randomUUID().toString();
         Customer customer = new Customer(id, name);
         customerRepository.save(customer);
@@ -83,7 +83,7 @@ public class CustomerService {
         return true;
     }
     @Transactional
-    public void remove(String id) {
+    public void delete(String id) {
         customerRepository.deleteById(id);
     }
 
@@ -91,7 +91,7 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
-    public List<Customer> getAll() {
+    public List<Customer> findAll() {
         return customerRepository.findAll();
     }
 }
