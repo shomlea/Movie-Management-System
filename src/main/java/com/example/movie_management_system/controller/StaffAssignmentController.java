@@ -22,7 +22,7 @@ public class StaffAssignmentController {
 
     @GetMapping
     public String listAll(Model model) {
-        List<StaffAssignment> assignments = staffAssignmentService.getAll();
+        List<StaffAssignment> assignments = staffAssignmentService.findAll();
         model.addAttribute("staffAssignments", assignments);
         return "staffAssignment/index"; // template: templates/staffAssignment/index.html
     }
@@ -38,13 +38,13 @@ public class StaffAssignmentController {
             @RequestParam("screeningId") String screeningId,
             @RequestParam("staffId") String staffId
     ) {
-        staffAssignmentService.add(screeningId, staffId);
+        staffAssignmentService.save(screeningId, staffId);
         return "redirect:/staff-assignments";
     }
 
     @PostMapping("/remove/{id}")
     public String removeStaffAssignment(@PathVariable String id) {
-        staffAssignmentService.remove(id);
+        staffAssignmentService.delete(id);
         return "redirect:/staff-assignments";
     }
     @GetMapping("view/{id}")

@@ -60,7 +60,7 @@ public class HallService {
     }
 
     public List<Theatre> getAvailableTheatres() {
-        return theatreService.getAll();
+        return theatreService.findAll();
     }
 
     @Transactional
@@ -130,7 +130,7 @@ public class HallService {
         }
     }
 
-    @Transactional
+
     public Optional<Hall> findById(String id) {
         return hallRepository.findById(id);
     }
