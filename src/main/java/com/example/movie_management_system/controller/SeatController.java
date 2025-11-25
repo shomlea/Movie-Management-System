@@ -25,7 +25,7 @@ public class SeatController {
 
     @PostMapping("/remove/{id}")
     public String removeSeat(@PathVariable String id){
-        seatService.remove(id);
+        seatService.delete(id);
         return "redirect:/seats";
     }
 
@@ -36,7 +36,7 @@ public class SeatController {
 
     @PostMapping
     public String createSeat(@RequestParam String hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
-        seatService.add(hallId, seatRow, seatColumn);
+        seatService.save(hallId, seatRow, seatColumn);
         return "redirect:/seats";
     }
 

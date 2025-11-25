@@ -19,14 +19,14 @@ public class HallController {
 
     @GetMapping
     public String getAllHalls(Model model) {
-        List<Hall> halls = hallService.getAll();
+        List<Hall> halls = hallService.findAll();
         model.addAttribute("halls", halls);
         return "hall/index";
     }
 
     @PostMapping("/remove/{id}")
     public String removeHall(@PathVariable String id) {
-        hallService.remove(id);
+        hallService.delete(id);
         return "redirect:/halls";
     }
 
@@ -37,7 +37,7 @@ public class HallController {
 
     @PostMapping
     public String createHall(@RequestParam String name, @RequestParam String theatreId, @RequestParam int capacity) {
-        hallService.add(name, theatreId, capacity);
+        hallService.save(name, theatreId, capacity);
         return "redirect:/halls";
     }
 

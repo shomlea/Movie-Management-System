@@ -11,20 +11,20 @@ import java.util.List;
 @Controller
 @RequestMapping ("/customers")
 public class CustomerController {
-    private CustomerService customerService;
+    private final CustomerService customerService;
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
     @GetMapping
     public String GetAllCustomers(Model model) {
-        List<Customer> customers = customerService.getAll();
+        List<Customer> customers = customerService.findAll();
         model.addAttribute("customers", customers);
         return "customer/index";
     }
     
     @PostMapping("/remove/{id}")
     public String removeCustomer(@PathVariable String id) {
-        customerService.remove(id);
+        customerService.delete(id);
         return "redirect:/customers";
     }
 
@@ -35,7 +35,7 @@ public class CustomerController {
 
     @PostMapping
     public String createCustomer(@RequestParam String name) {
-        customerService.add(name);
+        customerService.save(name);
         return "redirect:/customers";
     }
 

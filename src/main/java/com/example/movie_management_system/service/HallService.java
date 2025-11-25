@@ -60,7 +60,7 @@ public class HallService {
     }
 
     public List<Theatre> getAvailableTheatres() {
-        return theatreService.getAll();
+        return theatreService.findAll();
     }
 
     @Transactional
