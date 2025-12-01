@@ -27,7 +27,7 @@ public class MovieController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeMovie(@PathVariable String id) {
+    public String removeMovie(@PathVariable Long id) {
         movieService.delete(id);
         return "redirect:/movies";
     }
@@ -39,11 +39,11 @@ public class MovieController {
 
     @PostMapping
     public String createMovie(@RequestParam String title, @RequestParam String genre, @RequestParam int durationMin) {
-        movieService.add(title, durationMin, genre);
+        movieService.save(title, durationMin, genre);
         return "redirect:/movies";
     }
     @GetMapping("view/{id}")
-    public String viewMovie(@PathVariable String id, Model model) {
+    public String viewMovie(@PathVariable Long id, Model model) {
         return movieService.findById(id)
                 .map(customer -> {
                     model.addAttribute("movie", customer);
@@ -52,7 +52,7 @@ public class MovieController {
                 .orElse("redirect:/movies");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return movieService.findById(id)
                 .map(movie -> {
                     model.addAttribute("movie", movie);
@@ -62,7 +62,7 @@ public class MovieController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@PathVariable String id, @RequestParam String title, @RequestParam int durationMin, @RequestParam String genre) {
+    public String updateCustomer(@PathVariable Long id, @RequestParam String title, @RequestParam int durationMin, @RequestParam String genre) {
         movieService.update(id, title, durationMin, genre);
         return "redirect:/movies";
     }

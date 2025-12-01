@@ -27,7 +27,7 @@ public class TicketController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeTicket(@PathVariable String id) {
+    public String removeTicket(@PathVariable Long id) {
         ticketService.delete(id);
         return "redirect:/tickets";
     }
@@ -46,7 +46,7 @@ public class TicketController {
 
 
     @PostMapping("/update/{id}")
-    public String updateTicket(@PathVariable String id, @RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
+    public String updateTicket(@PathVariable Long id, @RequestParam Long screeningId, @RequestParam Long customerId, @RequestParam Long seatId, @RequestParam double price) {
         Optional<Ticket> ticket = ticketService.findById(id);
         ticketService.update(id, screeningId, customerId, seatId, price);
         return "redirect:/tickets";
@@ -54,13 +54,13 @@ public class TicketController {
 
 
     @PostMapping
-        public String createTicket(@RequestParam String screeningId, @RequestParam String customerId, @RequestParam String seatId, @RequestParam double price) {
+        public String createTicket(@RequestParam Long screeningId, @RequestParam Long customerId, @RequestParam Long seatId, @RequestParam double price) {
         ticketService.save(screeningId, customerId, seatId, price);
         return "redirect:/tickets";
     }
 
     @GetMapping("view/{id}")
-    public String viewTicket(@PathVariable String id, Model model) {
+    public String viewTicket(@PathVariable Long id, Model model) {
         return ticketService.findById(id)
                 .map(ticket -> {
                     model.addAttribute("ticket", ticket);

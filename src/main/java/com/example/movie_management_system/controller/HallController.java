@@ -25,7 +25,7 @@ public class HallController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeHall(@PathVariable String id) {
+    public String removeHall(@PathVariable Long id) {
         hallService.delete(id);
         return "redirect:/halls";
     }
@@ -36,13 +36,13 @@ public class HallController {
     }
 
     @PostMapping
-    public String createHall(@RequestParam String name, @RequestParam String theatreId, @RequestParam int capacity) {
+    public String createHall(@RequestParam String name, @RequestParam Long theatreId, @RequestParam int capacity) {
         hallService.save(name, theatreId, capacity);
         return "redirect:/halls";
     }
 
     @GetMapping("view/{id}")
-    public String viewHall(@PathVariable String id, Model model) {
+    public String viewHall(@PathVariable Long id, Model model) {
         return hallService.findById(id)
                 .map(hall -> {
                     model.addAttribute("hall", hall);
@@ -51,7 +51,7 @@ public class HallController {
                 .orElse("redirect:/halls");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return hallService.findById(id)
                 .map(hall -> {
                     model.addAttribute("hall", hall);
@@ -61,7 +61,7 @@ public class HallController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@PathVariable String id, @RequestParam String name, @RequestParam String theatreId, @RequestParam int capacity) {
+    public String updateCustomer(@PathVariable Long id, @RequestParam String name, @RequestParam Long theatreId, @RequestParam int capacity) {
         hallService.update(id, name, theatreId, capacity);
         return "redirect:/halls";
     }

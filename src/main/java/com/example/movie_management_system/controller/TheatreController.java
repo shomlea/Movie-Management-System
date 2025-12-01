@@ -47,7 +47,7 @@ public class TheatreController {
     }
 
     @GetMapping("view/{id}")
-    public String viewSeat(@PathVariable String id, Model model) {
+    public String viewSeat(@PathVariable Long id, Model model) {
         return theatreService.findById(id)
                 .map(theatre -> {
                     model.addAttribute("theatre", theatre);
@@ -57,7 +57,7 @@ public class TheatreController {
     }
 
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return theatreService.findById(id)
                 .map(theatre -> {
                     model.addAttribute("theatre", theatre);
@@ -68,7 +68,7 @@ public class TheatreController {
 
     @PostMapping("/update/{id}")
     public String updateSupportStaff(
-            @PathVariable String id,
+            @PathVariable Long id,
             @RequestParam String name,
             @RequestParam String city,
             @RequestParam int parkingCapacity) {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -25,7 +26,7 @@ public class ScreeningController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeScreening(@PathVariable String id) {
+    public String removeScreening(@PathVariable Long id) {
         screeningService.delete(id);
         return "redirect:/screenings";
     }
@@ -36,13 +37,13 @@ public class ScreeningController {
     }
 
     @PostMapping
-    public String createScreening(@RequestParam String hallId, @RequestParam String movieId, @RequestParam String date) {
+    public String createScreening(@RequestParam Long hallId, @RequestParam Long movieId, @RequestParam LocalDate date) {
         screeningService.save(hallId, movieId, date);
         return "redirect:/screenings";
     }
 
     @GetMapping("/view/{id}")
-    public String viewScreening(@PathVariable String id, Model model) {
+    public String viewScreening(@PathVariable Long id, Model model) {
         return screeningService.findById(id)
                 .map(screening -> {
                     model.addAttribute("screening", screening);
@@ -52,7 +53,7 @@ public class ScreeningController {
     }
 
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return screeningService.findById(id)
                 .map(screening -> {
                     model.addAttribute("screening", screening);
@@ -63,10 +64,10 @@ public class ScreeningController {
 
     @PostMapping("/update/{id}")
     public String updateScreening(
-            @PathVariable String id,
-            @RequestParam String hallId,
-            @RequestParam String movieId,
-            @RequestParam String date) {
+            @PathVariable Long id,
+            @RequestParam Long hallId,
+            @RequestParam Long movieId,
+            @RequestParam LocalDate date) {
 
         screeningService.update(id, hallId, movieId, date);
         return "redirect:/screenings";

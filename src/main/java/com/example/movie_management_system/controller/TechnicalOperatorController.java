@@ -47,13 +47,13 @@ public class TechnicalOperatorController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeTechnicalOperator(@PathVariable String id) {
+    public String removeTechnicalOperator(@PathVariable Long id) {
         technicalOperatorService.delete(id);
         return "redirect:/technical-operators";
     }
 
     @GetMapping("view/{id}")
-    public String viewSeat(@PathVariable String id, Model model) {
+    public String viewSeat(@PathVariable Long id, Model model) {
         return technicalOperatorService.findById(id)
                 .map(technicalOperator -> {
                     model.addAttribute("technicalOperator", technicalOperator);
@@ -62,7 +62,7 @@ public class TechnicalOperatorController {
                 .orElse("redirect:/technical-operators");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return technicalOperatorService.findById(id)
                 .map(staff -> {
                     model.addAttribute("technicalOperator", staff);
@@ -74,7 +74,7 @@ public class TechnicalOperatorController {
 
     @PostMapping("/update/{id}")
     public String updateSupportStaff(
-            @PathVariable String id,
+            @PathVariable Long id,
             @RequestParam String name,
             @RequestParam double salary,
             @RequestParam Specialization specialization) {
