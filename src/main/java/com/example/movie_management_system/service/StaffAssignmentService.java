@@ -22,12 +22,12 @@ public class StaffAssignmentService {
     }
 
     private Staff findStaffById(Long staffId) {
-        Optional<Staff> foundSupportStaff = supportStaffService.findById(staffId);
+        Optional<SupportStaff> foundSupportStaff = supportStaffService.findById(staffId);
         if (foundSupportStaff.isPresent()) {
             return foundSupportStaff.get();
         }
 
-        Optional<Staff> foundTechnicalOperator = technicalOperatorService.findById(staffId);
+        Optional<TechnicalOperator> foundTechnicalOperator = technicalOperatorService.findById(staffId);
         if (foundTechnicalOperator.isPresent()) {
             return foundTechnicalOperator.get();
         }
