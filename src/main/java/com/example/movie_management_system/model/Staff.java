@@ -1,21 +1,25 @@
 package com.example.movie_management_system.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Staff {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Staff name is required.")
     private String name;
 
     @Column(nullable = false)
+    @Positive(message = "Salary should be a positive number")
     private double salary; // added attribute
 
-    public Staff(String id, String name, double salary){
-        this.id = id;
+    public Staff(String name, double salary){
         this.name = name;
         this.salary = salary;
     }
@@ -24,7 +28,7 @@ public abstract class Staff {
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
     public String getName() {
@@ -32,7 +36,7 @@ public abstract class Staff {
     }
     public double getSalary() {return salary;}
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public void setName(String name) {
