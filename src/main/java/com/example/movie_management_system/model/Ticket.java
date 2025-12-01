@@ -1,18 +1,22 @@
 package com.example.movie_management_system.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Ticket {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String screeningId;
+
+    @Column(nullable = false)
     private String customerId;
+
+    @Column(nullable = false)
     private String seatId;
+
+    @Column(nullable = false)
     private double price;
 
     public Ticket(String id, String screeningId, String customerId, String seatId, double price) {

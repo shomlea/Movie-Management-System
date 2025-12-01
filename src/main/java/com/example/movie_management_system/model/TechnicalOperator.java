@@ -1,12 +1,12 @@
 package com.example.movie_management_system.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "staffId")
 public class TechnicalOperator extends Staff{
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Specialization specialization;
 
     public TechnicalOperator(String id, String name, double salary, Specialization specialization) {

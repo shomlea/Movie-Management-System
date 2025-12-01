@@ -9,14 +9,21 @@ import java.util.List;
 @Entity
 public class Hall {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String theatreId;
+
+    @Column(nullable = false)
     private int capacity;
-    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats = new ArrayList<>();
-    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "hallId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Screening> screenings = new ArrayList<>();
 
     public Hall(String id, String name, String theatreId, int capacity) {

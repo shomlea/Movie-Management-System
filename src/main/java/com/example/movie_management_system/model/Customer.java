@@ -8,10 +8,10 @@ import java.util.List;
 @Entity
 public class Customer {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    @Column(nullable = false)
     private String name;
-    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets= new ArrayList<>();
 
     public Customer(String id, String name) {
