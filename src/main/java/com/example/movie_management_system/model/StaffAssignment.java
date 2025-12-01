@@ -5,41 +5,43 @@ import jakarta.persistence.*;
 @Entity
 public class StaffAssignment {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String screeningId;
+    @ManyToOne
+    @JoinColumn(name = "screening_id", nullable = false)
+    private Screening screening;
 
-    @Column(nullable = false)
-    private String staffId;
+    @ManyToOne
+    @JoinColumn(name = "staff_id", nullable = false)
+    private Staff staff;
 
-    public StaffAssignment(String id, String screeningId, String staffId) {
-        this.id = id;
-        this.screeningId = screeningId;
-        this.staffId = staffId;
+    public StaffAssignment(Screening screening, Staff staff) {
+        this.screening = screening;
+        this.staff = staff;
     }
 
     public StaffAssignment() {
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
-    public String getScreeningId() {
-        return screeningId;
+    public Screening getScreening() {
+        return screening;
     }
-    public String getStaffId() {
-        return staffId;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    public void setScreeningId(String screeningId) {
-        this.screeningId = screeningId;
+    public void setScreening(Screening screening) {
+        this.screening = screening;
     }
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 }

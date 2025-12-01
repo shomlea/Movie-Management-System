@@ -23,53 +23,39 @@ public class SeatService {
     }
 
     @Transactional
-    public void save(String hallId, String seatRow, String seatColumn) {
+    public Seat save(Long hallId, String seatRow, String seatColumn) {
 
         Hall hall = hallService.findById(hallId)
                 .orElseThrow(() -> new NoSuchElementException("Hall with id " + hallId + " not found"));
 
-        String id = UUID.randomUUID().toString();
-        Seat seat = new Seat(id, hallId, seatRow, seatColumn);
+        Seat seat = new Seat(hall, seatRow, seatColumn);
 
-        // Add seat to hall (hall is the owning side logically)
-        hall.addSeat(seat);
-
-        // Persist seat
-        seatRepository.save(seat);
+        return seatRepository.save(seat);
     }
 
     @Transactional
-    public void update(String id, String hallId, String seatRow, String seatColumn) {
+    public Seat update(Long id, Long hallId, String seatRow, String seatColumn) {
         Seat seat = seatRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Seat with id " + id + " not found"));
+
+        Hall newHall = hallService.findById(hallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall with id " + hallId + " not found"));
 
         seat.setSeatRow(seatRow);
         seat.setSeatColumn(seatColumn);
 
-        if (!seat.getHallId().equals(hallId)) {
-            Hall oldHall = hallService.findById(seat.getHallId())
-                    .orElseThrow(() -> new NoSuchElementException("Old hall not found"));
-
-            Hall newHall = hallService.findById(hallId)
-                    .orElseThrow(() -> new NoSuchElementException("New hall not found"));
-
-            oldHall.removeSeat(id);
-            newHall.addSeat(seat);
-
-            seat.setHallId(hallId);
+        if (!seat.getHall().getId().equals(hallId)) {
+            seat.setHall(newHall);
         }
+
+        return seatRepository.save(seat);
 
     }
 
     @Transactional
-    public void delete(String id) {
+    public void delete(Long id) {
         Seat seat = seatRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Seat with id " + id + " not found"));
-
-        Hall hall = hallService.findById(seat.getHallId())
-                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
-
-        hall.removeSeat(id);
 
         seatRepository.deleteById(id);
     }
@@ -83,7 +69,7 @@ public class SeatService {
     }
 
 
-    public Optional<Seat> findById(String id) {
+    public Optional<Seat> findById(Long id) {
         return seatRepository.findById(id);
     }
 }

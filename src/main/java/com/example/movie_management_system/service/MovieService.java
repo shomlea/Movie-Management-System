@@ -18,29 +18,33 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public void add(String title, int durationMin, String genre) {
-        String id = UUID.randomUUID().toString();
-        Movie movie = new Movie(id, title, durationMin, genre);
-        movieRepository.save(movie);
+    @Transactional
+    public Movie save(String title, int durationMin, String genre) {
+        Movie movie = new Movie(title, durationMin, genre);
+        return movieRepository.save(movie);
     }
 
     @Transactional
-    public void update(String id, String title, int durationMin, String genre) {
+    public Movie update(Long id, String title, int durationMin, String genre) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Movie with id " + id + " not found"));
 
         movie.setTitle(title);
         movie.setDurationMin(durationMin);
         movie.setGenre(genre);
-        // No need to call save() — JPA updates automatically
+
+        return movieRepository.save(movie);
     }
 
     @Transactional
-    public void delete(String id) {
+    public void delete(Long id) {
+        if (!movieRepository.existsById(id)) {
+            throw new NoSuchElementException("Movie with ID " + id + " not found.");
+        }
         movieRepository.deleteById(id);
     }
 
-    public Optional<Movie> findById(String id) {
+    public Optional<Movie> findById(Long id) {
         return movieRepository.findById(id);
     }
 

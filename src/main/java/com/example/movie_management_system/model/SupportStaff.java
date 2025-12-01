@@ -1,16 +1,18 @@
 package com.example.movie_management_system.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "staffId")
 public class SupportStaff extends Staff{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull(message = "Role is required")
     private Role role;
 
-    public SupportStaff(String id, String name,double salary, Role role) {
-        super(id, name, salary);
+    public SupportStaff(String name,double salary, Role role) {
+        super(name, salary);
         this.role = role;
     }
 

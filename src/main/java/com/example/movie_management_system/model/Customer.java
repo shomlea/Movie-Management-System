@@ -1,6 +1,7 @@
 package com.example.movie_management_system.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +9,17 @@ import java.util.List;
 @Entity
 public class Customer {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false)
+    @NotBlank(message = "Customer name is required.")
     private String name;
-    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets= new ArrayList<>();
 
-    public Customer(String id, String name) {
-        this.id = id;
+    public Customer(String name) {
         this.name = name;
     }
 
@@ -23,7 +27,7 @@ public class Customer {
 
     }
 
-    public String getId(){
+    public Long getId(){
         return id;
     }
     public String getName(){
@@ -33,7 +37,7 @@ public class Customer {
         return tickets;
     }
 
-    public void setId(String id){
+    public void setId(Long id){
         this.id = id;
     }
     public void setName(String name){
@@ -43,25 +47,25 @@ public class Customer {
         this.tickets = tickets;
     }
 
-    public void addTicket(Ticket ticket){
-        tickets.add(ticket);
-    }
-    public boolean removeTicket(String ticketId){
-        return tickets.removeIf(ticket -> ticketId.equals(ticket.getId()));
-    }
-    public boolean updateTicket(String ticketId, Ticket ticket){
-        int index = -1;
-        for (int i = 0; i < tickets.size(); i++) {
-            if (ticketId.equals(tickets.get(i).getId())) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
-            tickets.set(index, ticket);
-            return true;
-        }
-        return false;
-    }
+//    public void addTicket(Ticket ticket){
+//        tickets.add(ticket);
+//    }
+//    public boolean removeTicket(Long ticketId){
+//        return tickets.removeIf(ticket -> ticketId.equals(ticket.getId()));
+//    }
+//    public boolean updateTicket(Long ticketId, Ticket ticket){
+//        int index = -1;
+//        for (int i = 0; i < tickets.size(); i++) {
+//            if (ticketId.equals(tickets.get(i).getId())) {
+//                index = i;
+//                break;
+//            }
+//        }
+//        if (index != -1) {
+//            tickets.set(index, ticket);
+//            return true;
+//        }
+//        return false;
+//    }
 
 }

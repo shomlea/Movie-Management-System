@@ -20,30 +20,53 @@ public class StaffAssignmentService {
         this.technicalOperatorService = technicalOperatorService;
         this.screeningService = screeningService;
     }
-    @Transactional
-    public void save(String screeningId, String staffId) {
-        String id = UUID.randomUUID().toString();
-        StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
-        if(screeningService.findById(screeningId).isPresent() && (supportStaffService.findById(staffId).isPresent() ||  technicalOperatorService.findById(staffId).isPresent())) {
-            staffAssignmentRepository.save(staffAssignment);
-            screeningService.addStaffAssignment(screeningId, staffAssignment);
+
+    private Staff findStaffById(Long staffId) {
+        Optional<SupportStaff> foundSupportStaff = supportStaffService.findById(staffId);
+        if (foundSupportStaff.isPresent()) {
+            return foundSupportStaff.get();
         }
-    }
-    @Transactional
-    public boolean update(String id, String screeningId, String staffId){
-        StaffAssignment staffAssignment = new StaffAssignment(id, screeningId, staffId);
-        screeningService.removeStaffAssignment(screeningId, id);
-        staffAssignmentRepository.save(staffAssignment);
-        return true;
+
+        Optional<TechnicalOperator> foundTechnicalOperator = technicalOperatorService.findById(staffId);
+        if (foundTechnicalOperator.isPresent()) {
+            return foundTechnicalOperator.get();
+        }
+
+        throw new NoSuchElementException("Staff with ID " + staffId + " not found.");
     }
 
     @Transactional
-    public void delete(String id) {
-        Optional<StaffAssignment> staffAssignment = staffAssignmentRepository.findById(id);
-        if (!staffAssignment.isPresent()) {
-            throw new NoSuchElementException("StaffAssignment with id " + id + " not found");
-        }
-        screeningService.removeStaffAssignment(staffAssignment.get().getScreeningId(), id);
+    public StaffAssignment save(Long screeningId, Long staffId) {
+        Screening screening = screeningService.findById(screeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+
+        Staff staff = findStaffById(staffId);
+
+        StaffAssignment staffAssignment = new StaffAssignment(screening, staff);
+
+        return staffAssignmentRepository.save(staffAssignment);
+    }
+    @Transactional
+    public StaffAssignment update(Long id, Long screeningId, Long staffId){
+
+        StaffAssignment staffAssignment = staffAssignmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("StaffAssignment with ID " + id + " not found."));
+
+        Screening screening = screeningService.findById(screeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+
+        Staff staff = findStaffById(staffId);
+
+        staffAssignment.setScreening(screening);
+        staffAssignment.setStaff(staff);
+
+        return staffAssignmentRepository.save(staffAssignment);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        staffAssignmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("StaffAssignment with ID " + id + " not found."));
         staffAssignmentRepository.deleteById(id);
     }
 
@@ -59,7 +82,7 @@ public class StaffAssignmentService {
 
 
 
-    public Optional<StaffAssignment> findById(String id) {
+    public Optional<StaffAssignment> findById(Long id) {
         return staffAssignmentRepository.findById(id);
     }
 

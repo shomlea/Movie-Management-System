@@ -28,14 +28,20 @@ public class TicketService {
     }
 
     @Transactional
-    public void save(String screeningID,String customerId, String seatId, double price) {
-        String id = UUID.randomUUID().toString();
-        Ticket ticket = new Ticket(id, screeningID, customerId, seatId, price);
-        if(screeningService.findById(screeningID).isPresent() && customerService.findById(customerId).isPresent() && seatService.findById(seatId).isPresent()) {
-            ticketRepository.save(ticket);
-            //screeningService.addTicket(screeningId, ticket);
-            customerService.addTicket(customerId, ticket);
-        }
+    public Ticket save(Long screeningId,Long customerId, Long seatId, double price) {
+        Screening screening = screeningService.findById(screeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+
+        Customer customer = customerService.findById(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer with ID " + customerId + " not found."));
+
+        Seat seat = seatService.findById(seatId)
+                .orElseThrow(() -> new NoSuchElementException("Seat with ID " + seatId + " not found."));
+
+
+        Ticket ticket = new Ticket(screening, customer, seat, price);
+
+        return ticketRepository.save(ticket);
     }
 
     public List<Screening> getAvailableScreenings() {
@@ -46,33 +52,43 @@ public class TicketService {
         return customerService.findAll();
     }
 
-    public List<Seat> getAvailableSeats(String screeningID) {
-        return seatService.findAll().stream().filter(screening -> screening.getId().equals(screeningID)).toList();
+    public List<Seat> getAvailableSeats(Long screeningId) {
+        return seatService.findAll().stream().filter(screening -> screening.getId().equals(screeningId)).toList();
     }
     @Transactional
-    public void update(String id, String screeningId, String customerId, String seatId, double price) {
-        Ticket ticket = new Ticket(id, screeningId, customerId, seatId, price);
-        ticketRepository.save(ticket);
-        customerService.updateTicket(customerId, id, ticket);
+    public Ticket update(Long id, Long screeningId, Long customerId, Long seatId, double price) {
+        Ticket existingTicket = ticketRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Ticket with ID " + id + " not found."));
 
+        Screening newScreening = screeningService.findById(screeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+
+        Customer newCustomer = customerService.findById(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer with ID " + customerId + " not found."));
+
+        Seat newSeat = seatService.findById(seatId)
+                .orElseThrow(() -> new NoSuchElementException("Seat with ID " + seatId + " not found."));
+
+        existingTicket.setScreening(newScreening);
+        existingTicket.setCustomer(newCustomer);
+        existingTicket.setSeat(newSeat);
+        existingTicket.setPrice(price);
+
+        return ticketRepository.save(existingTicket);
     }
 
     @Transactional
-    public boolean delete(String id) {
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        if (!ticket.isPresent()) {
-            throw new NoSuchElementException("Ticket with id " + id + " not found");
-        }
-        customerService.removeTicket(ticket.get().getCustomerId(), id);
+    public void delete(Long id) {
+        ticketRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Ticket with ID " + id + " not found"));
+
         ticketRepository.deleteById(id);
-
-        return true;
 
     }
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
     }
-    public Optional<Ticket> findById(String id) {
+    public Optional<Ticket> findById(Long id) {
         return ticketRepository.findById(id);
     }
 
