@@ -7,8 +7,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class TechnicalOperatorService {
@@ -19,26 +20,33 @@ public class TechnicalOperatorService {
     }
 
     @Transactional
-    public void save(String name, double salary, Specialization specialization) {
-        String id = UUID.randomUUID().toString();
-        TechnicalOperator technicalOperator = new TechnicalOperator(id, name, salary, specialization);
-        technicalOperatorRepository.save(technicalOperator);
+    public TechnicalOperator save(String name, double salary, Specialization specialization) {
+        TechnicalOperator technicalOperator = new TechnicalOperator(name, salary, specialization);
+        return technicalOperatorRepository.save(technicalOperator);
     }
 
     @Transactional
-    public void update(String id, String name, double salary, Specialization specialization) {
-        TechnicalOperator technicalOperator = new TechnicalOperator(id, name, salary, specialization);
-        technicalOperatorRepository.save(technicalOperator);
+    public TechnicalOperator update(Long id, String name, double salary, Specialization specialization) {
+        TechnicalOperator technicalOperator = technicalOperatorRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Technical Operator with ID " + id + " not found."));
+
+        technicalOperator.setName(name);
+        technicalOperator.setSalary(salary);
+        technicalOperator.setSpecialization(specialization);
+
+        return technicalOperatorRepository.save(technicalOperator);
     }
     @Transactional
-    public void delete(String id) {
+    public void delete(Long id) {
+        TechnicalOperator technicalOperator = technicalOperatorRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Technical Operator with ID " + id + " not found."));
         technicalOperatorRepository.deleteById(id);
     }
 
     public List<TechnicalOperator> findAll() {
         return technicalOperatorRepository.findAll();
     }
-    public Optional<TechnicalOperator> findById(String id) {
+    public Optional<TechnicalOperator> findById(Long id) {
         return technicalOperatorRepository.findById(id);
     }
 

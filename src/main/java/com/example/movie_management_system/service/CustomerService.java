@@ -18,76 +18,34 @@ public class CustomerService {
     }
 
 
-
-    public void addTicket(String customerId, Ticket ticket) {
-//        customerRepository.addTicket(customerId, ticket);
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            customer.addTicket(ticket);
-
-            customerRepository.save(customer);
-        }
-    }
-
-    public boolean removeTicket(String customerId, String ticketId) {
-//        return customerRepository.removeTicket(customerId, ticketId);
-        Optional<Customer>  optionalCustomer = customerRepository.findById(customerId);
-        boolean removedTicket = false;
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            removedTicket = customer.removeTicket(ticketId);
-
-            if(removedTicket)
-                customerRepository.save(customer);
-        }
-        return removedTicket;
-    }
-
-    public void updateTicket(String customerId, String ticketId, Ticket ticket) {
-//        return customerRepository.updateTicket(customerId, ticketId, ticket);
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            customer.updateTicket(ticketId, ticket);
-
-            customerRepository.save(customer);
-        }
-
-    }
-
-    public List<Ticket> getTickets(String customerId) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            return customer.getTickets();
-        }
-        return new ArrayList<>();
+    public List<Ticket> getTickets(Long customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found."));
+        return customer.getTickets();
     }
 
     @Transactional
-    public void save(String name) {
-        String id = UUID.randomUUID().toString();
-        Customer customer = new Customer(id, name);
-        customerRepository.save(customer);
+    public Customer save(String name) {
+        Customer customer = new Customer(name);
+        return customerRepository.save(customer);
     }
 
     @Transactional
-    public boolean update(String id, String name) {
-//        Customer customer = new Customer(id, name);
+    public Customer update(Long id, String name) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Customer with ID " + id + " not found."));
         customer.setName(name);
-        customerRepository.save(customer);
-
-        return true;
+        return customerRepository.save(customer);
     }
     @Transactional
-    public void delete(String id) {
+    public void delete(Long id) {
+        if (!customerRepository.existsById(id)) {
+            throw new NoSuchElementException("Customer with ID " + id + " not found.");
+        }
         customerRepository.deleteById(id);
     }
 
-    public Optional<Customer> findById(String id) {
+    public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id);
     }
 
