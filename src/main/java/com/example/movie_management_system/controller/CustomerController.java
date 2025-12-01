@@ -23,7 +23,7 @@ public class CustomerController {
     }
     
     @PostMapping("/remove/{id}")
-    public String removeCustomer(@PathVariable String id) {
+    public String removeCustomer(@PathVariable Long id) {
         customerService.delete(id);
         return "redirect:/customers";
     }
@@ -40,7 +40,7 @@ public class CustomerController {
     }
 
     @GetMapping("view/{id}")
-    public String viewCustomer(@PathVariable String id, Model model) {
+    public String viewCustomer(@PathVariable Long id, Model model) {
         return customerService.findById(id)
                 .map(customer -> {
                     model.addAttribute("customer", customer);
@@ -49,7 +49,7 @@ public class CustomerController {
                 .orElse("redirect:/customers");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return customerService.findById(id)
                 .map(customer -> {
                     model.addAttribute("customer", customer);
@@ -59,7 +59,7 @@ public class CustomerController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@PathVariable String id, @RequestParam String name) {
+    public String updateCustomer(@PathVariable Long id, @RequestParam String name) {
         customerService.update(id, name);
         return "redirect:/customers";
     }

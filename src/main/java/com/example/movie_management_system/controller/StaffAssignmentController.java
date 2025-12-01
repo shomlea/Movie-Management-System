@@ -35,20 +35,20 @@ public class StaffAssignmentController {
 
     @PostMapping("/add")
     public String addStaffAssignment(
-            @RequestParam("screeningId") String screeningId,
-            @RequestParam("staffId") String staffId
+            @RequestParam("screeningId") Long screeningId,
+            @RequestParam("staffId") Long staffId
     ) {
         staffAssignmentService.save(screeningId, staffId);
         return "redirect:/staff-assignments";
     }
 
     @PostMapping("/remove/{id}")
-    public String removeStaffAssignment(@PathVariable String id) {
+    public String removeStaffAssignment(@PathVariable Long id) {
         staffAssignmentService.delete(id);
         return "redirect:/staff-assignments";
     }
     @GetMapping("view/{id}")
-    public String viewStaffAssignment(@PathVariable String id, Model model) {
+    public String viewStaffAssignment(@PathVariable Long id, Model model) {
         return staffAssignmentService.findById(id)
                 .map(customer -> {
                     model.addAttribute("staffAssignment", customer);
@@ -57,7 +57,7 @@ public class StaffAssignmentController {
                 .orElse("redirect:/staff-assignments");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return staffAssignmentService.findById(id)
                 .map(staffAssignment -> {
                     model.addAttribute("staffAssignment", staffAssignment);
@@ -68,9 +68,9 @@ public class StaffAssignmentController {
 
     @PostMapping("/update/{id}")
     public String updateSeat(
-            @PathVariable String id,
-            @RequestParam String screeningId,
-            @RequestParam String staffId) {
+            @PathVariable Long id,
+            @RequestParam Long screeningId,
+            @RequestParam Long staffId) {
 
         staffAssignmentService.update(id, screeningId, staffId);
         return "redirect:/staff-assignments";

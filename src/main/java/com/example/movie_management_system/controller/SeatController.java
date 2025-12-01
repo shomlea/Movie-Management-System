@@ -24,7 +24,7 @@ public class SeatController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeSeat(@PathVariable String id){
+    public String removeSeat(@PathVariable Long id){
         seatService.delete(id);
         return "redirect:/seats";
     }
@@ -35,13 +35,13 @@ public class SeatController {
     }
 
     @PostMapping
-    public String createSeat(@RequestParam String hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
+    public String createSeat(@RequestParam Long hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
         seatService.save(hallId, seatRow, seatColumn);
         return "redirect:/seats";
     }
 
     @GetMapping("view/{id}")
-    public String viewSeat(@PathVariable String id, Model model) {
+    public String viewSeat(@PathVariable Long id, Model model) {
         return seatService.findById(id)
                 .map(customer -> {
                     model.addAttribute("seat", customer);
@@ -50,7 +50,7 @@ public class SeatController {
                 .orElse("redirect:/seats");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return seatService.findById(id)
                 .map(seat -> {
                     model.addAttribute("seat", seat);
@@ -61,8 +61,8 @@ public class SeatController {
 
     @PostMapping("/update/{id}")
     public String updateSeat(
-            @PathVariable String id,
-            @RequestParam String hallId,
+            @PathVariable Long id,
+            @RequestParam Long hallId,
             @RequestParam String seatRow,
             @RequestParam String seatColumn) {
 

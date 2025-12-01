@@ -46,13 +46,13 @@ public class SupportStaffController {
     }
 
     @PostMapping("/remove/{id}")
-    public String removeSupportStaff(@PathVariable String id) {
+    public String removeSupportStaff(@PathVariable Long id) {
         supportStaffService.delete(id);
         return "redirect:/support-staff";
     }
 
     @GetMapping("view/{id}")
-    public String viewSupportStaff(@PathVariable String id, Model model) {
+    public String viewSupportStaff(@PathVariable Long id, Model model) {
         Optional<SupportStaff> supportStaff = supportStaffService.findById(id);
         if (supportStaff.isPresent()) {
             model.addAttribute("supportStaff", supportStaff.get());
@@ -62,7 +62,7 @@ public class SupportStaffController {
         }
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable String id, Model model) {
+    public String showUpdateForm(@PathVariable Long id, Model model) {
         return supportStaffService.findById(id)
                 .map(staff -> {
                     model.addAttribute("supportStaff", staff);
@@ -74,7 +74,7 @@ public class SupportStaffController {
 
     @PostMapping("/update/{id}")
     public String updateSupportStaff(
-            @PathVariable String id,
+            @PathVariable Long id,
             @RequestParam String name,
             @RequestParam double salary,
             @RequestParam Role role) {
