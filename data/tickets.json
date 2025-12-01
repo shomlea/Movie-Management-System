@@ -6,6 +6,13 @@
     "seatId" : "51bfaa15-2ae7-45d3-8a51-69aa5ff34b76",
     "price" : 123.0
   },
+  "075ff18f-f6d1-492f-a94f-a95988488d3f" : {
+    "id" : "075ff18f-f6d1-492f-a94f-a95988488d3f",
+    "screeningId" : "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",
+    "customerId" : "5e6f7a8b-9c0d-1234-5678-90abcdef1234",
+    "seatId" : "c1d2e3f4-g5h6-7i8j-9k0l-1m2n3o4p5q6r",
+    "price" : 123.0
+  },
   "6605ab10-f4e6-402d-ada9-6ae67db33a03" : {
     "id" : "6605ab10-f4e6-402d-ada9-6ae67db33a03",
     "screeningId" : "3d4e5f6g-7h8i-9j0k-1l2m-3n4o5p6q7r8s",

@@ -1,16 +1,16 @@
 package com.example.movie_management_system.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class StaffAssignment {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String screeningId;
+
+    @Column(nullable = false)
     private String staffId;
 
     public StaffAssignment(String id, String screeningId, String staffId) {

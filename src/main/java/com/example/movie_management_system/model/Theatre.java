@@ -7,20 +7,25 @@ import java.util.List;
 @Entity
 public class Theatre {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String city;
-    private int parkingCapacity; // added attribute
-    @OneToMany(mappedBy = "theatreId", cascade = CascadeType.ALL)
-    private List<Hall> halls;
+
+    @Column(nullable = false)
+    private int parkingCapacity;
+
+    @OneToMany(mappedBy = "theatreId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Hall> halls = new ArrayList<>();
 
     public Theatre(String id, String name, String city, int parkingCapacity) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.parkingCapacity = parkingCapacity;
-        this.halls = new ArrayList<>();
     }
 
     public Theatre() {

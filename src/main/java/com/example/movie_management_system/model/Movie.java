@@ -10,12 +10,18 @@ import java.util.List;
 public class Movie {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private int durationMin;
-    private String genre; // added attribute
-    @OneToMany(mappedBy = "movieId", cascade = CascadeType.ALL)
+
+    @Column(nullable = false)
+    private String genre;
+
+    @OneToMany(mappedBy = "movieId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Screening> screenings = new ArrayList<>();
     public Movie(){}
 

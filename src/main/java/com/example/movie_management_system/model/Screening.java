@@ -10,15 +10,21 @@ import java.util.List;
 @Entity
 public class Screening {
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
+    @Column(nullable = false)
     private String hallId;
+
+    @Column(nullable = false)
     private String movieId;
+
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
-    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets = new ArrayList<>();
-    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "screeningId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StaffAssignment> assignments = new ArrayList<>();
 
 
