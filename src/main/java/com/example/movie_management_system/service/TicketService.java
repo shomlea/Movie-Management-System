@@ -6,6 +6,7 @@ import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.repository.TicketRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +46,10 @@ public class TicketService {
         if(seat.getHall().getId() != screening.getHall().getId()) {
             throw new IllegalArgumentException("Seat with ID " + seatId + " is not part of the hall this screening is showing at.");
         }
+        Optional<Ticket> foundTicket = ticketRepository.findBySeatIdAndScreeningId(seatId, screeningId);
+        if (foundTicket.isPresent()) {
+            throw new DataIntegrityViolationException("There is already a ticket for that seat during that screening.");
+        }
 
         ticket.setScreening(screening);
         ticket.setCustomer(customer);
@@ -74,6 +79,11 @@ public class TicketService {
 
         if(newSeat.getHall().getId() != newScreening.getHall().getId()) {
             throw new IllegalArgumentException("Seat with ID " + newSeatId + " is not part of the hall this screening is showing at.");
+        }
+
+        Optional<Ticket> foundTicket = ticketRepository.findBySeatIdAndScreeningId(newSeatId, newScreeningId);
+        if (foundTicket.isPresent() && !foundTicket.get().getId().equals(updatedTicket.getId())) {
+            throw new DataIntegrityViolationException("There is already a ticket for that seat during that screening.");
         }
 
         existingTicket.setScreening(newScreening);
