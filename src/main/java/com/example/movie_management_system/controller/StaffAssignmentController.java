@@ -1,9 +1,12 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.model.Screening;
+import com.example.movie_management_system.model.Staff;
 import com.example.movie_management_system.model.StaffAssignment;
 import com.example.movie_management_system.model.SupportStaff;
 import com.example.movie_management_system.service.StaffAssignmentService;
 import com.example.movie_management_system.service.ScreeningService;
+import com.example.movie_management_system.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,7 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/staff-assignments")
@@ -21,17 +25,20 @@ public class StaffAssignmentController {
 
     private final StaffAssignmentService staffAssignmentService;
     private final ScreeningService screeningService; // NEW
+    private final StaffService staffService;
 
 
     // Adjusted constructor injection to include new dependencies
     @Autowired
     public StaffAssignmentController(
             StaffAssignmentService staffAssignmentService,
-            ScreeningService screeningService
+            ScreeningService screeningService,
+            StaffService staffService
 
     ) {
         this.staffAssignmentService = staffAssignmentService;
         this.screeningService = screeningService;
+        this.staffService = staffService;
 
     }
 
@@ -59,28 +66,88 @@ public class StaffAssignmentController {
 
 
     // --- CREATE (Process Form) ---
+//    @PostMapping
+//    public String addStaffAssignment(
+//            @ModelAttribute @Valid StaffAssignment staffAssignment,
+//            BindingResult result,
+//            Model model
+//    ) {
+//        if (result.hasErrors()) {
+//            model.addAttribute("availableScreenings", screeningService.findAll());
+//            model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
+//            return "staffAssignment/form";
+//        }
+//
+//        try {
+//            staffAssignmentService.save(staffAssignment);
+//        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+//            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+//            model.addAttribute("availableScreenings", screeningService.findAll());
+//            model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
+//            return "staffAssignment/form";
+//        }
+//        return "redirect:/staff-assignments";
+//    }
+
     @PostMapping
     public String addStaffAssignment(
-            @ModelAttribute @Valid StaffAssignment staffAssignment,
+
+            @ModelAttribute StaffAssignment staffAssignment,
+
+            @RequestParam("staffId") Long staffId,
+            @RequestParam("screeningId") Long screeningId,
+
             BindingResult result,
             Model model
     ) {
+
+
+        try {
+
+            Staff staff = staffService.resolveStaffById(staffId); // <--- Implement this helper method
+            if (staff == null) {
+                result.rejectValue("staff", "staff.notFound", "The selected staff member was not found.");
+            } else {
+                staffAssignment.setStaff(staff);
+            }
+
+            // Resolve Screening
+            Screening screening = screeningService.findById(screeningId)
+                    .orElse(null);
+            if (screening == null) {
+                result.rejectValue("screening", "screening.notFound", "The selected screening was not found.");
+            } else {
+                staffAssignment.setScreening(screening);
+            }
+
+        } catch (NumberFormatException e) {
+            // Handle case where IDs are missing or non-numeric (though rarely happens with select box)
+            result.reject("global.error", "Invalid ID submitted.");
+        }
+
+        // --- Error Checking ---
+        // If the BindingResult has errors from @Valid or from manual checks above:
         if (result.hasErrors()) {
+            // Reload all necessary model attributes
             model.addAttribute("availableScreenings", screeningService.findAll());
             model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
             return "staffAssignment/form";
         }
 
+        // --- Save Logic ---
         try {
             staffAssignmentService.save(staffAssignment);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            // Handle service-level exceptions
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             model.addAttribute("availableScreenings", screeningService.findAll());
             model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
             return "staffAssignment/form";
         }
+
         return "redirect:/staff-assignments";
     }
+
 
     @PostMapping("/remove/{id}")
     public String removeStaffAssignment(@PathVariable Long id) {
