@@ -27,7 +27,7 @@
         <option value="">-- Select Staff --</option>
         <option th:each="st : ${availableStaff}"
                 th:value="${st.id}"
-                th:text="|ID: ${st.id}, Name: ${st.name}, Type: ${st.class.simpleName}|">
+                th:text="|ID: ${st.id}, Name: ${st.name}|">
             Staff Details
         </option>
     </select>

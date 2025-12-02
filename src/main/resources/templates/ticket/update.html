@@ -14,7 +14,7 @@
         <option value="">-- Select a Screening --</option>
         <option th:each="screening : ${availableScreenings}"
                 th:value="${screening.id}"
-                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}|">
+                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}, Hall: ${screening.hall.name}}|">
             Screening Details
         </option>
     </select>
