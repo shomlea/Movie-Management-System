@@ -1,8 +1,6 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
-import com.example.movie_management_system.model.Screening;
-import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.HallRepository;
 import jakarta.transaction.Transactional;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class HallService {
@@ -30,7 +27,7 @@ public class HallService {
         Theatre theatre = theatreService.findById(hall.getTheatre().getId())
                 .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + hall.getTheatre().getId() + " not found."));
 
-        Optional<Hall> foundHall = hallRepository.findByName(hall.getName());
+        Optional<Hall> foundHall = hallRepository.findByNameAndTheatreId(hall.getName(), hall.getTheatre().getId());
         if(foundHall.isPresent()) {
             throw new DataIntegrityViolationException("There is already a Hall with that name");
         }
@@ -49,7 +46,7 @@ public class HallService {
         Theatre newTheatre = theatreService.findById(newTheatreId)
                 .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + newTheatreId + " not found."));
 
-        Optional<Hall> foundHall = hallRepository.findByName(updatedHall.getName());
+        Optional<Hall> foundHall = hallRepository.findByNameAndTheatreId(updatedHall.getName(), updatedHall.getTheatre().getId());
         if(foundHall.isPresent() && !foundHall.get().getId().equals(existingHall.getId())) {
             throw new DataIntegrityViolationException("There is already a Hall with that name");
         }
