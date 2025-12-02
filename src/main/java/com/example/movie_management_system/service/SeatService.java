@@ -4,6 +4,7 @@ import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.repository.SeatRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,33 +24,45 @@ public class SeatService {
     }
 
     @Transactional
-    public Seat save(Long hallId, String seatRow, String seatColumn) {
+    public Seat save(Seat seat) {
+        Long hallId = seat.getHall().getId();
 
         Hall hall = hallService.findById(hallId)
-                .orElseThrow(() -> new NoSuchElementException("Hall with id " + hallId + " not found"));
+                .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
-        Seat seat = new Seat(hall, seatRow, seatColumn);
+        Optional<Seat> foundSeat = seatRepository.findBySeatRowAndSeatColumnAndHallId(seat.getSeatRow(), seat.getSeatColumn(), hallId);
+        if (foundSeat.isPresent()) {
+            throw new DataIntegrityViolationException("There is already a seat with the same row and column.");
+        }
+
+        seat.setHall(hall);
 
         return seatRepository.save(seat);
     }
 
     @Transactional
-    public Seat update(Long id, Long hallId, String seatRow, String seatColumn) {
-        Seat seat = seatRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Seat with id " + id + " not found"));
+    public Seat update(Long id, Seat updatedSeat) {
+        Seat existingSeat = seatRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Seat with ID " + id + " not found."));
 
-        Hall newHall = hallService.findById(hallId)
-                .orElseThrow(() -> new NoSuchElementException("Hall with id " + hallId + " not found"));
+        Long newHallId = updatedSeat.getHall().getId();
 
-        seat.setSeatRow(seatRow);
-        seat.setSeatColumn(seatColumn);
+        Hall newHall = hallService.findById(newHallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall with ID " + newHallId + " not found."));
 
-        if (!seat.getHall().getId().equals(hallId)) {
-            seat.setHall(newHall);
+        existingSeat.setSeatRow(updatedSeat.getSeatRow());
+        existingSeat.setSeatColumn(updatedSeat.getSeatColumn());
+
+        if (!existingSeat.getHall().getId().equals(newHallId)) {
+            existingSeat.setHall(newHall);
         }
 
-        return seatRepository.save(seat);
+        Optional<Seat> foundSeat = seatRepository.findBySeatRowAndSeatColumnAndHallId(updatedSeat.getSeatRow(), updatedSeat.getSeatColumn(), newHallId);
+        if (foundSeat.isPresent() && !foundSeat.get().getId().equals(existingSeat.getId())) {
+            throw new DataIntegrityViolationException("There is already a seat with the same row and column.");
+        }
 
+        return seatRepository.save(existingSeat);
     }
 
     @Transactional

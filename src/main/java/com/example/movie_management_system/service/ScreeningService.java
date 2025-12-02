@@ -27,39 +27,42 @@ public class ScreeningService {
     }
 
     @Transactional
-    public Screening save(Long hallId, Long movieId, LocalDate date) {
+    public Screening save(Screening screening) {
+        Long hallId = screening.getHall().getId();
+        Long movieId = screening.getMovie().getId();
 
         Hall hall = hallService.findById(hallId)
-                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
+                .orElseThrow(() -> new NoSuchElementException("Hall with ID " + hallId + " not found."));
 
         Movie movie = movieService.findById(movieId)
-                .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+                .orElseThrow(() -> new NoSuchElementException("Movie with ID " + movieId + " not found."));
 
-        Screening screening = new Screening(hall, movie, date);
+        screening.setHall(hall);
+        screening.setMovie(movie);
 
         return screeningRepository.save(screening);
     }
 
     @Transactional
-    public Screening update(Long id, Long hallId, Long movieId, LocalDate date) {
+    public Screening update(Long id, Screening updatedScreening) {
+        Screening existingScreening = screeningRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + id + " not found."));
 
-        Screening screening = screeningRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
+        Long newHallId = updatedScreening.getHall().getId();
+        Long newMovieId = updatedScreening.getMovie().getId();
 
-        // Validate foreign keys again
-        Hall hall = hallService.findById(hallId)
-                .orElseThrow(() -> new NoSuchElementException("Hall not found"));
+        Hall newHall = hallService.findById(newHallId)
+                .orElseThrow(() -> new NoSuchElementException("Hall with ID " + newHallId + " not found."));
 
-        Movie movie = movieService.findById(movieId)
-                .orElseThrow(() -> new NoSuchElementException("Movie not found"));
+        Movie newMovie = movieService.findById(newMovieId)
+                .orElseThrow(() -> new NoSuchElementException("Movie with ID " + newMovieId + " not found."));
 
 
-        screening.setHall(hall);
-        screening.setMovie(movie);
-        screening.setDate(date);
+        existingScreening.setHall(newHall);
+        existingScreening.setMovie(newMovie);
+        existingScreening.setDate(updatedScreening.getDate());
 
-        return screeningRepository.save(screening);
-
+        return screeningRepository.save(existingScreening);
     }
 
     @Transactional

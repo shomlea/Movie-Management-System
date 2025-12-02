@@ -3,6 +3,7 @@ package com.example.movie_management_system.service;
 import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.repository.StaffAssignmentRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -36,24 +37,17 @@ public class StaffAssignmentService {
     }
 
     @Transactional
-    public StaffAssignment save(Long screeningId, Long staffId) {
-        Screening screening = screeningService.findById(screeningId)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
-
-        Staff staff = findStaffById(staffId);
-
-        StaffAssignment staffAssignment = new StaffAssignment(screening, staff);
-
-        return staffAssignmentRepository.save(staffAssignment);
-    }
-    @Transactional
-    public StaffAssignment update(Long id, Long screeningId, Long staffId){
-
-        StaffAssignment staffAssignment = staffAssignmentRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("StaffAssignment with ID " + id + " not found."));
+    public StaffAssignment save(StaffAssignment staffAssignment) {
+        Long screeningId = staffAssignment.getScreening().getId();
+        Long staffId = staffAssignment.getStaff().getId();
 
         Screening screening = screeningService.findById(screeningId)
                 .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+
+        Optional<StaffAssignment> foundAssignment = staffAssignmentRepository.findByScreeningIdAndStaffId(screeningId, staffId);
+        if (foundAssignment.isPresent()) {
+            throw new DataIntegrityViolationException("This staff member is already assigned to this screening.");
+        }
 
         Staff staff = findStaffById(staffId);
 
@@ -61,6 +55,30 @@ public class StaffAssignmentService {
         staffAssignment.setStaff(staff);
 
         return staffAssignmentRepository.save(staffAssignment);
+    }
+    @Transactional
+    public StaffAssignment update(Long id, StaffAssignment updatedAssignment) {
+        StaffAssignment existingAssignment = staffAssignmentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("StaffAssignment with ID " + id + " not found."));
+
+        Long newScreeningId = updatedAssignment.getScreening().getId();
+        Long newStaffId = updatedAssignment.getStaff().getId();
+
+        Screening newScreening = screeningService.findById(newScreeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + newScreeningId + " not found."));
+
+        Optional<StaffAssignment> foundAssignment = staffAssignmentRepository.findByScreeningIdAndStaffId(newScreeningId, newStaffId);
+
+        if (foundAssignment.isPresent() && !foundAssignment.get().getId().equals(existingAssignment.getId())) {
+            throw new DataIntegrityViolationException("This staff member is already assigned to this screening.");
+        }
+
+        Staff newStaff = findStaffById(newStaffId);
+
+        existingAssignment.setScreening(newScreening);
+        existingAssignment.setStaff(newStaff);
+
+        return staffAssignmentRepository.save(existingAssignment);
     }
 
     @Transactional

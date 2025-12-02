@@ -19,21 +19,20 @@ public class MovieService {
     }
 
     @Transactional
-    public Movie save(String title, int durationMin, String genre) {
-        Movie movie = new Movie(title, durationMin, genre);
+    public Movie save(Movie movie) {
         return movieRepository.save(movie);
     }
 
     @Transactional
-    public Movie update(Long id, String title, int durationMin, String genre) {
-        Movie movie = movieRepository.findById(id)
+    public Movie update(Long id, Movie updatedMovie) {
+        Movie existingMovie = movieRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Movie with id " + id + " not found"));
 
-        movie.setTitle(title);
-        movie.setDurationMin(durationMin);
-        movie.setGenre(genre);
+        existingMovie.setTitle(updatedMovie.getTitle());
+        existingMovie.setDurationMin(updatedMovie.getDurationMin());
+        existingMovie.setGenre(updatedMovie.getGenre());
 
-        return movieRepository.save(movie);
+        return movieRepository.save(existingMovie);
     }
 
     @Transactional

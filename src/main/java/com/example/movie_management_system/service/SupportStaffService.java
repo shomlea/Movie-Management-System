@@ -2,9 +2,11 @@ package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Role;
 import com.example.movie_management_system.model.SupportStaff;
+import com.example.movie_management_system.model.TechnicalOperator;
 import com.example.movie_management_system.repository.SupportStaffRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,20 +22,26 @@ public class SupportStaffService {
         this.supportStaffRepository = supportStaffRepository;
     }
     @Transactional
-    public SupportStaff save(String name, double salary, Role role) {
-        SupportStaff supportStaff = new SupportStaff(name, salary, role);
+    public SupportStaff save(SupportStaff supportStaff) {
+        Optional<SupportStaff> foundSupportStaff = supportStaffRepository.findByName(supportStaff.getName());
+        if(foundSupportStaff.isPresent())
+            throw new DataIntegrityViolationException("There is already a Theatre with that name");
         return supportStaffRepository.save(supportStaff);
     }
     @Transactional
-    public SupportStaff update(Long id, String name, double salary, Role role){
-        SupportStaff supportStaff = supportStaffRepository.findById(id)
+    public SupportStaff update(Long id, SupportStaff updatedStaff) {
+        SupportStaff existingStaff = supportStaffRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("SupportStaff with ID " + id + " not found."));
 
-        supportStaff.setName(name);
-        supportStaff.setSalary(salary);
-        supportStaff.setRole(role);
+        Optional<SupportStaff> foundSupportStaff = supportStaffRepository.findByName(existingStaff.getName());
+        if(foundSupportStaff.isPresent() && !foundSupportStaff.get().getId().equals(existingStaff.getId()))
+            throw new DataIntegrityViolationException("There is already a Theatre with that name");
 
-        return supportStaffRepository.save(supportStaff);
+        existingStaff.setName(updatedStaff.getName());
+        existingStaff.setSalary(updatedStaff.getSalary());
+        existingStaff.setRole(updatedStaff.getRole());
+
+        return supportStaffRepository.save(existingStaff);
     }
     @Transactional
     public void delete(Long id) {
