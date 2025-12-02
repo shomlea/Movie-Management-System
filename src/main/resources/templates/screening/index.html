@@ -26,8 +26,8 @@
     <tbody>
     <tr th:each="screening : ${screenings}">
         <td th:text="${screening.id}"></td>
-        <td th:text="${screening.hallId}"></td>
-        <td th:text="${screening.movieId}"></td>
+        <td th:text="${screening.hall.id}"></td>
+        <td th:text="${screening.movie.id}"></td>
         <td th:text="${screening.date}"></td>
         <td>
             <a th:href="@{|/screenings/view/${screening.id}|}">View</a> |

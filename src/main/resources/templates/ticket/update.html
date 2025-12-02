@@ -1,9 +1,53 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit Ticket</title>
 </head>
 <body>
+<h1>Edit Ticket</h1>
 
+<form th:object="${ticket}" th:action="@{|/tickets/update/${ticket.id}|}" method="post">
+
+    <label for="screeningId">Screening:</label>
+    <select id="screeningId" th:field="*{screening.id}" required>
+        <option value="">-- Select a Screening --</option>
+        <option th:each="screening : ${availableScreenings}"
+                th:value="${screening.id}"
+                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}|">
+            Screening Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('screening')}" th:errors="*{screening}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="customerId">Customer:</label>
+    <select id="customerId" th:field="*{customer.id}" required>
+        <option value="">-- Select a Customer --</option>
+        <option th:each="customer : ${availableCustomers}"
+                th:value="${customer.id}"
+                th:text="|ID: ${customer.id}, Name: ${customer.name}|">
+            Customer Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('customer')}" th:errors="*{customer}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="seatId">Seat:</label>
+    <input type="number" id="seatId" th:field="*{seat.id}" required/>
+    <span th:if="${#fields.hasErrors('seat')}" th:errors="*{seat}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" th:field="*{price}" required/>
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></span>
+    <br/><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<br>
+<a th:href="@{/tickets}">Back</a>
 </body>
 </html>

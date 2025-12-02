@@ -27,9 +27,9 @@
     <tbody>
     <tr th:each="ticket : ${tickets}">
         <td th:text="${ticket.id}"></td>
-        <td th:text="${ticket.screeningId}"></td>
-        <td th:text="${ticket.customerId}"></td>
-        <td th:text="${ticket.seatId}"></td>
+        <td th:text="${ticket.screening.id}"></td>
+        <td th:text="${ticket.customer.id}"></td>
+        <td th:text="${ticket.seat.id}"></td>
         <td th:text="${ticket.price}"></td>
         <td>
             <a th:href="@{|/tickets/view/${ticket.id}|}">View</a> |
@@ -38,11 +38,7 @@
                     Remove
                 </button>
             </form>
-            <form th:action="@{|/tickets/edit/${ticket.id}|}" method="post" style="display:inline;">
-                <button type="submit">
-                    Edit
-                </button>
-            </form>
+            <a th:href="@{|/tickets/update/${ticket.id}|}">Update</a>
         </td>
     </tr>
     </tbody>

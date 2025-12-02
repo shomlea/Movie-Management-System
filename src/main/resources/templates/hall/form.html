@@ -6,15 +6,30 @@
 <body>
 <h1>Add a New Hall</h1>
 
-<form th:action="@{/halls}" method="post">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required/><br/><br/>
+<form th:object="${hall}" th:action="@{/halls}" method="post">
 
-    <label for="theatreId">Theatre Id:</label>
-    <input type="text" id="theatreId" name="theatreId" required/><br/><br/>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="theatre">Theatre:</label>
+    <select id="theatre" th:field="*{theatre.id}" required>
+        <option value="">-- Select Theatre --</option>
+        <option th:each="t : ${availableTheatres}"
+                th:value="${t.id}"
+                th:text="${t.name}">
+            Theatre Name
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('theatre')}" th:errors="*{theatre}" style="color: red;"></span>
+    <br/><br/>
 
     <label for="capacity">Capacity:</label>
-    <input type="number" id="capacity" name="capacity" required/><br/><br/>
+    <input type="number" id="capacity" th:field="*{capacity}" required/>
+    <span th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}" style="color: red;"></span>
+    <br/><br/>
 
     <button type="submit">Add Hall</button>
 </form>

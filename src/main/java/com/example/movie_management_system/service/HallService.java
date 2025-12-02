@@ -6,6 +6,7 @@ import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.HallRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,28 +26,39 @@ public class HallService {
     }
 
     @Transactional
-    public Hall save(String name, Long theatreId, int capacity) {
+    public Hall save(Hall hall) {
+        Theatre theatre = theatreService.findById(hall.getTheatre().getId())
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + hall.getTheatre().getId() + " not found."));
 
-        Theatre theatre = theatreService.findById(theatreId)
-                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+        Optional<Hall> foundHall = hallRepository.findByName(hall.getName());
+        if(foundHall.isPresent()) {
+            throw new DataIntegrityViolationException("There is already a Hall with that name");
+        }
 
-        Hall hall = new Hall(name, theatre, capacity);
+        hall.setTheatre(theatre);
         return hallRepository.save(hall);
     }
 
     @Transactional
-    public Hall update(Long id, String name, Long theatreId, int capacity) {
-        Hall hall = hallRepository.findById(id)
+    public Hall update(Long id, Hall updatedHall) {
+        Hall existingHall = hallRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Hall with ID " + id + " not found."));
 
-        Theatre theatre = theatreService.findById(theatreId)
-                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
+        Long newTheatreId = updatedHall.getTheatre().getId();
 
-        hall.setName(name);
-        hall.setTheatre(theatre);
-        hall.setCapacity(capacity);
+        Theatre newTheatre = theatreService.findById(newTheatreId)
+                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + newTheatreId + " not found."));
 
-        return hallRepository.save(hall);
+        Optional<Hall> foundHall = hallRepository.findByName(updatedHall.getName());
+        if(foundHall.isPresent() && !foundHall.get().getId().equals(existingHall.getId())) {
+            throw new DataIntegrityViolationException("There is already a Hall with that name");
+        }
+
+        existingHall.setName(updatedHall.getName());
+        existingHall.setCapacity(updatedHall.getCapacity());
+        existingHall.setTheatre(newTheatre);
+
+        return hallRepository.save(existingHall);
     }
 
     @Transactional

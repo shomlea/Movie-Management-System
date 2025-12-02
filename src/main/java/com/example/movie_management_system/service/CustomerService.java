@@ -4,6 +4,7 @@ import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,17 +26,27 @@ public class CustomerService {
     }
 
     @Transactional
-    public Customer save(String name) {
-        Customer customer = new Customer(name);
+    public Customer save(Customer customer) {
+        Optional<Customer> foundCustomer = customerRepository.findByName(customer.getName());
+        if (foundCustomer.isPresent()) {
+            throw new DataIntegrityViolationException("Customer with name " + customer.getName() + " already exists.");
+        }
         return customerRepository.save(customer);
     }
 
     @Transactional
-    public Customer update(Long id, String name) {
-        Customer customer = customerRepository.findById(id)
+    public Customer update(Long id, Customer updatedCustomer) {
+        Customer existingCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Customer with ID " + id + " not found."));
-        customer.setName(name);
-        return customerRepository.save(customer);
+
+        Optional<Customer> foundCustomer = customerRepository.findByName(updatedCustomer.getName());
+        if (foundCustomer.isPresent() &&  !foundCustomer.get().getId().equals(existingCustomer.getId())) {
+            throw new DataIntegrityViolationException("Customer with name " + updatedCustomer.getName() + " already exists.");
+        }
+
+        existingCustomer.setName(updatedCustomer.getName());
+
+        return customerRepository.save(existingCustomer);
     }
     @Transactional
     public void delete(Long id) {

@@ -9,8 +9,36 @@
 
 <p><strong>ID:</strong> <span th:text="${hall.id}"></span></p>
 <p><strong>Name:</strong> <span th:text="${hall.name}"></span></p>
-<p><strong>TheatreID:</strong> <span th:text="${hall.theatreId}"></span></p>
+<p>
+    <strong>Theatre:</strong>
+    <span th:text="${hall.theatre.name}"></span>
+    (ID: <span th:text="${hall.theatre.id}"></span>)
+</p>
 <p><strong>Capacity:</strong> <span th:text="${hall.capacity}"></span></p>
+
+<h2>Associated Seats:</h2>
+<div th:if="${#lists.isEmpty(hall.seats)}">
+    <p>No seats defined for this hall.</p>
+</div>
+<ul th:unless="${#lists.isEmpty(hall.seats)}">
+    <li th:each="seat : ${hall.seats}">
+        ID: <span th:text="${seat.id}"></span> |
+        Row: <span th:text="${seat.seatRow}"></span> |
+        Column: <span th:text="${seat.seatColumn}"></span>
+    </li>
+</ul>
+
+<h2>Scheduled Screenings:</h2>
+<div th:if="${#lists.isEmpty(hall.screenings)}">
+    <p>No screenings scheduled in this hall.</p>
+</div>
+<ul th:unless="${#lists.isEmpty(hall.screenings)}">
+    <li th:each="screening : ${hall.screenings}">
+        ID: <span th:text="${screening.id}"></span> |
+        Date: <span th:text="${screening.date}"></span> |
+        Movie: <span th:text="${screening.movie.title}"></span>
+    </li>
+</ul>
 
 <br>
 <a th:href="@{/halls}">Back to hall List</a>

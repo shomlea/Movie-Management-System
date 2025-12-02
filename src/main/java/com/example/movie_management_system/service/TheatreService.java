@@ -4,6 +4,7 @@ package com.example.movie_management_system.service;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.TheatreRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,20 +18,27 @@ public class TheatreService {
         this.theatreRepository = theatreRepository;
     }
     @Transactional
-    public Theatre save(String name, String city, int parkingCapacity) {
-        Theatre theatre = new Theatre(name, city, parkingCapacity);
+    public Theatre save(Theatre theatre) {
+        Optional<Theatre> foundTheatre = theatreRepository.findByName(theatre.getName());
+        if(foundTheatre.isPresent())
+            throw new DataIntegrityViolationException("There is already a Theatre with that name");
         return theatreRepository.save(theatre);
     }
     @Transactional
-    public Theatre update(Long id, String name, String city, int parkingCapacity) {
-        Theatre theatre = theatreRepository.findById(id)
+    public Theatre update(Long id, Theatre updatedTheatre) {
+        Theatre existingTheatre = theatreRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + id + " not found."));
 
-        theatre.setName(name);
-        theatre.setCity(city);
-        theatre.setParkingCapacity(parkingCapacity);
+        Optional<Theatre> foundTheatre = theatreRepository.findByName(updatedTheatre.getName());
+        if (foundTheatre.isPresent() && !foundTheatre.get().getId().equals(existingTheatre.getId())) {
+            throw new DataIntegrityViolationException("There is already a Theatre with that name.");
+        }
 
-        return theatreRepository.save(theatre);
+        existingTheatre.setName(updatedTheatre.getName());
+        existingTheatre.setCity(updatedTheatre.getCity());
+        existingTheatre.setParkingCapacity(updatedTheatre.getParkingCapacity());
+
+        return theatreRepository.save(existingTheatre);
     }
 
     @Transactional

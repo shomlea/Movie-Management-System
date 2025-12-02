@@ -8,9 +8,41 @@
 <h1>Screening Details</h1>
 
 <p><strong>ID:</strong> <span th:text="${screening.id}"></span></p>
-<p><strong>Hall ID:</strong> <span th:text="${screening.hallId}"></span></p>
+<p>
+    <strong>Hall:</strong>
+    <span th:text="${screening.hall.name}"></span>
+    (ID: <span th:text="${screening.hall.id}"></span>)
+</p>
+<p>
+    <strong>Movie:</strong>
+    <span th:text="${screening.movie.title}"></span>
+    (ID: <span th:text="${screening.movie.id}"></span>)
+</p>
 <p><strong>Date:</strong> <span th:text="${screening.date}"></span></p>
-<p><strong>Movie ID:</strong> <span th:text="${screening.movieId}"></span></p>
+
+<h2>Tickets Sold:</h2>
+<div th:if="${#lists.isEmpty(screening.tickets)}">
+    <p>No tickets sold for this screening.</p>
+</div>
+<ul th:unless="${#lists.isEmpty(screening.tickets)}">
+    <li th:each="ticket : ${screening.tickets}">
+        ID: <span th:text="${ticket.id}"></span> |
+        Customer: <span th:text="${ticket.customer.name}"></span> |
+        Seat: <span th:text="${ticket.seat.seatRow} + ${ticket.seat.seatColumn}"></span>
+    </li>
+</ul>
+
+<h2>Assigned Staff:</h2>
+<div th:if="${#lists.isEmpty(screening.assignments)}">
+    <p>No staff assigned to this screening.</p>
+</div>
+<ul th:unless="${#lists.isEmpty(screening.assignments)}">
+    <li th:each="assignment : ${screening.assignments}">
+        ID: <span th:text="${assignment.staff.id}"></span> |
+        Name: <span th:text="${assignment.staff.name}"></span> |
+        Role: <span th:text="${assignment.staff.class.simpleName}"></span>
+    </li>
+</ul>
 
 <br>
 <a th:href="@{/screenings}">Back to screening List</a>

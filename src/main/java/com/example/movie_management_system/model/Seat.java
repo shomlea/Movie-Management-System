@@ -2,6 +2,7 @@ package com.example.movie_management_system.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Seat {
@@ -15,10 +16,12 @@ public class Seat {
 
     @Column(nullable = false)
     @NotBlank(message = "Seat row is required.")
+    @Size(min = 1, max = 2, message = "Row identifier must be 1 or 2 characters long.")
     private String seatRow; // "A,B,C,.."
 
     @Column(nullable = false)
     @NotBlank(message = "Seat column is required.")
+    @Size(min = 1, max = 2, message = "Column identifier must be 1 or 2 characters long.")
     private String seatColumn; // "1,2,3.."
 
     public Seat(Hall hall, String seatRow, String seatColumn) {

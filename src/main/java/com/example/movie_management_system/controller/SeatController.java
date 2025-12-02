@@ -2,18 +2,26 @@ package com.example.movie_management_system.controller;
 
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.service.SeatService;
+import com.example.movie_management_system.service.HallService; // NEW: Required for dropdown data
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/seats")
 public class SeatController {
     private final SeatService seatService;
-    public SeatController(SeatService seatService) {
+    private final HallService hallService; // NEW
+
+    public SeatController(SeatService seatService, HallService hallService) {
         this.seatService = seatService;
+        this.hallService = hallService;
     }
 
     @GetMapping
@@ -29,45 +37,80 @@ public class SeatController {
         return "redirect:/seats";
     }
 
+    // --- CREATE (Show Form) ---
     @GetMapping("/add")
-    public String createForm() {
+    public String showAddForm(Model model) {
+        model.addAttribute("seat", new Seat());
+        model.addAttribute("availableHalls", hallService.findAll());
         return "seat/form";
     }
 
+    // --- CREATE (Process Form) ---
     @PostMapping
-    public String createSeat(@RequestParam Long hallId, @RequestParam String seatRow, @RequestParam String seatColumn) {
-        seatService.save(hallId, seatRow, seatColumn);
+    public String createSeat(
+            @ModelAttribute @Valid Seat seat,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableHalls", hallService.findAll());
+            return "seat/form";
+        }
+
+        try {
+            seatService.save(seat);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableHalls", hallService.findAll());
+            return "seat/form";
+        }
+
         return "redirect:/seats";
     }
 
     @GetMapping("view/{id}")
     public String viewSeat(@PathVariable Long id, Model model) {
         return seatService.findById(id)
-                .map(customer -> {
-                    model.addAttribute("seat", customer);
+                .map(seat -> {
+                    model.addAttribute("seat", seat);
                     return "seat/view";
                 })
                 .orElse("redirect:/seats");
     }
+
+    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return seatService.findById(id)
                 .map(seat -> {
                     model.addAttribute("seat", seat);
+                    model.addAttribute("availableHalls", hallService.findAll());
                     return "seat/update";
                 })
                 .orElse("redirect:/seats");
     }
 
+    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateSeat(
             @PathVariable Long id,
-            @RequestParam Long hallId,
-            @RequestParam String seatRow,
-            @RequestParam String seatColumn) {
+            @ModelAttribute @Valid Seat seat,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableHalls", hallService.findAll());
+            return "seat/update";
+        }
 
-        seatService.update(id, hallId, seatRow, seatColumn);
+        try {
+            seatService.update(id, seat);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableHalls", hallService.findAll());
+            return "seat/update";
+        }
+
         return "redirect:/seats";
     }
-
 }

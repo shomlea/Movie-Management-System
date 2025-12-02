@@ -8,14 +8,31 @@
 
 <h1>Edit Staff Assignment</h1>
 
-<form th:action="@{|/staff-assignments/update/${staffAssignment.id}|}" method="post">
+<form th:object="${staffAssignment}" th:action="@{|/staff-assignments/update/${staffAssignment.id}|}" method="post">
 
-    <label for="screeningId">Screening Id:</label>
-    <input type="text" id="screeningId" name="screeningId" th:value="${staffAssignment.screeningId}" required>
+    <label for="screeningId">Screening:</label><br>
+    <select id="screeningId" th:field="*{screening.id}" required>
+        <option value="">-- Select Screening --</option>
+        <option th:each="s : ${availableScreenings}"
+                th:value="${s.id}"
+                th:text="|ID: ${s.id}, Date: ${s.date}, Movie: ${s.movie.title}|">
+            Screening Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('screening')}" th:errors="*{screening}" style="color: red;"></span>
     <br><br>
 
-    <label for="staffId">Staff Id:</label>
-    <input type="text" id="staffId" name="staffId" th:value="${staffAssignment.staffId}" required>
+    <label for="staffId">Staff:</label><br>
+    <select id="staffId" th:field="*{staff.id}" required>
+        <option value="">-- Select Staff --</option>
+        <option th:each="st : ${availableStaff}"
+                th:value="${st.id}"
+                th:text="|ID: ${st.id}, Name: ${st.name}, Type: ${st.class.simpleName}|">
+            Staff Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('staff')}" th:errors="*{staff}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>

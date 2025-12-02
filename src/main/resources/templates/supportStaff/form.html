@@ -8,20 +8,29 @@
 <body>
 <h1>Add New Support Staff</h1>
 
-<form th:action="@{/support-staff/add}" method="post">
+<form th:object="${supportStaff}" th:action="@{/support-staff}" method="post">
+
     <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+    <input type="text" id="name" th:field="*{name}" required>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br><br>
 
     <label for="salary">Salary:</label><br>
-    <input type="number" id="salary" name="salary" required><br><br>
+    <input type="number" id="salary" th:field="*{salary}" required>
+    <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" style="color: red;"></span>
+    <br><br>
 
     <label for="role">Role:</label><br>
-    <select id="role" name="role" required>
+    <select id="role" th:field="*{role}" required>
+        <option value="">-- Select Role --</option>
         <option th:each="role : ${roles}"
                 th:value="${role}"
                 th:text="${role}">
         </option>
-    </select><br><br>
+    </select>
+    <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" style="color: red;"></span>
+    <br><br>
 
     <button type="submit">Add</button>
 </form>

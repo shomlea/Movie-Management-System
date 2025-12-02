@@ -28,7 +28,11 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket save(Long screeningId,Long customerId, Long seatId, double price) {
+    public Ticket save(Ticket ticket) {
+        Long screeningId = ticket.getScreening().getId();
+        Long customerId = ticket.getCustomer().getId();
+        Long seatId = ticket.getSeat().getId();
+
         Screening screening = screeningService.findById(screeningId)
                 .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
 
@@ -38,41 +42,44 @@ public class TicketService {
         Seat seat = seatService.findById(seatId)
                 .orElseThrow(() -> new NoSuchElementException("Seat with ID " + seatId + " not found."));
 
+        if(seat.getHall().getId() != screening.getHall().getId()) {
+            throw new IllegalArgumentException("Seat with ID " + seatId + " is not part of the hall this screening is showing at.");
+        }
 
-        Ticket ticket = new Ticket(screening, customer, seat, price);
+        ticket.setScreening(screening);
+        ticket.setCustomer(customer);
+        ticket.setSeat(seat);
 
         return ticketRepository.save(ticket);
     }
 
-    public List<Screening> getAvailableScreenings() {
-        return screeningService.findAll();
-    }
 
-    public List<Customer> getAvailableCustomers() {
-        return customerService.findAll();
-    }
-
-    public List<Seat> getAvailableSeats(Long screeningId) {
-        return seatService.findAll().stream().filter(screening -> screening.getId().equals(screeningId)).toList();
-    }
     @Transactional
-    public Ticket update(Long id, Long screeningId, Long customerId, Long seatId, double price) {
+    public Ticket update(Long id, Ticket updatedTicket) {
         Ticket existingTicket = ticketRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Ticket with ID " + id + " not found."));
 
-        Screening newScreening = screeningService.findById(screeningId)
-                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+        Long newScreeningId = updatedTicket.getScreening().getId();
+        Long newCustomerId = updatedTicket.getCustomer().getId();
+        Long newSeatId = updatedTicket.getSeat().getId();
 
-        Customer newCustomer = customerService.findById(customerId)
-                .orElseThrow(() -> new NoSuchElementException("Customer with ID " + customerId + " not found."));
+        Screening newScreening = screeningService.findById(newScreeningId)
+                .orElseThrow(() -> new NoSuchElementException("Screening with ID " + newScreeningId + " not found."));
 
-        Seat newSeat = seatService.findById(seatId)
-                .orElseThrow(() -> new NoSuchElementException("Seat with ID " + seatId + " not found."));
+        Customer newCustomer = customerService.findById(newCustomerId)
+                .orElseThrow(() -> new NoSuchElementException("Customer with ID " + newCustomerId + " not found."));
+
+        Seat newSeat = seatService.findById(newSeatId)
+                .orElseThrow(() -> new NoSuchElementException("Seat with ID " + newSeatId + " not found."));
+
+        if(newSeat.getHall().getId() != newScreening.getHall().getId()) {
+            throw new IllegalArgumentException("Seat with ID " + newSeatId + " is not part of the hall this screening is showing at.");
+        }
 
         existingTicket.setScreening(newScreening);
         existingTicket.setCustomer(newCustomer);
         existingTicket.setSeat(newSeat);
-        existingTicket.setPrice(price);
+        existingTicket.setPrice(updatedTicket.getPrice());
 
         return ticketRepository.save(existingTicket);
     }
@@ -85,6 +92,20 @@ public class TicketService {
         ticketRepository.deleteById(id);
 
     }
+
+    public List<Screening> getAvailableScreenings() {
+        return screeningService.findAll();
+    }
+
+    public List<Customer> getAvailableCustomers() {
+        return customerService.findAll();
+    }
+
+    public List<Seat> getAvailableSeats() {
+        return seatService.findAll();
+//        return seatService.findAll().stream().filter(screening -> screening.getId().equals(screeningId)).toList();
+    }
+
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
     }

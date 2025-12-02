@@ -8,18 +8,35 @@
 
 <h1>Edit Screening</h1>
 
-<form th:action="@{|/screenings/update/${screening.id}|}" method="post">
+<form th:object="${screening}" th:action="@{|/screenings/update/${screening.id}|}" method="post">
 
-    <label for="hallId">Hall Id:</label>
-    <input type="text" id="hallId" name="hallId" th:value="${screening.hallId}" required>
+    <label for="hallId">Hall:</label>
+    <select id="hallId" th:field="*{hall.id}" required>
+        <option value="">-- Select Hall --</option>
+        <option th:each="h : ${availableHalls}"
+                th:value="${h.id}"
+                th:text="|${h.name} (${h.id})|">
+            Hall Name
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('hall')}" th:errors="*{hall}" style="color: red;"></span>
     <br><br>
 
-    <label for="movieId">Movie Id:</label>
-    <input type="text" id="movieId" name="movieId" th:value="${screening.movieId}" required>
+    <label for="movieId">Movie:</label>
+    <select id="movieId" th:field="*{movie.id}" required>
+        <option value="">-- Select Movie --</option>
+        <option th:each="m : ${availableMovies}"
+                th:value="${m.id}"
+                th:text="|${m.title} (${m.id})|">
+            Movie Title
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('movie')}" th:errors="*{movie}" style="color: red;"></span>
     <br><br>
 
     <label for="date">Date:</label>
-    <input type="date" id="date" name="date" th:value="${screening.date}" required>
+    <input type="date" id="date" th:field="*{date}" required>
+    <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>

@@ -4,11 +4,15 @@ import com.example.movie_management_system.model.Role;
 import com.example.movie_management_system.model.SupportStaff;
 import com.example.movie_management_system.service.SupportStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -29,19 +33,34 @@ public class SupportStaffController {
         return "supportStaff/index";
     }
 
+    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model) {
+        model.addAttribute("supportStaff", new SupportStaff());
         model.addAttribute("roles", Role.values());
-        return "supportStaff/form"; // <-- changed from add to form
+        return "supportStaff/form";
     }
 
-    @PostMapping("/add")
+    // --- CREATE (Process Form) ---
+    @PostMapping
     public String addSupportStaff(
-            @RequestParam("name") String name,
-            @RequestParam("salary") double salary,
-            @RequestParam("role") Role role
+            @ModelAttribute @Valid SupportStaff supportStaff,
+            BindingResult result,
+            Model model
     ) {
-        supportStaffService.save(name, salary, role);
+        if (result.hasErrors()) {
+            model.addAttribute("roles", Role.values());
+            return "supportStaff/form";
+        }
+
+        try {
+            supportStaffService.save(supportStaff);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("roles", Role.values());
+            return "supportStaff/form";
+        }
+
         return "redirect:/support-staff";
     }
 
@@ -61,6 +80,8 @@ public class SupportStaffController {
             return "redirect:/support-staff";
         }
     }
+
+    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return supportStaffService.findById(id)
@@ -72,14 +93,27 @@ public class SupportStaffController {
                 .orElse("redirect:/support-staff");
     }
 
+    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateSupportStaff(
             @PathVariable Long id,
-            @RequestParam String name,
-            @RequestParam double salary,
-            @RequestParam Role role) {
+            @ModelAttribute @Valid SupportStaff supportStaff,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("roles", Role.values());
+            return "supportStaff/update";
+        }
 
-        supportStaffService.update(id, name, salary, role);
+        try {
+            supportStaffService.update(id, supportStaff);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("roles", Role.values());
+            return "supportStaff/update";
+        }
+
         return "redirect:/support-staff";
     }
 }

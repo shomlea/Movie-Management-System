@@ -8,9 +8,21 @@
 <h1>Tickets Details</h1>
 
 <p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
-<p><strong>Screening ID:</strong> <span th:text="${ticket.screeningId}"></span></p>
-<p><strong>Customer ID:</strong> <span th:text="${ticket.customerId}"></span></p>
-<p><strong>Seat ID:</strong> <span th:text="${ticket.seatId}"></span></p>
+<p>
+    <strong>Screening ID:</strong>
+    <span th:text="${ticket.screening.id}"></span>
+    (Date: <span th:text="${ticket.screening.date}"></span>)
+</p>
+<p>
+    <strong>Customer ID:</strong>
+    <span th:text="${ticket.customer.id}"></span>
+    (Name: <span th:text="${ticket.customer.name}"></span>)
+</p>
+<p>
+    <strong>Seat ID:</strong>
+    <span th:text="${ticket.seat.id}"></span>
+    (Location: <span th:text="${ticket.seat.seatRow} + ${ticket.seat.seatColumn}"></span>)
+</p>
 <p><strong>Price:</strong> <span th:text="${ticket.price}"></span></p>
 
 <br>

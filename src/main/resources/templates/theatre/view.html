@@ -12,6 +12,19 @@
 <p><strong>City:</strong> <span th:text="${theatre.city}"></span></p>
 <p><strong>Parking Capacity:</strong> <span th:text="${theatre.parkingCapacity}"></span></p>
 
+<h2>Associated Halls:</h2>
+<div th:if="${#lists.isEmpty(theatre.halls)}">
+    <p>No halls associated with this theatre.</p>
+</div>
+
+<ul th:unless="${#lists.isEmpty(theatre.halls)}">
+    <li th:each="hall : ${theatre.halls}">
+        ID: <span th:text="${hall.id}"></span> |
+        Name: <span th:text="${hall.name}"></span> |
+        Capacity: <span th:text="${hall.capacity}"></span>
+    </li>
+</ul>
+
 <br>
 <a th:href="@{/theatres}">Back to theatre List</a>
 
