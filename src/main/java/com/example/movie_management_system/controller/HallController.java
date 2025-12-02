@@ -2,19 +2,26 @@ package com.example.movie_management_system.controller;
 
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.service.HallService;
+import com.example.movie_management_system.service.TheatreService;
+import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/halls")
 public class HallController {
     private HallService hallService;
+    private TheatreService theatreService;
 
-    public HallController(HallService hallService) {
+    public HallController(HallService hallService,  TheatreService theatreService) {
         this.hallService = hallService;
+        this.theatreService = theatreService;
     }
 
     @GetMapping
@@ -31,13 +38,31 @@ public class HallController {
     }
 
     @GetMapping("/add")
-    public String createForm(){
+    public String showAddForm(Model model) { // Signature updated to include Model
+        model.addAttribute("hall", new Hall()); // Required for th:object binding
+        model.addAttribute("availableTheatres", theatreService.findAll()); // Required for dropdown
         return "hall/form";
     }
 
     @PostMapping
-    public String createHall(@RequestParam String name, @RequestParam Long theatreId, @RequestParam int capacity) {
-        hallService.save(name, theatreId, capacity);
+    public String createHall(
+            @ModelAttribute @Valid Hall hall,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableTheatres", theatreService.findAll());
+            return "hall/form";
+        }
+
+        try {
+            hallService.save(hall);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableTheatres", theatreService.findAll());
+            return "hall/form";
+        }
+
         return "redirect:/halls";
     }
 
@@ -51,18 +76,37 @@ public class HallController {
                 .orElse("redirect:/halls");
     }
     @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(Model model, @PathVariable Long id) {
         return hallService.findById(id)
                 .map(hall -> {
                     model.addAttribute("hall", hall);
+                    model.addAttribute("availableTheatres", theatreService.findAll()); // Required for dropdown
                     return "hall/update";
                 })
                 .orElse("redirect:/halls");
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@PathVariable Long id, @RequestParam String name, @RequestParam Long theatreId, @RequestParam int capacity) {
-        hallService.update(id, name, theatreId, capacity);
+    public String updateHall(
+            @PathVariable Long id,
+            @ModelAttribute @Valid Hall hall,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableTheatres", theatreService.findAll());
+            return "hall/update";
+        }
+
+        try {
+
+            hallService.update(id, hall);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableTheatres", theatreService.findAll());
+            return "hall/update";
+        }
+
         return "redirect:/halls";
     }
 

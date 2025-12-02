@@ -1,12 +1,16 @@
 package com.example.movie_management_system.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ui.Model;
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.service.CustomerService;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping ("/customers")
@@ -29,13 +33,23 @@ public class CustomerController {
     }
 
     @GetMapping("/add")
-    public String showAddForm() {
+    public String showAddForm(Model model) {
+        model.addAttribute("customer", new Customer());
         return "/customer/form";
     }
 
     @PostMapping
-    public String createCustomer(@RequestParam String name) {
-        customerService.save(name);
+    public String createCustomer(@ModelAttribute @Valid Customer customer, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "customer/form";
+        }
+        try {
+            customerService.save(customer);
+        } catch (DataIntegrityViolationException e) {
+            // Catches the duplicate name error (409 Conflict)
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            return "customer/form";
+        }
         return "redirect:/customers";
     }
 
@@ -59,8 +73,23 @@ public class CustomerController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCustomer(@PathVariable Long id, @RequestParam String name) {
-        customerService.update(id, name);
+    public String updateCustomer(@PathVariable Long id, @ModelAttribute @Valid Customer customer, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "customer/update";
+        }
+
+        try {
+            customerService.update(id, customer);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+
+            model.addAttribute("customer", customer);
+
+            return "customer/update";
+        }
+
+
+
         return "redirect:/customers";
     }
 

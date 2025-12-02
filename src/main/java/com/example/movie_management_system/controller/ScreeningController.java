@@ -2,20 +2,30 @@ package com.example.movie_management_system.controller;
 
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.service.ScreeningService;
+import com.example.movie_management_system.service.HallService; // NEW: Required for dropdown data
+import com.example.movie_management_system.service.MovieService; // NEW: Required for dropdown data
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/screenings")
 public class ScreeningController {
     private final ScreeningService screeningService;
+    private final HallService hallService; // NEW
+    private final MovieService movieService; // NEW
 
-    public ScreeningController(ScreeningService screeningService) {
+    public ScreeningController(ScreeningService screeningService, HallService hallService, MovieService movieService) {
         this.screeningService = screeningService;
+        this.hallService = hallService;
+        this.movieService = movieService;
     }
 
     @GetMapping
@@ -31,14 +41,37 @@ public class ScreeningController {
         return "redirect:/screenings";
     }
 
+    // --- CREATE (Show Form) ---
     @GetMapping("/add")
-    public String createForm(){
+    public String showAddForm(Model model){
+        model.addAttribute("screening", new Screening());
+        model.addAttribute("availableHalls", hallService.findAll());
+        model.addAttribute("availableMovies", movieService.findAll());
         return "screening/form";
     }
 
+    // --- CREATE (Process Form) ---
     @PostMapping
-    public String createScreening(@RequestParam Long hallId, @RequestParam Long movieId, @RequestParam LocalDate date) {
-        screeningService.save(hallId, movieId, date);
+    public String createScreening(
+            @ModelAttribute @Valid Screening screening,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableHalls", hallService.findAll());
+            model.addAttribute("availableMovies", movieService.findAll());
+            return "screening/form";
+        }
+
+        try {
+            screeningService.save(screening);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableHalls", hallService.findAll());
+            model.addAttribute("availableMovies", movieService.findAll());
+            return "screening/form";
+        }
+
         return "redirect:/screenings";
     }
 
@@ -52,25 +85,42 @@ public class ScreeningController {
                 .orElse("redirect:/screenings");
     }
 
+    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return screeningService.findById(id)
                 .map(screening -> {
                     model.addAttribute("screening", screening);
+                    model.addAttribute("availableHalls", hallService.findAll());
+                    model.addAttribute("availableMovies", movieService.findAll());
                     return "screening/update";
                 })
                 .orElse("redirect:/screenings");
     }
 
+    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateScreening(
             @PathVariable Long id,
-            @RequestParam Long hallId,
-            @RequestParam Long movieId,
-            @RequestParam LocalDate date) {
+            @ModelAttribute @Valid Screening screening,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableHalls", hallService.findAll());
+            model.addAttribute("availableMovies", movieService.findAll());
+            return "screening/update";
+        }
 
-        screeningService.update(id, hallId, movieId, date);
+        try {
+            screeningService.update(id, screening);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableHalls", hallService.findAll());
+            model.addAttribute("availableMovies", movieService.findAll());
+            return "screening/update";
+        }
+
         return "redirect:/screenings";
     }
 }
-

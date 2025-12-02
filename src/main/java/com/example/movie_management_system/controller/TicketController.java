@@ -1,17 +1,22 @@
 package com.example.movie_management_system.controller;
 
-import com.example.movie_management_system.model.*;
+import com.example.movie_management_system.model.Customer;
+import com.example.movie_management_system.model.Screening;
+import com.example.movie_management_system.model.Seat;
+import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.service.TicketService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/tickets")
-
 public class TicketController {
     private final TicketService ticketService;
 
@@ -32,30 +37,40 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
+    // --- CREATE (Show Form) ---
     @GetMapping("/add")
-    public String createForm(Model model){
-        List<Screening> availableScreenings = ticketService.getAvailableScreenings();
-        model.addAttribute("availableScreenings", availableScreenings);
-
-        List<Customer> availableCustomers = ticketService.getAvailableCustomers();
-        model.addAttribute("availableCustomers", availableCustomers);
-
-
+    public String showAddForm(Model model){
+        model.addAttribute("ticket", new Ticket());
+        model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+        model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+        model.addAttribute("availableSeats", ticketService.getAvailableSeats()); // Assuming getAvailableSeats() no longer takes ID
         return "ticket/form";
     }
 
-
-    @PostMapping("/update/{id}")
-    public String updateTicket(@PathVariable Long id, @RequestParam Long screeningId, @RequestParam Long customerId, @RequestParam Long seatId, @RequestParam double price) {
-        Optional<Ticket> ticket = ticketService.findById(id);
-        ticketService.update(id, screeningId, customerId, seatId, price);
-        return "redirect:/tickets";
-    }
-
-
+    // --- CREATE (Process Form) ---
     @PostMapping
-        public String createTicket(@RequestParam Long screeningId, @RequestParam Long customerId, @RequestParam Long seatId, @RequestParam double price) {
-        ticketService.save(screeningId, customerId, seatId, price);
+    public String createTicket(
+            @ModelAttribute @Valid Ticket ticket,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            return "ticket/form";
+        }
+
+        try {
+            ticketService.save(ticket);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            return "ticket/form";
+        }
+
         return "redirect:/tickets";
     }
 
@@ -69,4 +84,45 @@ public class TicketController {
                 .orElse("redirect:/tickets");
     }
 
+    // --- UPDATE (Show Form) ---
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable Long id, Model model) {
+        return ticketService.findById(id)
+                .map(ticket -> {
+                    model.addAttribute("ticket", ticket);
+                    model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+                    model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+                    model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+                    return "ticket/update";
+                })
+                .orElse("redirect:/tickets");
+    }
+
+    // --- UPDATE (Process Form) ---
+    @PostMapping("/update/{id}")
+    public String updateTicket(
+            @PathVariable Long id,
+            @ModelAttribute @Valid Ticket ticket,
+            BindingResult result,
+            Model model
+    ) {
+        if (result.hasErrors()) {
+            model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            return "ticket/update";
+        }
+
+        try {
+            ticketService.update(id, ticket);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            return "ticket/update";
+        }
+
+        return "redirect:/tickets";
+    }
 }
