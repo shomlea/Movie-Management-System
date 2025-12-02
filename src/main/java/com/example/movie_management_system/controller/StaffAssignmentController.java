@@ -111,7 +111,6 @@ public class StaffAssignmentController {
                 staffAssignment.setStaff(staff);
             }
 
-            // Resolve Screening
             Screening screening = screeningService.findById(screeningId)
                     .orElse(null);
             if (screening == null) {
@@ -121,12 +120,10 @@ public class StaffAssignmentController {
             }
 
         } catch (NumberFormatException e) {
-            // Handle case where IDs are missing or non-numeric (though rarely happens with select box)
             result.reject("global.error", "Invalid ID submitted.");
         }
 
-        // --- Error Checking ---
-        // If the BindingResult has errors from @Valid or from manual checks above:
+
         if (result.hasErrors()) {
             // Reload all necessary model attributes
             model.addAttribute("availableScreenings", screeningService.findAll());
@@ -134,7 +131,7 @@ public class StaffAssignmentController {
             return "staffAssignment/form";
         }
 
-        // --- Save Logic ---
+
         try {
             staffAssignmentService.save(staffAssignment);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
@@ -178,14 +175,31 @@ public class StaffAssignmentController {
                 .orElse("redirect:/staff-assignments");
     }
 
-    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateStaffAssignment(
             @PathVariable Long id,
             @ModelAttribute @Valid StaffAssignment staffAssignment,
+            @RequestParam("staffId") Long staffId,
+            @RequestParam("screeningId") Long screeningId,
             BindingResult result,
             Model model
     ) {
+
+        Staff staff = staffService.resolveStaffById(staffId);
+        if (staff == null) {
+            result.rejectValue("staff", "staff.notFound", "The selected staff member was not found.");
+        }
+        staffAssignment.setStaff(staff);
+
+        Screening screening = screeningService.findById(screeningId).orElse(null);
+        if (screening == null) {
+            result.rejectValue("screening", "screening.notFound", "The selected screening was not found.");
+        }
+        staffAssignment.setScreening(screening);
+
+        staffAssignment.setId(id);
+
+
         if (result.hasErrors()) {
             model.addAttribute("availableScreenings", screeningService.findAll());
             model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
@@ -193,6 +207,7 @@ public class StaffAssignmentController {
         }
 
         try {
+
             staffAssignmentService.update(id, staffAssignment);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
