@@ -10,7 +10,7 @@
 <form th:object="${staffAssignment}" th:action="@{/staff-assignments}" method="post">
 
     <label for="screeningId">Screening:</label><br>
-    <select id="screeningId" th:field="*{screening.id}" required>
+    <select id="screeningId" name="screeningId" required>
         <option value="">-- Select Screening --</option>
         <option th:each="s : ${availableScreenings}"
                 th:value="${s.id}"
@@ -22,7 +22,7 @@
     <br><br>
 
     <label for="staffId">Staff:</label><br>
-    <select id="staffId" th:field="*{staff.id}" required>
+    <select id="staffId" name="staffId" required>
         <option value="">-- Select Staff --</option>
         <option th:each="st : ${availableStaff}"
                 th:value="${st.id}"
