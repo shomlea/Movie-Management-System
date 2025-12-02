@@ -6,9 +6,15 @@
 <body>
 <h1>Add a New Customer</h1>
 
-<form th:action="@{/customers}" method="post">
+<form th:object="${customer}" th:action="@{/customers}" method="post">
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required/><br/><br/>
+
+    <input type="text" id="name" th:field="*{name}" required/><br/><br/>
+
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+
+    <br/><br/>
 
     <button type="submit">Add Customer</button>
 </form>

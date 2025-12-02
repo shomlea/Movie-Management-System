@@ -5,11 +5,19 @@
     <title>View staff assignment</title>
 </head>
 <body>
-<h1>staff assignment Details</h1>
+<h1>Staff Assignment Details</h1>
 
 <p><strong>ID:</strong> <span th:text="${staffAssignment.id}"></span></p>
-<p><strong>Screening ID:</strong> <span th:text="${staffAssignment.screeningId}"></span></p>
-<p><strong>Staff ID:</strong> <span th:text="${staffAssignment.staffId}"></span></p>
+<p>
+    <strong>Screening ID:</strong>
+    <span th:text="${staffAssignment.screening.id}"></span>
+    (Date: <span th:text="${staffAssignment.screening.date}"></span>)
+</p>
+<p>
+    <strong>Staff ID:</strong>
+    <span th:text="${staffAssignment.staff.id}"></span>
+    (Name: <span th:text="${staffAssignment.staff.name}"></span>)
+</p>
 
 <br>
 <a th:href="@{/staff-assignments}">Back to staff assignment List</a>

@@ -8,18 +8,21 @@
 
 <h1>Edit Movie</h1>
 
-<form th:action="@{|/movies/update/${movie.id}|}" method="post">
+<form th:object="${movie}" th:action="@{|/movies/update/${movie.id}|}" method="post">
 
     <label for="title">Title:</label>
-    <input type="text" id="title" name="title" th:value="${movie.title}" required>
+    <input type="text" id="title" th:field="*{title}" required>
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color: red;"></span>
     <br><br>
 
     <label for="genre">Genre:</label>
-    <input type="text" id="genre" name="genre" th:value="${movie.genre}" required>
+    <input type="text" id="genre" th:field="*{genre}" required>
+    <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" style="color: red;"></span>
     <br><br>
 
     <label for="durationMin">Duration in minutes:</label>
-    <input type="number" id="durationMin" name="durationMin" th:value="${movie.durationMin}" required>
+    <input type="number" id="durationMin" th:field="*{durationMin}" required>
+    <span th:if="${#fields.hasErrors('durationMin')}" th:errors="*{durationMin}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>

@@ -9,12 +9,21 @@
 
 <p><strong>ID:</strong> <span th:text="${customer.id}"></span></p>
 <p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
-<p><strong>Tickets:</strong></p>
-<tr th:each="ticket : ${customer.tickets}">
-    <strong>Ticket Id: </strong><td th:text="${ticket.id}"></td>;
-    <strong>Screening Id: </strong><td th:text="${ticket.screeningId}"></td>;
-    <strong>Seat Id: </strong><td th:text="${ticket.seatId}"></td><br>
-</tr>
+
+<h2>Tickets:</h2>
+
+<div th:if="${#lists.isEmpty(customer.tickets)}">
+    <p>No tickets purchased by this customer.</p>
+</div>
+
+<ul th:unless="${#lists.isEmpty(customer.tickets)}">
+    <li th:each="ticket : ${customer.tickets}">
+        <strong>Ticket ID: </strong><span th:text="${ticket.id}"></span> |
+        <strong>Screening ID: </strong><span th:text="${ticket.screening.id}"></span> |
+        <strong>Seat ID: </strong><span th:text="${ticket.seat.id}"></span> |
+        <strong>Price: </strong><span th:text="${ticket.price}"></span>
+    </li>
+</ul>
 
 <br>
 <a th:href="@{/customers}">Back to Customer List</a>

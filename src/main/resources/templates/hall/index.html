@@ -27,7 +27,9 @@
     <tr th:each="hall : ${halls}">
         <td th:text="${hall.id}"></td>
         <td th:text="${hall.name}"></td>
-        <td th:text="${hall.theatreId}"></td>
+
+        <td th:text="${hall.theatre.id}"></td>
+
         <td th:text="${hall.capacity}"></td>
         <td>
             <a th:href="@{|/halls/view/${hall.id}|}">View</a> |

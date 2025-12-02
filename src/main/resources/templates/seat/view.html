@@ -8,7 +8,10 @@
 <h1>Seat Details</h1>
 
 <p><strong>ID:</strong> <span th:text="${seat.id}"></span></p>
-<p><strong>Hall ID:</strong> <span th:text="${seat.hallId}"></span></p>
+<p>
+    <strong>Hall ID:</strong> <span th:text="${seat.hall.id}"></span>
+    (Name: <span th:text="${seat.hall.name}"></span>)
+</p>
 <p><strong>Row:</strong> <span th:text="${seat.seatRow}"></span></p>
 <p><strong>Column:</strong> <span th:text="${seat.seatColumn}"></span></p>
 

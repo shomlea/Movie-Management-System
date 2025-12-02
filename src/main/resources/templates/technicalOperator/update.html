@@ -8,24 +8,28 @@
 
 <h1>Edit Technical Operators</h1>
 
-<form th:action="@{|/technical-operators/update/${technicalOperator.id}|}" method="post">
+<form th:object="${technicalOperator}" th:action="@{|/technical-operators/update/${technicalOperator.id}|}" method="post">
 
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" th:value="${technicalOperator.name}" required>
+    <input type="text" id="name" th:field="*{name}" required>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
     <br><br>
 
     <label for="salary">Salary:</label>
-    <input type="number" id="salary" name="salary" th:value="${technicalOperator.salary}" required>
+    <input type="number" id="salary" th:field="*{salary}" required>
+    <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" style="color: red;"></span>
     <br><br>
 
     <label for="specialization">Specialization:</label>
-    <select id="specialization" name="specialization" required>
+    <select id="specialization" th:field="*{specialization}" required>
+        <option value="">-- Select Specialization --</option>
         <option th:each="s : ${specializations}"
                 th:value="${s}"
-                th:text="${s}"
-                th:selected="${s == technicalOperator.specialization}">
+                th:text="${s}">
         </option>
     </select>
+    <span th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>

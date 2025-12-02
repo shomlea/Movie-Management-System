@@ -6,15 +6,23 @@
 <body>
 <h1>Add a New Theatre</h1>
 
-<form th:action="@{/theatres}" method="post">
+<form th:object="${theatre}" th:action="@{/theatres}" method="post">
+
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required/><br/><br/>
+    <input type="text" id="name" th:field="*{name}" required/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br/><br/>
 
     <label for="city">City:</label>
-    <input type="text" id="city" name="city" required/><br/><br/>
+    <input type="text" id="city" th:field="*{city}" required/>
+    <span th:if="${#fields.hasErrors('city')}" th:errors="*{city}" style="color: red;"></span>
+    <br/><br/>
 
     <label for="parkingCapacity">Parking Capacity:</label>
-    <input type="number" id="parkingCapacity" name="parkingCapacity" required/><br/><br/>
+    <input type="number" id="parkingCapacity" th:field="*{parkingCapacity}" required/>
+    <span th:if="${#fields.hasErrors('parkingCapacity')}" th:errors="*{parkingCapacity}" style="color: red;"></span>
+    <br/><br/>
 
     <button type="submit">Add Theatre</button>
 </form>

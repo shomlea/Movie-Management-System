@@ -8,24 +8,28 @@
 
 <h1>Edit Support Staff</h1>
 
-<form th:action="@{|/support-staff/update/${supportStaff.id}|}" method="post">
+<form th:object="${supportStaff}" th:action="@{|/support-staff/update/${supportStaff.id}|}" method="post">
 
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" th:value="${supportStaff.name}" required>
+    <input type="text" id="name" th:field="*{name}" required>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
     <br><br>
 
     <label for="salary">Salary:</label>
-    <input type="number" id="salary" name="salary" th:value="${supportStaff.salary}" required>
+    <input type="number" id="salary" th:field="*{salary}" required>
+    <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" style="color: red;"></span>
     <br><br>
 
     <label for="role">Role:</label>
-    <select id="role" name="role" required>
+    <select id="role" th:field="*{role}" required>
+        <option value="">-- Select Role --</option>
         <option th:each="r : ${roles}"
                 th:value="${r}"
-                th:text="${r}"
-                th:selected="${r == supportStaff.role}">
+                th:text="${r}">
         </option>
     </select>
+    <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>

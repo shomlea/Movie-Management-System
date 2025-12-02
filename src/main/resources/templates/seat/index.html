@@ -26,7 +26,7 @@
     <tbody>
     <tr th:each="seat : ${seats}">
         <td th:text="${seat.id}"></td>
-        <td th:text="${seat.hallId}"></td>
+        <td th:text="${seat.hall.id}"></td>
         <td th:text="${seat.seatRow}"></td>
         <td th:text="${seat.seatColumn}"></td>
         <td>

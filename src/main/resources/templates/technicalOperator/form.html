@@ -7,20 +7,29 @@
 <body>
 <h1>Add New Technical Operator</h1>
 
-<form th:action="@{/technical-operators/add}" method="post">
+<form th:object="${technicalOperator}" th:action="@{/technical-operators}" method="post">
+
     <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" required><br><br>
+    <input type="text" id="name" th:field="*{name}" required>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br><br>
 
     <label for="salary">Salary:</label><br>
-    <input type="number" id="salary" name="salary" required><br><br>
+    <input type="number" id="salary" th:field="*{salary}" required>
+    <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" style="color: red;"></span>
+    <br><br>
 
     <label for="specialization">Specialization:</label><br>
-    <select id="specialization" name="specialization" required>
+    <select id="specialization" th:field="*{specialization}" required>
+        <option value="">-- Select Specialization --</option>
         <option th:each="spec : ${specializations}"
                 th:value="${spec}"
                 th:text="${spec}">
         </option>
-    </select><br><br>
+    </select>
+    <span th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}" style="color: red;"></span>
+    <br><br>
 
     <button type="submit">Add</button>
 </form>

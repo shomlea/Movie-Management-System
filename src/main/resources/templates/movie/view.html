@@ -12,6 +12,19 @@
 <p><strong>Duration:</strong> <span th:text="${movie.durationMin}"></span></p>
 <p><strong>Genre:</strong> <span th:text="${movie.genre}"></span></p>
 
+<h2>Associated Screenings:</h2>
+<div th:if="${#lists.isEmpty(movie.screenings)}">
+    <p>No screenings scheduled for this movie.</p>
+</div>
+
+<ul th:unless="${#lists.isEmpty(movie.screenings)}">
+    <li th:each="screening : ${movie.screenings}">
+        ID: <span th:text="${screening.id}"></span> |
+        Date: <span th:text="${screening.date}"></span> |
+        Hall ID: <span th:text="${screening.hall.id}"></span>
+    </li>
+</ul>
+
 <br>
 <a th:href="@{/movies}">Back to Movie List</a>
 

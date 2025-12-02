@@ -6,34 +6,43 @@
 <body>
 <h1>Add a new Ticket</h1>
 
-<form th:action="@{/tickets}" method="post">
+<form th:object="${ticket}" th:action="@{/tickets}" method="post">
 
     <label for="screeningId">Screening:</label>
-    <select id="screeningId" name="screeningId" required
+    <select id="screeningId" th:field="*{screening.id}" required
             onchange="fetchAvailableSeats(this.value)">
         <option value="">-- Select a Screening --</option>
         <option th:each="screening : ${availableScreenings}"
                 th:value="${screening.id}"
-                th:text="${screening.movieId}">
-            Movie Title @ 10:00
+                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}|">
+            Screening Details
         </option>
-    </select><br/><br/>
+    </select>
+    <span th:if="${#fields.hasErrors('screening')}" th:errors="*{screening}" style="color: red;"></span>
+    <br/><br/>
 
-    <label for="customerId">Customer Id:</label>
-    <select id="customerId" name="customerId" required>
+    <label for="customerId">Customer:</label>
+    <select id="customerId" th:field="*{customer.id}" required>
         <option value="">-- Select a Customer --</option>
         <option th:each="customer : ${availableCustomers}"
                 th:value="${customer.id}"
-                th:text="${customer.name}">
-            101
+                th:text="|ID: ${customer.id}, Name: ${customer.name}|">
+            Customer Details
         </option>
-    </select><br/><br/>
+    </select>
+    <span th:if="${#fields.hasErrors('customer')}" th:errors="*{customer}" style="color: red;"></span>
+    <br/><br/>
 
-    <label for="seatId">Seat Id:</label>
-    <input type="text" id="seatId" name="seatId" required/><br/><br/>
+    <label for="seatId">Seat:</label>
+    <input type="number" id="seatId" th:field="*{seat.id}" required/>
+    <span th:if="${#fields.hasErrors('seat')}" th:errors="*{seat}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
+    <br/><br/>
 
     <label for="price">Price:</label>
-    <input type="number" id="price" name="price" required/><br/><br/>
+    <input type="number" id="price" th:field="*{price}" required/>
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></span>
+    <br/><br/>
 
     <button type="submit">Add Ticket</button>
 </form>
@@ -41,4 +50,3 @@
 <a th:href="@{/tickets}">Back to Ticket List</a>
 </body>
 </html>
-
