@@ -6,43 +6,78 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Hall Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${hall.id}"></span></p>
-<p><strong>Name:</strong> <span th:text="${hall.name}"></span></p>
-<p>
-    <strong>Theatre:</strong>
-    <span th:text="${hall.theatre.name}"></span>
-    (ID: <span th:text="${hall.theatre.id}"></span>)
-</p>
-<p><strong>Capacity:</strong> <span th:text="${hall.capacity}"></span></p>
+<a th:href="@{/halls}">Back to Hall List</a>
+<br><br>
 
-<h2>Associated Seats:</h2>
-<div th:if="${#lists.isEmpty(hall.seats)}">
-    <p>No seats defined for this hall.</p>
+<!-- Hall details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${hall.id}" disabled>
+
+    <label>Name</label>
+    <input type="text" th:value="${hall.name}" disabled>
+
+    <label>Theatre</label>
+    <input type="text"
+           th:value="${hall.theatre.name + ' (ID: ' + hall.theatre.id + ')'}"
+           disabled>
+
+    <label>Capacity</label>
+    <input type="text" th:value="${hall.capacity}" disabled>
+
 </div>
-<ul th:unless="${#lists.isEmpty(hall.seats)}">
-    <li th:each="seat : ${hall.seats}">
-        ID: <span th:text="${seat.id}"></span> |
-        Row: <span th:text="${seat.seatRow}"></span> |
-        Column: <span th:text="${seat.seatColumn}"></span>
-    </li>
-</ul>
 
-<h2>Scheduled Screenings:</h2>
-<div th:if="${#lists.isEmpty(hall.screenings)}">
-    <p>No screenings scheduled in this hall.</p>
+<h2>Seats</h2>
+
+<div th:if="${hall.seats == null or #lists.isEmpty(hall.seats)}">
+    <p class="subtitle">No seats defined for this hall.</p>
 </div>
-<ul th:unless="${#lists.isEmpty(hall.screenings)}">
-    <li th:each="screening : ${hall.screenings}">
-        ID: <span th:text="${screening.id}"></span> |
-        Date: <span th:text="${screening.date}"></span> |
-        Movie: <span th:text="${screening.movie.title}"></span>
-    </li>
-</ul>
 
-<br>
-<a th:href="@{/halls}">Back to hall List</a>
+<table th:if="${hall.seats != null and !#lists.isEmpty(hall.seats)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Row</th>
+        <th>Column</th>
+        <th>Hall</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="seat : ${hall.seats}">
+        <td th:text="${seat.id}"></td>
+        <td th:text="${seat.seatRow}"></td>
+        <td th:text="${seat.seatColumn}"></td>
+        <td th:text="${seat.hall.name + ' (ID: ' + seat.hall.id + ')'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Screenings</h2>
+
+<div th:if="${hall.screenings == null or #lists.isEmpty(hall.screenings)}">
+    <p class="subtitle">No screenings scheduled in this hall.</p>
+</div>
+
+<table th:if="${hall.screenings != null and !#lists.isEmpty(hall.screenings)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Movie</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="screening : ${hall.screenings}">
+        <td th:text="${screening.id}"></td>
+        <td th:text="${screening.date}"></td>
+        <td th:text="${screening.movie.title}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>
