@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Support Staff</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Add New Support Staff</h1>
@@ -17,7 +17,7 @@
     <br><br>
 
     <label for="salary">Salary:</label><br>
-    <input type="number" id="salary" th:field="*{salary}" required>
+    <input type="number" id="salary" th:field="*{salary}" step="any" required>
     <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}" style="color: red;"></span>
     <br><br>
 

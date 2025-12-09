@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Screening</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         <option value="">-- Select Hall --</option>
         <option th:each="h : ${availableHalls}"
                 th:value="${h.id}"
-                th:text="|${h.name} (${h.id})|">
+                th:text="|${h.name} (Theatre: ${h.theatre.name})|">
             Hall Name
         </option>
     </select>
@@ -27,7 +28,7 @@
         <option value="">-- Select Movie --</option>
         <option th:each="m : ${availableMovies}"
                 th:value="${m.id}"
-                th:text="|${m.title} (${m.id})|">
+                th:text="|${m.title} (ID: ${m.id})|">
             Movie Title
         </option>
     </select>

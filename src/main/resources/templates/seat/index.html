@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Seat List</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Seats</h1>
@@ -17,7 +18,7 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Hall Id</th>
+        <th>Hall Name</th>
         <th>Row</th>
         <th>Column</th>
         <th>Actions</th>
@@ -26,11 +27,11 @@
     <tbody>
     <tr th:each="seat : ${seats}">
         <td th:text="${seat.id}"></td>
-        <td th:text="${seat.hall.id}"></td>
+        <td th:text="|${seat.hall.name} (Theatre: ${seat.hall.theatre.name})|"></td>
         <td th:text="${seat.seatRow}"></td>
         <td th:text="${seat.seatColumn}"></td>
         <td>
-            <a th:href="@{|/seats/view/${seat.id}|}">View</a> |
+            <a th:href="@{|/seats/view/${seat.id}|}">View</a>
             <form th:action="@{|/seats/remove/${seat.id}|}" method="post" style="display:inline;">
                 <button type="submit" onclick="return confirm('Are you sure you want to remove this seat?');">
                     Remove
