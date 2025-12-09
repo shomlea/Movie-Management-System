@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Seat</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         <option value="">-- Select Hall --</option>
         <option th:each="h : ${availableHalls}"
                 th:value="${h.id}"
-                th:text="|${h.name} (Capacity: ${h.capacity})|">
+                th:text="|${h.name} (Theatre: ${h.theatre.name})|">
             Hall Name
         </option>
     </select>

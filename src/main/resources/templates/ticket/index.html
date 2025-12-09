@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Ticket List</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Tickets</h1>
-
+<div class="menu-links">
 <a th:href="@{/}">Back to Main Menu</a><br><br>
-
-
+</div>
+<div class="action-links">
 <a th:href="@{/tickets/add}">Add a New Ticket</a>
 <br><br>
-
+</div>
 <table border="1" cellpadding="6">
     <thead>
     <tr>
         <th>ID</th>
         <th>Screening Id</th>
-        <th>Customer Id</th>
-        <th>Seat Id</th>
+        <th>Customer Name</th>
+        <th>Seat</th>
         <th>Price</th>
         <th>Actions</th>
     </tr>
@@ -27,14 +28,14 @@
     <tbody>
     <tr th:each="ticket : ${tickets}">
         <td th:text="${ticket.id}"></td>
-        <td th:text="${ticket.screening.id}"></td>
-        <td th:text="${ticket.customer.id}"></td>
-        <td th:text="${ticket.seat.id}"></td>
+        <td th:text="|${ticket.screening.id} (${ticket.screening.movie.title})|"></td>
+        <td th:text="${ticket.customer.name}"></td>
+        <td th:text="|${ticket.seat.seatRow}${ticket.seat.seatColumn}|"></td>
         <td th:text="${ticket.price}"></td>
         <td>
-            <a th:href="@{|/tickets/view/${ticket.id}|}">View</a> |
+            <a th:href="@{|/tickets/view/${ticket.id}|}">View</a>
             <form th:action="@{|/tickets/remove/${ticket.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this ticket?');">
+                <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this ticket?');">
                     Remove
                 </button>
             </form>

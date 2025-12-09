@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>View Screening</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Screening Details</h1>
@@ -39,8 +40,7 @@
 <ul th:unless="${#lists.isEmpty(screening.assignments)}">
     <li th:each="assignment : ${screening.assignments}">
         ID: <span th:text="${assignment.staff.id}"></span> |
-        Name: <span th:text="${assignment.staff.name}"></span> |
-        Role: <span th:text="${assignment.staff.class.simpleName}"></span>
+        Name: <span th:text="${assignment.staff.name}"></span>
     </li>
 </ul>
 

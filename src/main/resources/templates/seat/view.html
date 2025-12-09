@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>View Seat</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Seat Details</h1>
@@ -12,6 +13,7 @@
     <strong>Hall ID:</strong> <span th:text="${seat.hall.id}"></span>
     (Name: <span th:text="${seat.hall.name}"></span>)
 </p>
+<p><strong>Theatre:</strong> <span th:text="${seat.hall.theatre.name}"></span></p>
 <p><strong>Row:</strong> <span th:text="${seat.seatRow}"></span></p>
 <p><strong>Column:</strong> <span th:text="${seat.seatColumn}"></span></p>
 
