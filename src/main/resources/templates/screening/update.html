@@ -38,6 +38,7 @@
     <label for="date">Date:</label>
     <input type="date" id="date" th:field="*{date}" required>
     <span th:if="${#fields.hasErrors('date')}" th:errors="*{date}" style="color: red;"></span>
+    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
     <br><br>
 
     <button type="submit">Save</button>
