@@ -41,7 +41,7 @@
     <br/><br/>
 
     <label for="price">Price:</label>
-    <input type="number" id="price" th:field="*{price}" step="any" required/>
+        <input type="number" id="price" th:field="*{price}" step="any" required/>
     <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></span>
     <br/><br/>
 

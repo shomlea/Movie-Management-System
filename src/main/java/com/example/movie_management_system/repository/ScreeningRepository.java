@@ -4,6 +4,10 @@ import com.example.movie_management_system.model.Screening;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 @Repository
 public interface ScreeningRepository extends JpaRepository<Screening,Long> {
+    Optional<Screening> findByHallIdAndMovieIdAndDate(Long hallId, Long movieId, LocalDate date);
 }

@@ -3,6 +3,7 @@ package com.example.movie_management_system.service;
 import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.repository.ScreeningRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -37,6 +38,11 @@ public class ScreeningService {
         Movie movie = movieService.findById(movieId)
                 .orElseThrow(() -> new NoSuchElementException("Movie with ID " + movieId + " not found."));
 
+        Optional<Screening> foundScreening = screeningRepository.findByHallIdAndMovieIdAndDate(hall.getId(), movie.getId(), screening.getDate());
+        if(foundScreening.isPresent()) {
+            throw new DataIntegrityViolationException("There is already a Screening for that movie in that hall on that date");
+        }
+
         screening.setHall(hall);
         screening.setMovie(movie);
 
@@ -56,6 +62,11 @@ public class ScreeningService {
 
         Movie newMovie = movieService.findById(newMovieId)
                 .orElseThrow(() -> new NoSuchElementException("Movie with ID " + newMovieId + " not found."));
+
+        Optional<Screening> foundScreening = screeningRepository.findByHallIdAndMovieIdAndDate(newHallId, newMovieId, updatedScreening.getDate());
+        if(foundScreening.isPresent() && !foundScreening.get().getId().equals(existingScreening.getId())) {
+            throw new DataIntegrityViolationException("There is already a Screening for that movie in that hall on that date");
+        }
 
 
         existingScreening.setHall(newHall);
