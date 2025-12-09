@@ -6,28 +6,51 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Movie Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${movie.id}"></span></p>
-<p><strong>Title:</strong> <span th:text="${movie.title}"></span></p>
-<p><strong>Duration:</strong> <span th:text="${movie.durationMin}"></span></p>
-<p><strong>Genre:</strong> <span th:text="${movie.genre}"></span></p>
+<a th:href="@{/movies}">Back to Movie List</a>
+<br><br>
 
-<h2>Associated Screenings:</h2>
-<div th:if="${#lists.isEmpty(movie.screenings)}">
-    <p>No screenings scheduled for this movie.</p>
+<!-- Movie details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${movie.id}" disabled>
+
+    <label>Title</label>
+    <input type="text" th:value="${movie.title}" disabled>
+
+    <label>Duration (min)</label>
+    <input type="text" th:value="${movie.durationMin}" disabled>
+
+    <label>Genre</label>
+    <input type="text" th:value="${movie.genre}" disabled>
+
 </div>
 
-<ul th:unless="${#lists.isEmpty(movie.screenings)}">
-    <li th:each="screening : ${movie.screenings}">
-        ID: <span th:text="${screening.id}"></span> |
-        Date: <span th:text="${screening.date}"></span> |
-        Hall ID: <span th:text="${screening.hall.id}"></span>
-    </li>
-</ul>
+<h2>Screenings</h2>
 
-<br>
-<a th:href="@{/movies}">Back to Movie List</a>
+<div th:if="${movie.screenings == null or #lists.isEmpty(movie.screenings)}">
+    <p class="subtitle">No screenings scheduled for this movie.</p>
+</div>
+
+<table th:if="${movie.screenings != null and !#lists.isEmpty(movie.screenings)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Hall</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="screening : ${movie.screenings}">
+        <td th:text="${screening.id}"></td>
+        <td th:text="${screening.date}"></td>
+        <td th:text="${screening.hall.name}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

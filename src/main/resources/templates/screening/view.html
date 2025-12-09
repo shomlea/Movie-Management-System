@@ -6,46 +6,76 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Screening Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${screening.id}"></span></p>
-<p>
-    <strong>Hall:</strong>
-    <span th:text="${screening.hall.name}"></span>
-    (ID: <span th:text="${screening.hall.id}"></span>)
-</p>
-<p>
-    <strong>Movie:</strong>
-    <span th:text="${screening.movie.title}"></span>
-    (ID: <span th:text="${screening.movie.id}"></span>)
-</p>
-<p><strong>Date:</strong> <span th:text="${screening.date}"></span></p>
+<a th:href="@{/screenings}">Back to Screening List</a>
+<br><br>
 
-<h2>Tickets Sold:</h2>
-<div th:if="${#lists.isEmpty(screening.tickets)}">
-    <p>No tickets sold for this screening.</p>
+<!-- Screening details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${screening.id}" disabled>
+
+    <label>Hall</label>
+    <input type="text"
+           th:value="${screening.hall.name + ' (ID: ' + screening.hall.id + ')'}"
+           disabled>
+
+    <label>Movie</label>
+    <input type="text"
+           th:value="${screening.movie.title + ' (ID: ' + screening.movie.id + ')'}"
+           disabled>
+
+    <label>Date</label>
+    <input type="text" th:value="${screening.date}" disabled>
+
 </div>
-<ul th:unless="${#lists.isEmpty(screening.tickets)}">
-    <li th:each="ticket : ${screening.tickets}">
-        ID: <span th:text="${ticket.id}"></span> |
-        Customer: <span th:text="${ticket.customer.name}"></span> |
-        Seat: <span th:text="${ticket.seat.seatRow} + ${ticket.seat.seatColumn}"></span>
-    </li>
-</ul>
 
-<h2>Assigned Staff:</h2>
-<div th:if="${#lists.isEmpty(screening.assignments)}">
-    <p>No staff assigned to this screening.</p>
+<h2>Tickets Sold</h2>
+
+<div th:if="${screening.tickets == null or #lists.isEmpty(screening.tickets)}">
+    <p class="subtitle">No tickets sold for this screening.</p>
 </div>
-<ul th:unless="${#lists.isEmpty(screening.assignments)}">
-    <li th:each="assignment : ${screening.assignments}">
-        ID: <span th:text="${assignment.staff.id}"></span> |
-        Name: <span th:text="${assignment.staff.name}"></span>
-    </li>
-</ul>
 
-<br>
-<a th:href="@{/screenings}">Back to screening List</a>
+<table th:if="${screening.tickets != null and !#lists.isEmpty(screening.tickets)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Seat</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${screening.tickets}">
+        <td th:text="${ticket.id}"></td>
+        <td th:text="${ticket.customer.name}"></td>
+        <td th:text="${ticket.seat.seatRow + '-' + ticket.seat.seatColumn}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Assigned Staff</h2>
+
+<div th:if="${screening.assignments == null or #lists.isEmpty(screening.assignments)}">
+    <p class="subtitle">No staff assigned to this screening.</p>
+</div>
+
+<table th:if="${screening.assignments != null and !#lists.isEmpty(screening.assignments)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignment : ${screening.assignments}">
+        <td th:text="${assignment.staff.id}"></td>
+        <td th:text="${assignment.staff.name}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>
