@@ -70,7 +70,7 @@ public class StaffAssignmentService {
         Optional<StaffAssignment> foundAssignment = staffAssignmentRepository.findByScreeningIdAndStaffId(newScreeningId, newStaffId);
 
         if (foundAssignment.isPresent() && !foundAssignment.get().getId().equals(existingAssignment.getId())) {
-            throw new DataIntegrityViolationException("This staff member is already assigned to this screening.");
+            throw new DataIntegrityViolationException("There is already an assignment for this staff member to this screening.");
         }
 
         Staff newStaff = findStaffById(newStaffId);

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Screening</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Add a New Screening</h1>
@@ -13,7 +14,7 @@
         <option value="">-- Select Hall --</option>
         <option th:each="h : ${availableHalls}"
                 th:value="${h.id}"
-                th:text="|${h.name} (${h.id})|">
+                th:text="|${h.name} (Theatre: ${h.theatre.name})|">
             Hall Name
         </option>
     </select>
@@ -25,7 +26,7 @@
         <option value="">-- Select Movie --</option>
         <option th:each="m : ${availableMovies}"
                 th:value="${m.id}"
-                th:text="|${m.title} (${m.id})|">
+                th:text="|${m.title} (ID: ${m.id})|">
             Movie Title
         </option>
     </select>

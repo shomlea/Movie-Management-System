@@ -2,22 +2,43 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Movie Management System</title>
+    <title>Dashboard | Movie Management System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Customer Management</h1><br><br>
-<a th:href="@{/customers}" style>Customer Management</a> <br>
-<a th:href="@{/tickets}">Ticket Management</a> <br><br>
-<h1>Theatre Management</h1><br><br>
-<a th:href="@{/movies}">Movie Management</a> <br>
-<a th:href="@{/screenings}">Screening Management</a><br>
-<a th:href="@{/theatres}">Theatre Management</a> <br>
-<a th:href="@{/halls}">Hall Management</a><br>
-<a th:href="@{/seats}">Seat Management</a> <br><br>
-<h1>Staff Management</h1><br><br>
-<a th:href="@{/support-staff}">Support Staff Management</a> <br>
-<a th:href="@{/technical-operators}">Technical Operator Management</a> <br>
-<a th:href="@{/staff-assignments}">Staff Assignment Management</a> <br>
+<div class="main-content">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Movie Management System</p>
 
-</body>
+    <div class="homepage-grid">
+
+        <div class="card">
+            <h2>Customer Management</h2>
+            <ul>
+                <li><a th:href="@{/customers}">Customer Management</a></li>
+                <li><a th:href="@{/tickets}">Ticket Management</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Theatre Management</h2>
+            <ul>
+                <li><a th:href="@{/movies}">Movie Management</a></li>
+                <li><a th:href="@{/screenings}">Screening Management</a></li>
+                <li><a th:href="@{/theatres}">Theatre Management</a></li>
+                <li><a th:href="@{/halls}">Hall Management</a></li>
+                <li><a th:href="@{/seats}">Seat Management</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Staff Management</h2>
+            <ul>
+                <li><a th:href="@{/support-staff}">Support Staff Management</a></li>
+                <li><a th:href="@{/technical-operators}">Technical Operators Management</a></li>
+                <li><a th:href="@{/staff-assignments}">Staff Assignments Management</a></li>
+            </ul>
+        </div>
+
+    </div> </div> </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Screening List</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Screenings</h1>
@@ -17,8 +18,8 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Hall Id</th>
-        <th>Movie Id</th>
+        <th>Hall Name</th>
+        <th>Movie Title</th>
         <th>Date (YYYY-MM-DD)</th>
         <th>Actions</th>
     </tr>
@@ -26,11 +27,11 @@
     <tbody>
     <tr th:each="screening : ${screenings}">
         <td th:text="${screening.id}"></td>
-        <td th:text="${screening.hall.id}"></td>
-        <td th:text="${screening.movie.id}"></td>
+        <td th:text="|${screening.hall.name} (Theatre: ${screening.hall.theatre.name})|"></td>
+        <td th:text="${screening.movie.title}"></td>
         <td th:text="${screening.date}"></td>
         <td>
-            <a th:href="@{|/screenings/view/${screening.id}|}">View</a> |
+            <a th:href="@{|/screenings/view/${screening.id}|}">View</a>
             <form th:action="@{|/screenings/remove/${screening.id}|}" method="post" style="display:inline;">
                 <button type="submit" onclick="return confirm('Are you sure you want to remove this screening?');">
                     Remove

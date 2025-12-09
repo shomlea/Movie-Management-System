@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Staff Assignments List</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Staff Assignments</h1>
@@ -17,7 +18,7 @@
     <tr>
         <th>ID</th>
         <th>Screening ID</th>
-        <th>Staff ID</th>
+        <th>Staff</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -25,9 +26,9 @@
     <tr th:each="assignment : ${staffAssignments}">
         <td th:text="${assignment.id}"></td>
         <td th:text="${assignment.screening.id}"></td>
-        <td th:text="${assignment.staff.id}"></td>
+        <td th:text="|${assignment.staff.name} (ID: ${assignment.staff.id})|"></td>
         <td>
-            <a th:href="@{|/staff-assignments/view/${assignment.id}|}">View</a> |
+            <a th:href="@{|/staff-assignments/view/${assignment.id}|}">View</a>
             <form th:action="@{|/staff-assignments/remove/${assignment.id}|}" method="post" style="display:inline;">
                 <button type="submit" onclick="return confirm('Are you sure you want to remove this assignment?');">
                     Remove

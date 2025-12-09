@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Ticket</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <h1>Add a new Ticket</h1>
@@ -14,7 +15,7 @@
         <option value="">-- Select a Screening --</option>
         <option th:each="screening : ${availableScreenings}"
                 th:value="${screening.id}"
-                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}, Hall: ${screening.hall.name}}|">
+                th:text="|ID: ${screening.id}, Date: ${screening.date}, Movie: ${screening.movie.title}, Hall: ${screening.hall.name}|">
             Screening Details
         </option>
     </select>
@@ -33,18 +34,19 @@
     <span th:if="${#fields.hasErrors('customer')}" th:errors="*{customer}" style="color: red;"></span>
     <br/><br/>
 
-    <label for="seatId">Seat:</label>
+    <label for="seatId">Seat ID:</label>
     <input type="number" id="seatId" th:field="*{seat.id}" required/>
     <span th:if="${#fields.hasErrors('seat')}" th:errors="*{seat}" style="color: red;"></span>
     <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></span>
     <br/><br/>
 
     <label for="price">Price:</label>
-    <input type="number" id="price" th:field="*{price}" required/>
+    <input type="number" id="price" th:field="*{price}" step="any" required/>
     <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></span>
     <br/><br/>
 
     <button type="submit">Add Ticket</button>
+
 </form>
 
 <a th:href="@{/tickets}">Back to Ticket List</a>
