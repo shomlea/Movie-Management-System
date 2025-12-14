@@ -1,9 +1,13 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.TechnicalOperatorFilterDto;
 import com.example.movie_management_system.model.Specialization;
 import com.example.movie_management_system.model.TechnicalOperator;
 import com.example.movie_management_system.service.TechnicalOperatorService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,9 +28,11 @@ public class TechnicalOperatorController {
     }
 
     @GetMapping
-    public String listAll(Model model) {
-        List<TechnicalOperator> operators = technicalOperatorService.findAll();
-        model.addAttribute("technicalOperators", operators);
+    public String listAll(TechnicalOperatorFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+        Page<TechnicalOperator> operatorPage = technicalOperatorService.findAll(filter, pageable);
+        model.addAttribute("allSpecializations", Specialization.values());
+        model.addAttribute("operatorPage", operatorPage);
+        model.addAttribute("filter", filter);
         return "technicalOperator/index";
     }
 

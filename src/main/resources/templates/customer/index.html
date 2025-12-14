@@ -6,37 +6,104 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Customers</h1>
+<h1>Customer Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-
-<a th:href="@{/customers/add}">Add a New Customer</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/customers/add}">Add a New Customer</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="customer : ${customers}">
-        <td th:text="${customer.id}"></td>
-        <td th:text="${customer.name}"></td>
-        <td>
-            <a th:href="@{|/customers/view/${customer.id}|}">View</a>
-            <form th:action="@{|/customers/remove/${customer.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this customer?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/customers/update/${customer.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/customers}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Customers</h2>
 
-</body>
+    <input type="hidden" name="size" th:value="${customerPage.size}" />
+
+    <th:block th:if="${!customerPage.sort.empty}"
+              th:with="sortOrderList=${customerPage.sort.get().toList()}">
+
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' +
+                         ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <label for="nameQuery">Filter by Name:</label>
+    <input type="text" id="nameQuery" th:field="*{nameQuery}" placeholder="Enter name or part of name..."/>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/customers}">Reset Filters</a>
+</form>
+
+<div th:with="
+    sortOrderList = ${!customerPage.sort.empty ? customerPage.sort.get().toList() : null},
+    currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+    currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'},
+    currentFilterQuery= ${filter.nameQuery != null ? filter.nameQuery : ''}
+">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th>
+                <a th:with="isIdSorted=${currentSortProperty == 'id'}"
+                   th:href="@{/customers(page=0, size=${customerPage.size}, nameQuery=${currentFilterQuery},
+                   sort='id,' + (${isIdSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC'))}">
+
+                    ID
+                    <span th:if="${isIdSorted}"
+                          th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>
+                <a th:with="isNameSorted=${currentSortProperty == 'name'}"
+                   th:href="@{/customers(page=0, size=${customerPage.size}, nameQuery=${currentFilterQuery},
+                   sort='name,' + (${isNameSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC'))}">
+
+                    Name
+                    <span th:if="${isNameSorted}"
+                          th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="customer : ${customerPage.content}">
+            <td th:text="${customer.id}">1</td>
+            <td th:text="${customer.name}">John Smith</td>
+            <td>
+                <a th:href="@{|/customers/view/${customer.id}|}">View</a>
+                <form th:action="@{|/customers/remove/${customer.id}|}" method="post" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Are you sure you want to remove this customer?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/customers/update/${customer.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${customerPage.totalPages > 0}" style="margin-top: 20px;">
+
+        <div th:with="urlBase='?size=' + ${customerPage.size} + '&nameQuery=' + ${currentFilterQuery} + '&sort=' + ${currentSortProperty} + ',' + ${currentSortDirection}">
+
+            <a th:href="@{${urlBase} + '&page=0'}">First</a>
+
+            <span th:if="${customerPage.hasPrevious()}">
+                <a th:href="@{${urlBase} + '&page=' + ${customerPage.number - 1}}">Previous</a>
+            </span>
+
+            <span th:text="${customerPage.number + 1}">1</span> of <span th:text="${customerPage.totalPages}">5</span>
+
+            <span th:if="${customerPage.hasNext()}">
+                <a th:href="@{${urlBase} + '&page=' + ${customerPage.number + 1}}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase} + '&page=' + ${customerPage.totalPages - 1}}">Last</a>
+
+            <span style="margin-left: 20px;">Total Customers: <span th:text="${customerPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div> </body>
 </html>

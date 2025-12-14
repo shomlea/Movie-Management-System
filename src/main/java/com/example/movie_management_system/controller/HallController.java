@@ -1,10 +1,14 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.HallFilterDto;
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.service.HallService;
 import com.example.movie_management_system.service.TheatreService;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +29,10 @@ public class HallController {
     }
 
     @GetMapping
-    public String getAllHalls(Model model) {
-        List<Hall> halls = hallService.findAll();
-        model.addAttribute("halls", halls);
+    public String getAllHalls(HallFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+        Page<Hall> hallPage = hallService.findAll(filter, pageable);
+        model.addAttribute("hallPage", hallPage);
+        model.addAttribute("filter", filter);
         return "hall/index";
     }
 

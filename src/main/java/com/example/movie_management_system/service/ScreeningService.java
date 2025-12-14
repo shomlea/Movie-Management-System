@@ -1,9 +1,15 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.ScreeningFilterDto;
 import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.repository.ScreeningRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -96,36 +102,53 @@ public class ScreeningService {
         return screeningRepository.findAll();
     }
 
+    public Page<Screening> findAll(ScreeningFilterDto filter, Pageable pageable) {
 
-//    @Transactional
-//    public void addStaffAssignment(String id, StaffAssignment staffAssignment) {
-//
-//        Screening screening = screeningRepository.findById(id)
-//                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
-//
-//        screening.addAssignment(staffAssignment);
-//        // screeningRepository.save(screening); // Not needed if mapped correctly
-//    }
-//
-//    @Transactional
-//    public void removeStaffAssignment(String id, String staffAssignmentId) {
-//
-//        Screening screening = screeningRepository.findById(id)
-//                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
-//
-//        if (screening.removeAssignment(staffAssignmentId)) {
-//            // auto-update inside transaction
-//        }
-//    }
-//
-//    @Transactional
-//    public void updateStaffAssignment(String id, String staffAssignmentId, StaffAssignment updated) {
-//
-//        Screening screening = screeningRepository.findById(id)
-//                .orElseThrow(() -> new NoSuchElementException("Screening not found"));
-//
-//        if (screening.updateAssignment(staffAssignmentId, updated)) {
-//            // auto-update
-//        }
-//    }
+        if (filter.isEmpty()) {
+            return screeningRepository.findAll(pageable);
+        }
+
+        Specification<Screening> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getMovieTitleQuery() != null && !filter.getMovieTitleQuery().trim().isEmpty()) {
+            final String moviePattern = "%" + filter.getMovieTitleQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<Screening, Movie> movieJoin = root.join("movie", JoinType.INNER);
+                return cb.like(cb.lower(movieJoin.get("title")), moviePattern);
+            });
+        }
+
+        if (filter.getHallNameQuery() != null && !filter.getHallNameQuery().trim().isEmpty()) {
+            final String hallPattern = "%" + filter.getHallNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<Screening, Hall> hallJoin = root.join("hall", JoinType.INNER);
+                return cb.like(cb.lower(hallJoin.get("name")), hallPattern);
+            });
+        }
+
+        if (filter.getTheatreNameQuery() != null && !filter.getTheatreNameQuery().trim().isEmpty()) {
+            final String theatrePattern = "%" + filter.getTheatreNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<Screening, Hall> hallJoin = root.join("hall", JoinType.INNER);
+                Join<Hall, Theatre> theatreJoin = hallJoin.join("theatre", JoinType.INNER);
+                return cb.like(cb.lower(theatreJoin.get("name")), theatrePattern);
+            });
+        }
+
+        if (filter.getDateAfter() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("date"), filter.getDateAfter())
+            );
+        }
+
+        if (filter.getDateBefore() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("date"), filter.getDateBefore())
+            );
+        }
+
+        return screeningRepository.findAll(spec, pageable);
+    }
+
+
 }

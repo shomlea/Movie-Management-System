@@ -6,40 +6,171 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Support Staff</h1>
+<h1>Support Staff Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br>
-<a th:href="@{/support-staff/add}">Add New Support Staff</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/support-staff/add}">Add New Staff</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Salary</th>
-        <th>Role</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="staff : ${supportStaff}">
-        <td th:text="${staff.id}"></td>
-        <td th:text="${staff.name}"></td>
-        <td th:text="${staff.salary}"></td>
-        <td th:text="${staff.role}"></td>
-        <td>
-            <a th:href="@{|/support-staff/view/${staff.id}|}">View</a>
-            <form th:action="@{|/support-staff/remove/${staff.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this support Staff?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/support-staff/update/${staff.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/support-staff}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Staff</h2>
 
+    <input type="hidden" name="size" th:value="${staffPage?.size ?: 10}" />
+    <th:block th:if="${!staffPage?.sort?.empty}" th:with="sortOrderList=${staffPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+            <label for="nameQuery">Name:</label>
+            <input type="text" id="nameQuery" th:field="*{nameQuery}" placeholder="Enter staff name..."/>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label for="role">Role:</label>
+            <select id="role" th:field="*{role}">
+                <option value="">-- All Roles --</option>
+                <option th:each="staffRole : ${allRoles}"
+                        th:value="${staffRole}"
+                        th:text="${staffRole.name}">
+                </option>
+            </select>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="minSalary">Min Salary:</label>
+            <input type="number" id="minSalary" th:field="*{minSalary}" step="0.01" placeholder="Min salary"/>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="maxSalary">Max Salary:</label>
+            <input type="number" id="maxSalary" th:field="*{maxSalary}" step="0.01" placeholder="Max salary"/>
+        </div>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/support-staff}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!staffPage?.sort?.empty ? staffPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/support-staff(
+                           page=0,
+                           size=${staffPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           role=${filter.role},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/support-staff(
+                           page=0,
+                           size=${staffPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           role=${filter.role},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Name
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='role', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/support-staff(
+                           page=0,
+                           size=${staffPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           role=${filter.role},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Role
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='salary', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/support-staff(
+                           page=0,
+                           size=${staffPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           role=${filter.role},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Salary
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="staff : ${staffPage.content}">
+            <td th:text="${staff.id}"></td>
+            <td th:text="${staff.name}"></td>
+            <td th:text="${staff.role}"></td>
+            <td th:text="${#numbers.formatDecimal(staff.salary, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td>
+                <a th:href="@{|/support-staff/view/${staff.id}|}">View</a>
+                <form th:action="@{|/support-staff/remove/${staff.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this staff member?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/support-staff/update/${staff.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${staffPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/support-staff(
+                                  size=${staffPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  nameQuery=${filter.nameQuery},
+                                  minSalary=${filter.minSalary},
+                                  maxSalary=${filter.maxSalary},
+                                  role=${filter.role}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${staffPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${staffPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${staffPage.number + 1}">1</span> of <span th:text="${staffPage.totalPages}">5</span>
+
+            <span th:if="${staffPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${staffPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${staffPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Staff: <span th:text="${staffPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

@@ -1,11 +1,17 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.SeatFilterDto;
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.repository.SeatRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +45,11 @@ public class SeatService {
             throw new DataIntegrityViolationException("There is already a seat with the same row and column.");
         }
 
+        Long numberOfSeats = seatRepository.countByHallId(hallId);
+        if (numberOfSeats >= hall.getCapacity()) {
+            throw new DataIntegrityViolationException("Hall Capacity Exceeded.");
+        }
+
         seat.setHall(hall);
 
         return seatRepository.save(seat);
@@ -57,13 +68,24 @@ public class SeatService {
         existingSeat.setSeatRow(updatedSeat.getSeatRow());
         existingSeat.setSeatColumn(updatedSeat.getSeatColumn());
 
-        if (!existingSeat.getHall().getId().equals(newHallId)) {
+        boolean hallIsChanging = !existingSeat.getHall().getId().equals(newHallId);
+
+        if (hallIsChanging) {
             existingSeat.setHall(newHall);
         }
 
         Optional<Seat> foundSeat = seatRepository.findBySeatRowAndSeatColumnAndHallId(updatedSeat.getSeatRow(), updatedSeat.getSeatColumn(), newHallId);
         if (foundSeat.isPresent() && !foundSeat.get().getId().equals(existingSeat.getId())) {
             throw new DataIntegrityViolationException("There is already a seat with the same row and column.");
+        }
+
+        if (hallIsChanging) {
+
+            Long currentSeatCount = seatRepository.countByHallId(newHallId);
+
+            if (currentSeatCount >= newHall.getCapacity()) {
+                throw new DataIntegrityViolationException("Hall Capacity Exceeded in new Hall.");
+            }
         }
 
         return seatRepository.save(existingSeat);
@@ -85,10 +107,23 @@ public class SeatService {
         return seatRepository.findAll();
     }
 
-//    public List<Seat> findByScreeningId(Long screeningId){
-//        Screening screening = screeningService.findById(screeningId).orElseThrow(() -> new NoSuchElementException("Screening with id " + screeningId + "not found"));
-//        seatRepository.findByHallId(screening.getHall().getId());
-//    }
+    public Page<Seat> findAll(SeatFilterDto filter, Pageable pageable) {
+
+        if (filter.isEmpty()) {
+            return seatRepository.findAll(pageable);
+        }
+
+        Specification<Seat> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getHallNameQuery() != null && !filter.getHallNameQuery().trim().isEmpty()) {
+            final String hallNamePattern = "%" + filter.getHallNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<Seat, Hall> hallJoin = root.join("hall", JoinType.INNER);
+                return cb.like(cb.lower(hallJoin.get("name")), hallNamePattern);
+            });
+        }
+        return seatRepository.findAll(spec, pageable);
+    }
 
     public Optional<Seat> findById(Long id) {
         return seatRepository.findById(id);

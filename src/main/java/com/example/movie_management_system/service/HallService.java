@@ -1,10 +1,16 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.HallFilterDto;
 import com.example.movie_management_system.model.Hall;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.HallRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,6 +64,8 @@ public class HallService {
         return hallRepository.save(existingHall);
     }
 
+
+
     @Transactional
     public void delete(Long id) {
         if (!hallRepository.existsById(id)) {
@@ -76,6 +84,44 @@ public class HallService {
     }
 
     public List<Hall> findAll() {
-        return hallRepository.findAll();  // JPA method
+        return hallRepository.findAll();
+    }
+    public Page<Hall> findAll(HallFilterDto filter, Pageable pageable) {
+
+        if (filter.isEmpty()) {
+            return hallRepository.findAll(pageable);
+        }
+
+        Specification<Hall> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getNameQuery() != null && !filter.getNameQuery().trim().isEmpty()) {
+            final String hallNamePattern = "%" + filter.getNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("name")), hallNamePattern)
+            );
+        }
+
+
+        if (filter.getTheatreNameQuery() != null && !filter.getTheatreNameQuery().trim().isEmpty()) {
+            final String theatreNamePattern = "%" + filter.getTheatreNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<Hall, Theatre> theatreJoin = root.join("theatre", JoinType.INNER);
+                return cb.like(cb.lower(theatreJoin.get("name")), theatreNamePattern);
+            });
+        }
+
+        if (filter.getMinCapacity() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("capacity"), filter.getMinCapacity())
+            );
+        }
+
+        if (filter.getMaxCapacity() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("capacity"), filter.getMaxCapacity())
+            );
+        }
+
+        return hallRepository.findAll(spec, pageable);
     }
 }

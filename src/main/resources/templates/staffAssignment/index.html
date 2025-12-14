@@ -2,43 +2,131 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Staff Assignments List</title>
+    <title>Staff Assignment List</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Staff Assignments</h1>
+<h1>Staff Assignment Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br>
-<a th:href="@{/staff-assignments/add}">Add New Assignment</a>
-
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/staff-assignments/add}">Create New Assignment</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Screening ID</th>
-        <th>Staff</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="assignment : ${staffAssignments}">
-        <td th:text="${assignment.id}"></td>
-        <td th:text="${assignment.screening.id}"></td>
-        <td th:text="|${assignment.staff.name} (ID: ${assignment.staff.id})|"></td>
-        <td>
-            <a th:href="@{|/staff-assignments/view/${assignment.id}|}">View</a>
-            <form th:action="@{|/staff-assignments/remove/${assignment.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this assignment?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/staff-assignments/update/${assignment.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/staff-assignments}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Assignments</h2>
 
+    <input type="hidden" name="size" th:value="${assignmentPage?.size ?: 10}" />
+    <th:block th:if="${!assignmentPage?.sort?.empty}" th:with="sortOrderList=${assignmentPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="margin-bottom: 10px;">
+        <label for="staffNameQuery">Staff Name:</label>
+        <input type="text" id="staffNameQuery" th:field="*{staffNameQuery}" placeholder="Enter staff name..."/>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/staff-assignments}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!assignmentPage?.sort?.empty ? assignmentPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/staff-assignments(
+                           page=0,
+                           size=${assignmentPage.size},
+                           staffNameQuery=${filter.staffNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='screening.movie.title', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/staff-assignments(
+                           page=0,
+                           size=${assignmentPage.size},
+                           staffNameQuery=${filter.staffNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Screening ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='staff.name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/staff-assignments(
+                           page=0,
+                           size=${assignmentPage.size},
+                           staffNameQuery=${filter.staffNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Staff (ID)
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="assignment : ${assignmentPage.content}">
+            <td th:text="${assignment.id}"></td>
+
+            <td th:with="s=${assignment.screening}, m=${s.movie}, h=${s.hall}, t=${h.theatre}"
+                th:text="'ID: ' + ${s.id} + ', Date: ' + ${#temporals.format(s.date, 'dd-MM-yyyy')} + ', Movie Title: ' + ${m.title} + ', Hall Name: ' + ${h.name} + ', Theatre Name: ' + ${t.name}">
+            </td>
+
+            <td th:with="staff=${assignment.staff}"
+                th:text="${staff.name} + ' (ID: ' + ${staff.id} + ')'">
+            </td>
+
+            <td>
+                <a th:href="@{|/staff-assignments/view/${assignment.id}|}">View</a>
+                <form th:action="@{|/staff-assignments/remove/${assignment.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this assignment?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/staff-assignments/update/${assignment.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${assignmentPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/staff-assignments(
+                                  size=${assignmentPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  staffNameQuery=${filter.staffNameQuery}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${assignmentPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${assignmentPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${assignmentPage.number + 1}">1</span> of <span th:text="${assignmentPage.totalPages}">5</span>
+
+            <span th:if="${assignmentPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${assignmentPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${assignmentPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Assignments: <span th:text="${assignmentPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

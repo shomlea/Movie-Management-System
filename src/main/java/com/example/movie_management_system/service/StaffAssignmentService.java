@@ -1,9 +1,15 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.StaffAssignmentFilterDto;
 import com.example.movie_management_system.model.*;
 import com.example.movie_management_system.repository.StaffAssignmentRepository;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -107,5 +113,24 @@ public class StaffAssignmentService {
     public List<StaffAssignment> findAll()
     {
         return staffAssignmentRepository.findAll();
+    }
+
+    public Page<StaffAssignment> findAll(StaffAssignmentFilterDto filter, Pageable pageable) {
+
+        if (filter.isEmpty()) {
+            return staffAssignmentRepository.findAll(pageable);
+        }
+
+        Specification<StaffAssignment> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getStaffNameQuery() != null && !filter.getStaffNameQuery().trim().isEmpty()) {
+            final String namePattern = "%" + filter.getStaffNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> {
+                Join<StaffAssignment, Staff> staffJoin = root.join("staff", JoinType.INNER);
+                return cb.like(cb.lower(staffJoin.get("name")), namePattern);
+            });
+        }
+
+        return staffAssignmentRepository.findAll(spec, pageable);
     }
 }

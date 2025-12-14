@@ -6,44 +6,165 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Halls</h1>
+<h1>Hall Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-
-
-<a th:href="@{/halls/add}">Add a New Hall</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/halls/add}">Add a New Hall</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Theatre Name</th>
-        <th>Capacity</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="hall : ${halls}">
-        <td th:text="${hall.id}"></td>
-        <td th:text="${hall.name}"></td>
+<form th:action="@{/halls}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Halls</h2>
 
-        <td th:text="${hall.theatre.name}"></td>
+    <input type="hidden" name="size" th:value="${hallPage?.size ?: 10}" />
+    <th:block th:if="${!hallPage?.sort?.empty}" th:with="sortOrderList=${hallPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
 
-        <td th:text="${hall.capacity}"></td>
-        <td>
-            <a th:href="@{|/halls/view/${hall.id}|}">View</a>
-            <form th:action="@{|/halls/remove/${hall.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this hall?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/halls/update/${hall.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+            <label for="nameQuery">Hall Name:</label>
+            <input type="text" id="nameQuery" th:field="*{nameQuery}" placeholder="Enter hall name..."/>
+        </div>
 
+        <div style="flex-grow: 1;">
+            <label for="theatreNameQuery">Theatre Name:</label>
+            <input type="text" id="theatreNameQuery" th:field="*{theatreNameQuery}" placeholder="Enter theatre name..."/>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="minCapacity">Min Capacity:</label>
+            <input type="number" id="minCapacity" th:field="*{minCapacity}" placeholder="Min capacity"/>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="maxCapacity">Max Capacity:</label>
+            <input type="number" id="maxCapacity" th:field="*{maxCapacity}" placeholder="Max capacity"/>
+        </div>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/halls}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!hallPage?.sort?.empty ? hallPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/halls(
+                           page=0,
+                           size=${hallPage.size},
+                           nameQuery=${filter.nameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           minCapacity=${filter.minCapacity},
+                           maxCapacity=${filter.maxCapacity},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/halls(
+                           page=0,
+                           size=${hallPage.size},
+                           nameQuery=${filter.nameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           minCapacity=${filter.minCapacity},
+                           maxCapacity=${filter.maxCapacity},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Hall Name
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='theatre.name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/halls(
+                           page=0,
+                           size=${hallPage.size},
+                           nameQuery=${filter.nameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           minCapacity=${filter.minCapacity},
+                           maxCapacity=${filter.maxCapacity},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Theatre Name
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='capacity', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/halls(
+                           page=0,
+                           size=${hallPage.size},
+                           nameQuery=${filter.nameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           minCapacity=${filter.minCapacity},
+                           maxCapacity=${filter.maxCapacity},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Capacity
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="hall : ${hallPage.content}">
+            <td th:text="${hall.id}"></td>
+            <td th:text="${hall.name}"></td>
+            <td th:text="${hall.theatre.name}"></td>
+            <td th:text="${hall.capacity}"></td>
+            <td>
+                <a th:href="@{|/halls/view/${hall.id}|}">View</a>
+                <form th:action="@{|/halls/remove/${hall.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this hall?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/halls/update/${hall.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${hallPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/halls(
+                                  size=${hallPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  nameQuery=${filter.nameQuery},
+                                  theatreNameQuery=${filter.theatreNameQuery},
+                                  minCapacity=${filter.minCapacity},
+                                  maxCapacity=${filter.maxCapacity}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${hallPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${hallPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${hallPage.number + 1}">1</span> of <span th:text="${hallPage.totalPages}">5</span>
+
+            <span th:if="${hallPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${hallPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${hallPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Halls: <span th:text="${hallPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

@@ -1,11 +1,15 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.ScreeningFilterDto;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.service.ScreeningService;
 import com.example.movie_management_system.service.HallService; // NEW: Required for dropdown data
 import com.example.movie_management_system.service.MovieService; // NEW: Required for dropdown data
 import com.example.movie_management_system.service.SeatService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,9 +36,10 @@ public class ScreeningController {
     }
 
     @GetMapping
-    public String getAllScreenings(Model model) {
-        List<Screening> screenings = screeningService.findAll();
-        model.addAttribute("screenings", screenings);
+    public String getAllScreenings(ScreeningFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+        Page<Screening> screeningPage = screeningService.findAll(filter, pageable);
+        model.addAttribute("screeningPage", screeningPage);
+        model.addAttribute("filter", filter);
         return "screening/index";
     }
 

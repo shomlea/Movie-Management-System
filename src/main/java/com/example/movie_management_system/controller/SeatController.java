@@ -1,9 +1,13 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.SeatFilterDto;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.service.SeatService;
 import com.example.movie_management_system.service.HallService; // NEW: Required for dropdown data
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +29,10 @@ public class SeatController {
     }
 
     @GetMapping
-    public String getAllSeats(Model model) {
-        List<Seat> seats = seatService.findAll();
-        model.addAttribute("seats", seats);
+    public String getAllSeats(SeatFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+        Page<Seat> seatPage = seatService.findAll(filter, pageable);
+        model.addAttribute("seatPage", seatPage);
+        model.addAttribute("filter", filter);
         return "seat/index";
     }
 

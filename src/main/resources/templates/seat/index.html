@@ -6,42 +6,133 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Seats</h1>
+<h1>Seat Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-
-
-<a th:href="@{/seats/add}">Add a New Seat</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/seats/add}">Add a New Seat</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Hall Name</th>
-        <th>Row</th>
-        <th>Column</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="seat : ${seats}">
-        <td th:text="${seat.id}"></td>
-        <td th:text="|${seat.hall.name} (Theatre: ${seat.hall.theatre.name})|"></td>
-        <td th:text="${seat.seatRow}"></td>
-        <td th:text="${seat.seatColumn}"></td>
-        <td>
-            <a th:href="@{|/seats/view/${seat.id}|}">View</a>
-            <form th:action="@{|/seats/remove/${seat.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this seat?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/seats/update/${seat.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/seats}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Seats</h2>
 
+    <input type="hidden" name="size" th:value="${seatPage?.size ?: 10}" />
+    <th:block th:if="${!seatPage?.sort?.empty}" th:with="sortOrderList=${seatPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="margin-bottom: 10px;">
+        <label for="hallNameQuery">Hall Name:</label>
+        <input type="text" id="hallNameQuery" th:field="*{hallNameQuery}" placeholder="Enter hall name..."/>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/seats}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!seatPage?.sort?.empty ? seatPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/seats(
+                           page=0,
+                           size=${seatPage.size},
+                           hallNameQuery=${filter.hallNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='hall.name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/seats(
+                           page=0,
+                           size=${seatPage.size},
+                           hallNameQuery=${filter.hallNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Hall
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='seatRow', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/seats(
+                           page=0,
+                           size=${seatPage.size},
+                           hallNameQuery=${filter.hallNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Row
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='seatColumn', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/seats(
+                           page=0,
+                           size=${seatPage.size},
+                           hallNameQuery=${filter.hallNameQuery},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Column
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="seat : ${seatPage.content}">
+            <td th:text="${seat.id}"></td>
+            <td th:text="|${seat.hall.name} (${seat.hall.theatre.name})|"></td>
+            <td th:text="${seat.seatRow}"></td>
+            <td th:text="${seat.seatColumn}"></td>
+            <td>
+                <a th:href="@{|/seats/view/${seat.id}|}">View</a>
+                <form th:action="@{|/seats/remove/${seat.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this seat?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/seats/update/${seat.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${seatPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/seats(
+                                  size=${seatPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  hallNameQuery=${filter.hallNameQuery}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${seatPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${seatPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${seatPage.number + 1}">1</span> of <span th:text="${seatPage.totalPages}">5</span>
+
+            <span th:if="${seatPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${seatPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${seatPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Seats: <span th:text="${seatPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.StaffAssignmentFilterDto;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Staff;
 import com.example.movie_management_system.model.StaffAssignment;
@@ -9,6 +10,9 @@ import com.example.movie_management_system.service.ScreeningService;
 import com.example.movie_management_system.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,9 +47,10 @@ public class StaffAssignmentController {
     }
 
     @GetMapping
-    public String listAll(Model model) {
-        List<StaffAssignment> assignments = staffAssignmentService.findAll();
-        model.addAttribute("staffAssignments", assignments);
+    public String listAll(StaffAssignmentFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+        Page<StaffAssignment> assignmentPage = staffAssignmentService.findAll(filter, pageable);
+        model.addAttribute("assignmentPage", assignmentPage);
+        model.addAttribute("filter", filter);
         return "staffAssignment/index";
     }
 

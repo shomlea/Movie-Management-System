@@ -2,44 +2,175 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Technical Operators List</title>
+    <title>Technical Operator List</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Technical Operators</h1>
+<h1>Technical Operator Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br>
-<a th:href="@{/technical-operators/add}">Add New Technical Operator</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/technical-operators/add}">Add New Operator</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Salary</th>
-        <th>Specialization</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="operator : ${technicalOperators}">
-        <td th:text="${operator.id}"></td>
-        <td th:text="${operator.name}"></td>
-        <td th:text="${operator.salary}"></td>
-        <td th:text="${operator.specialization}"></td>
-        <td>
-            <a th:href="@{|/technical-operators/view/${operator.id}|}">View</a>
-            <form th:action="@{|/technical-operators/remove/${operator.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this technical Operator?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/technical-operators/update/${operator.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/technical-operators}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Technical Operators</h2>
 
+    <input type="hidden" name="size" th:value="${operatorPage?.size ?: 10}" />
+    <th:block th:if="${!operatorPage?.sort?.empty}" th:with="sortOrderList=${operatorPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+            <label for="nameQuery">Name:</label>
+            <input type="text" id="nameQuery" th:field="*{nameQuery}" placeholder="Enter operator name..."/>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label for="specialization">Specialization:</label>
+            <select id="specialization" th:field="*{specialization}">
+                <option value="">-- All Specializations --</option>
+                <option th:each="spec : ${allSpecializations}"
+                        th:value="${spec}"
+                        th:text="${spec.name}">
+                </option>
+            </select>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="minSalary">Min Salary:</label>
+            <input type="number" id="minSalary" th:field="*{minSalary}" step="0.01" placeholder="Min salary"/>
+        </div>
+
+        <div style="width: 200px;">
+            <label for="maxSalary">Max Salary:</label>
+            <input type="number" id="maxSalary" th:field="*{maxSalary}" step="0.01" placeholder="Max salary"/>
+        </div>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/technical-operators}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!operatorPage?.sort?.empty ? operatorPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/technical-operators(
+                           page=0,
+                           size=${operatorPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           specialization=${filter.specialization},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/technical-operators(
+                           page=0,
+                           size=${operatorPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           specialization=${filter.specialization},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Name
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='specialization', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/technical-operators(
+                           page=0,
+                           size=${operatorPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           specialization=${filter.specialization},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Specialization
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='salary', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/technical-operators(
+                           page=0,
+                           size=${operatorPage.size},
+                           nameQuery=${filter.nameQuery},
+                           minSalary=${filter.minSalary},
+                           maxSalary=${filter.maxSalary},
+                           specialization=${filter.specialization},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Salary
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="operator : ${operatorPage.content}">
+            <td th:text="${operator.id}"></td>
+            <td th:text="${operator.name}"></td>
+            <td th:text="${operator.specialization}"></td>
+            <td th:text="${#numbers.formatDecimal(operator.salary, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td>
+                <a th:href="@{|/technical-operators/view/${operator.id}|}">View</a>
+                <form th:action="@{|/technical-operators/remove/${operator.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this operator?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/technical-operators/update/${operator.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${operatorPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/technical-operators(
+                                  size=${operatorPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  nameQuery=${filter.nameQuery},
+                                  minSalary=${filter.minSalary},
+                                  maxSalary=${filter.maxSalary},
+                                  specialization=${filter.specialization}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${operatorPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${operatorPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${operatorPage.number + 1}">1</span> of <span th:text="${operatorPage.totalPages}">5</span>
+
+            <span th:if="${operatorPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${operatorPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${operatorPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Operators: <span th:text="${operatorPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
