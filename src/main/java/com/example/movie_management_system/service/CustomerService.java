@@ -27,10 +27,10 @@ public class CustomerService {
 
     @Transactional
     public Customer save(Customer customer) {
-        Optional<Customer> foundCustomer = customerRepository.findByName(customer.getName());
-        if (foundCustomer.isPresent()) {
-            throw new DataIntegrityViolationException("Customer with name " + customer.getName() + " already exists.");
-        }
+//        Optional<Customer> foundCustomer = customerRepository.findByName(customer.getName());
+//        if (foundCustomer.isPresent()) {
+//            throw new DataIntegrityViolationException("Customer with name " + customer.getName() + " already exists.");
+//        }
         return customerRepository.save(customer);
     }
 
@@ -39,10 +39,10 @@ public class CustomerService {
         Customer existingCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Customer with ID " + id + " not found."));
 
-        Optional<Customer> foundCustomer = customerRepository.findByName(updatedCustomer.getName());
-        if (foundCustomer.isPresent() &&  !foundCustomer.get().getId().equals(existingCustomer.getId())) {
-            throw new DataIntegrityViolationException("Customer with name " + updatedCustomer.getName() + " already exists.");
-        }
+//        Optional<Customer> foundCustomer = customerRepository.findByName(updatedCustomer.getName());
+//        if (foundCustomer.isPresent() &&  !foundCustomer.get().getId().equals(existingCustomer.getId())) {
+//            throw new DataIntegrityViolationException("Customer with name " + updatedCustomer.getName() + " already exists.");
+//        }
 
         existingCustomer.setName(updatedCustomer.getName());
 
