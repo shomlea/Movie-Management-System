@@ -6,43 +6,185 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Screenings</h1>
+<h1>Screening Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-
-
-<a th:href="@{/screenings/add}">Add a New Screening</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/screenings/add}">Add a New Screening</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Hall Name</th>
-        <th>Movie Title</th>
-        <th>Date (YYYY-MM-DD)</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="screening : ${screenings}">
-        <td th:text="${screening.id}"></td>
-        <td th:text="|${screening.hall.name} (Theatre: ${screening.hall.theatre.name})|"></td>
-        <td th:text="${screening.movie.title}"></td>
-        <td th:text="${screening.date}"></td>
-        <td>
-            <a th:href="@{|/screenings/view/${screening.id}|}">View</a>
-            <form th:action="@{|/screenings/remove/${screening.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this screening?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/screenings/update/${screening.id}|}">Update</a>
-            <a th:href="@{|/tickets/buy/${screening.id}|}">Buy Ticket</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/screenings}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Screenings</h2>
 
+    <input type="hidden" name="size" th:value="${screeningPage?.size ?: 10}" />
+
+    <th:block th:if="${!screeningPage?.sort?.empty}" th:with="sortOrderList=${screeningPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+            <label for="movieTitleQuery">Movie Title:</label>
+            <input type="text" id="movieTitleQuery" th:field="*{movieTitleQuery}" placeholder="Enter movie title..."/>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label for="hallNameQuery">Hall Name:</label>
+            <input type="text" id="hallNameQuery" th:field="*{hallNameQuery}" placeholder="Enter hall name..."/>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label for="theatreNameQuery">Theatre Name (for Filter):</label>
+            <input type="text" id="theatreNameQuery" th:field="*{theatreNameQuery}" placeholder="Enter theatre name..."/>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+
+        <div style="width: 200px;">
+            <label for="dateAfter">Date From:</label>
+            <input type="date" id="dateAfter"
+                   th:field="*{dateAfter}"
+                   th:value="${filter.dateAfter != null ? #temporals.format(filter.dateAfter, 'yyyy-MM-dd') : ''}"
+            />
+        </div>
+
+        <div style="width: 200px;">
+            <label for="dateBefore">Date To:</label>
+            <input type="date" id="dateBefore"
+                   th:field="*{dateBefore}"
+                   th:value="${filter.dateBefore != null ? #temporals.format(filter.dateBefore, 'yyyy-MM-dd') : ''}"
+            />
+        </div>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/screenings}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!screeningPage?.sort?.empty ? screeningPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'date'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/screenings(
+                           page=0,
+                           size=${screeningPage.size},
+                           movieTitleQuery=${filter.movieTitleQuery},
+                           hallNameQuery=${filter.hallNameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           dateAfter=${filter.dateAfter},
+                           dateBefore=${filter.dateBefore},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='movie.title', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/screenings(
+                           page=0,
+                           size=${screeningPage.size},
+                           movieTitleQuery=${filter.movieTitleQuery},
+                           hallNameQuery=${filter.hallNameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           dateAfter=${filter.dateAfter},
+                           dateBefore=${filter.dateBefore},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Movie Title
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='hall.name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/screenings(
+                           page=0,
+                           size=${screeningPage.size},
+                           movieTitleQuery=${filter.movieTitleQuery},
+                           hallNameQuery=${filter.hallNameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           dateAfter=${filter.dateAfter},
+                           dateBefore=${filter.dateBefore},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Hall
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='date', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/screenings(
+                           page=0,
+                           size=${screeningPage.size},
+                           movieTitleQuery=${filter.movieTitleQuery},
+                           hallNameQuery=${filter.hallNameQuery},
+                           theatreNameQuery=${filter.theatreNameQuery},
+                           dateAfter=${filter.dateAfter},
+                           dateBefore=${filter.dateBefore},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Date
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="screening : ${screeningPage.content}">
+            <td th:text="${screening.id}"></td>
+            <td th:text="${screening.movie.title}"></td>
+            <td th:text="|${screening.hall.name} (${screening.hall.theatre.name})|"></td>
+            <td th:text="${#temporals.format(screening.date, 'dd-MM-yyyy')}"></td>
+            <td>
+                <a th:href="@{|/screenings/view/${screening.id}|}">View</a>
+                <form th:action="@{|/screenings/remove/${screening.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this screening?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/screenings/update/${screening.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${screeningPage?.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/screenings(
+                                  size=${screeningPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  movieTitleQuery=${filter.movieTitleQuery},
+                                  hallNameQuery=${filter.hallNameQuery},
+                                  theatreNameQuery=${filter.theatreNameQuery},
+                                  dateAfter=${filter.dateAfter},
+                                  dateBefore=${filter.dateBefore}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${screeningPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${screeningPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${screeningPage.number + 1}">1</span> of <span th:text="${screeningPage.totalPages}">5</span>
+
+            <span th:if="${screeningPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${screeningPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${screeningPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Screenings: <span th:text="${screeningPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

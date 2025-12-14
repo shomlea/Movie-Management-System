@@ -6,42 +6,165 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Movies</h1>
+<h1>Movie Management</h1>
 
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-
-
-<a th:href="@{/movies/add}">Add a New Movie</a>
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/movies/add}">Add a New Movie</a>
 <br><br>
 
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Duration (Min)</th>
-        <th>Genre</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="movie : ${movies}">
-        <td th:text="${movie.id}"></td>
-        <td th:text="${movie.title}"></td>
-        <td th:text="${movie.durationMin}"></td>
-        <td th:text="${movie.genre}"></td>
-        <td>
-            <a th:href="@{|/movies/view/${movie.id}|}">View</a>
-            <form th:action="@{|/movies/remove/${movie.id}|}" method="post" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to remove this movie?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/movies/update/${movie.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<form th:action="@{/movies}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Movies</h2>
 
+    <input type="hidden" name="size" th:value="${moviePage.size}" />
+    <th:block th:if="${!moviePage.sort.empty}" th:with="sortOrderList=${moviePage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' + ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 10px;">
+        <div style="flex-grow: 1;">
+            <label for="titleQuery">Title:</label>
+            <input type="text" id="titleQuery" th:field="*{titleQuery}" placeholder="Enter movie title..."/>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <label for="genreQuery">Genre:</label>
+            <input type="text" id="genreQuery" th:field="*{genreQuery}" placeholder="e.g., Action, Comedy..."/>
+        </div>
+
+        <div style="width: 150px;">
+            <label for="minDurationMin">Min Duration (min):</label>
+            <input type="number" id="minDurationMin" th:field="*{minDurationMin}" placeholder="e.g., 90"/>
+        </div>
+
+        <div style="width: 150px;">
+            <label for="maxDurationMin">Max Duration (min):</label>
+            <input type="number" id="maxDurationMin" th:field="*{maxDurationMin}" placeholder="e.g., 180"/>
+        </div>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/movies}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!moviePage.sort.empty ? moviePage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/movies(
+                           page=0,
+                           size=${moviePage.size},
+                           titleQuery=${filter.titleQuery},
+                           genreQuery=${filter.genreQuery},
+                           minDurationMin=${filter.minDurationMin},
+                           maxDurationMin=${filter.maxDurationMin},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='title', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/movies(
+                           page=0,
+                           size=${moviePage.size},
+                           titleQuery=${filter.titleQuery},
+                           genreQuery=${filter.genreQuery},
+                           minDurationMin=${filter.minDurationMin},
+                           maxDurationMin=${filter.maxDurationMin},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Title
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='durationMin', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/movies(
+                           page=0,
+                           size=${moviePage.size},
+                           titleQuery=${filter.titleQuery},
+                           genreQuery=${filter.genreQuery},
+                           minDurationMin=${filter.minDurationMin},
+                           maxDurationMin=${filter.maxDurationMin},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Duration (min)
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='genre', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/movies(
+                           page=0,
+                           size=${moviePage.size},
+                           titleQuery=${filter.titleQuery},
+                           genreQuery=${filter.genreQuery},
+                           minDurationMin=${filter.minDurationMin},
+                           maxDurationMin=${filter.maxDurationMin},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+                    Genre
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="movie : ${moviePage.content}">
+            <td th:text="${movie.id}"></td>
+            <td th:text="${movie.title}"></td>
+            <td th:text="${movie.durationMin}"></td>
+            <td th:text="${movie.genre}"></td>
+            <td>
+                <a th:href="@{|/movies/view/${movie.id}|}">View</a>
+                <form th:action="@{|/movies/remove/${movie.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this movie?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/movies/update/${movie.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${moviePage.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/movies(
+                                  size=${moviePage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  titleQuery=${filter.titleQuery},
+                                  genreQuery=${filter.genreQuery},
+                                  minDurationMin=${filter.minDurationMin},
+                                  maxDurationMin=${filter.maxDurationMin}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${moviePage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${moviePage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${moviePage.number + 1}">1</span> of <span th:text="${moviePage.totalPages}">5</span>
+
+            <span th:if="${moviePage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${moviePage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${moviePage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Movies: <span th:text="${moviePage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

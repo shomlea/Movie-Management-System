@@ -6,44 +6,162 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Tickets</h1>
-<div class="menu-links">
-<a th:href="@{/}">Back to Main Menu</a><br><br>
-</div>
-<div class="action-links">
-<a th:href="@{/tickets/add}">Add a New Ticket</a>
-<br><br>
-</div>
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Screening Id</th>
-        <th>Customer Name</th>
-        <th>Seat</th>
-        <th>Price</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="ticket : ${tickets}">
-        <td th:text="${ticket.id}"></td>
-        <td th:text="|${ticket.screening.id} (${ticket.screening.movie.title})|"></td>
-        <td th:text="${ticket.customer.name}"></td>
-        <td th:text="|${ticket.seat.seatRow}${ticket.seat.seatColumn}|"></td>
-        <td th:text="${ticket.price}"></td>
-        <td>
-            <a th:href="@{|/tickets/view/${ticket.id}|}">View</a>
-            <form th:action="@{|/tickets/remove/${ticket.id}|}" method="post" style="display:inline;">
-                <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this ticket?');">
-                    Remove
-                </button>
-            </form>
-            <a th:href="@{|/tickets/update/${ticket.id}|}">Update</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<h1>Tickets Management</h1>
 
+<a th:href="@{/}">Back to Main Menu</a> | <a th:href="@{/tickets/add}">Add a New Ticket</a>
+<br><br>
+
+<form th:action="@{/tickets}" method="get" th:object="${filter}" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <h2>🔎 Filter Tickets</h2>
+
+    <input type="hidden" name="size" th:value="${ticketPage.size}" />
+
+    <th:block th:if="${!ticketPage.sort.empty}" th:with="sortOrderList=${ticketPage.sort.get().toList()}">
+        <input type="hidden" name="sort"
+               th:value="${sortOrderList.get(0).property} + ',' +
+                             ${sortOrderList.get(0).direction}" />
+    </th:block>
+
+    <div style="margin-bottom: 10px;">
+        <label for="customerNameQuery">Customer Name:</label>
+        <input type="text" id="customerNameQuery" th:field="*{customerNameQuery}" placeholder="Enter customer name..."/>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label for="minPrice">Min Price:</label>
+        <input type="number" id="minPrice" th:field="*{minPrice}" step="0.01" placeholder="e.g., 10.00"/>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label for="maxPrice">Max Price:</label>
+        <input type="number" id="maxPrice" th:field="*{maxPrice}" step="0.01" placeholder="e.g., 50.00"/>
+    </div>
+
+    <button type="submit">Apply Filter</button>
+    <a th:href="@{/tickets}">Reset Filters</a>
+</form>
+
+<div th:with="
+        sortOrderList = ${!ticketPage.sort.empty ? ticketPage.sort.get().toList() : null},
+        currentSortProperty= ${sortOrderList != null ? sortOrderList.get(0).property : 'id'},
+        currentSortDirection= ${sortOrderList != null ? sortOrderList.get(0).direction.name() : 'ASC'}
+    ">
+
+    <table border="1" cellpadding="6" class="customer-list-table">
+        <thead>
+        <tr>
+            <th th:with="sortProp='id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/tickets(
+                           page=0,
+                           size=${ticketPage.size},
+                           customerNameQuery=${filter.customerNameQuery},
+                           minPrice=${filter.minPrice},
+                           maxPrice=${filter.maxPrice},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+
+                    ID
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='screening.id', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/tickets(
+                           page=0,
+                           size=${ticketPage.size},
+                           customerNameQuery=${filter.customerNameQuery},
+                           minPrice=${filter.minPrice},
+                           maxPrice=${filter.maxPrice},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+
+                    Screening / Movie
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th th:with="sortProp='customer.name', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/tickets(
+                           page=0,
+                           size=${ticketPage.size},
+                           customerNameQuery=${filter.customerNameQuery},
+                           minPrice=${filter.minPrice},
+                           maxPrice=${filter.maxPrice},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+
+                    Customer Name
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Seat</th>
+
+            <th th:with="sortProp='price', isSorted=${currentSortProperty == sortProp}">
+                <a th:href="@{/tickets(
+                           page=0,
+                           size=${ticketPage.size},
+                           customerNameQuery=${filter.customerNameQuery},
+                           minPrice=${filter.minPrice},
+                           maxPrice=${filter.maxPrice},
+                           sort=${sortProp} + ',' + (${isSorted} and ${currentSortDirection} == 'ASC' ? 'DESC' : 'ASC')
+                       )}">
+
+                    Price
+                    <span th:if="${isSorted}" th:text="${currentSortDirection == 'ASC' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ticket : ${ticketPage.content}">
+            <td th:text="${ticket.id}"></td>
+            <td th:text="|${ticket.screening.id} (${ticket.screening.movie.title})|"></td>
+            <td th:text="${ticket.customer.name}"></td>
+            <td th:text="|${ticket.seat.seatRow}${ticket.seat.seatColumn}|"></td>
+            <td th:text="${ticket.price}"></td>
+            <td>
+                <a th:href="@{|/tickets/view/${ticket.id}|}">View</a>
+                <form th:action="@{|/tickets/remove/${ticket.id}|}" method="post" style="display:inline;">
+                    <button class="remove-button" type="submit" onclick="return confirm('Are you sure you want to remove this ticket?');">
+                        Remove
+                    </button>
+                </form>
+                <a th:href="@{|/tickets/update/${ticket.id}|}">Update</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${ticketPage.totalPages > 0}" style="margin-top: 20px;">
+        <div th:with="urlBase= @{/tickets(
+                                  size=${ticketPage.size},
+                                  sort=${currentSortProperty} + ',' + ${currentSortDirection},
+                                  customerNameQuery=${filter.customerNameQuery},
+                                  minPrice=${filter.minPrice},
+                                  maxPrice=${filter.maxPrice}
+                              )}">
+
+            <a th:href="@{${urlBase}(page=0)}">First</a>
+
+            <span th:if="${ticketPage.hasPrevious()}">
+                <a th:href="@{${urlBase}(page=${ticketPage.number - 1})}">Previous</a>
+            </span>
+
+            <span th:text="${ticketPage.number + 1}">1</span> of <span th:text="${ticketPage.totalPages}">5</span>
+
+            <span th:if="${ticketPage.hasNext()}">
+                <a th:href="@{${urlBase}(page=${ticketPage.number + 1})}">Next</a>
+            </span>
+
+            <a th:href="@{${urlBase}(page=${ticketPage.totalPages - 1})}">Last</a>
+
+            <span style="margin-left: 20px;">Total Tickets: <span th:text="${ticketPage.totalElements}">50</span></span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
