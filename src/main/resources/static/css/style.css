@@ -138,7 +138,6 @@ select:focus {
     background-color: #fff;
 }
 
-/* homepage */
 
    .subtitle {
        font-size: 1.1em;
@@ -218,4 +217,14 @@ select:focus {
        border-color: #007bff;
        outline: none;
        background-color: #fff;
+   }
+
+   thead th a {
+       color: white;
+       text-decoration: none;
+   }
+
+   thead th a:hover {
+       color: #e2f0ff;
+       text-decoration: underline;
    }
