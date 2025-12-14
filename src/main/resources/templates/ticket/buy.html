@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Buy Ticket</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<form th:object="${ticket}" th:action="@{/tickets/buy/__${screening.id}__}" method="post">
+
+    <h1>Purchase Ticket for Screening</h1>
+
+    <fieldset>
+        <legend>Screening Details</legend>
+
+        <p><strong>Movie:</strong> <span th:text="${screening.movie.title}">Movie Title</span></p>
+        <p><strong>Hall:</strong> <span th:text="${screening.hall.name}">Hall Name</span></p>
+        <p><strong>Date & Time:</strong> <span th:text="${#temporals.format(screening.date, 'yyyy-MM-dd HH:mm')}">Date/Time</span></p>
+        <p><strong>Screening ID:</strong> <span th:text="${screening.id}">123</span></p>
+    </fieldset>
+
+    <br/>
+
+    <div th:if="${message}" style="color: red; font-weight: bold;">
+        <p th:text="${message}"></p>
+    </div>
+
+    <label for="customerId">Customer:</label>
+    <select id="customerId" th:field="*{customer.id}" required>
+        <option value="">-- Select Customer --</option>
+        <option th:each="c : ${availableCustomers}"
+                th:value="${c.id}"
+                th:text="|ID: ${c.id}, Name: ${c.name}|">
+            Customer Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('customer')}" th:errors="*{customer}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="seatId">Seat:</label>
+    <select id="seatId" th:field="*{seat.id}" required>
+        <option value="">-- Select an Available Seat --</option>
+        <option th:each="s : ${availableSeats}"
+                th:value="${s.id}"
+                th:text="|Row: ${s.seatRow}, Column: ${s.seatColumn}|">
+            Seat Details
+        </option>
+    </select>
+    <span th:if="${#fields.hasErrors('seat')}" th:errors="*{seat}" style="color: red;"></span>
+    <br/><br/>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" th:field="*{price}" step="any" required/>
+    <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" style="color: red;"></span>
+    <br/><br/>
+
+    <input type="hidden" th:field="*{screening.id}" th:value="${screening.id}" />
+
+    <button type="submit">Complete Purchase</button>
+</form>
+
+<a th:href="@{/screenings}">Back to Screening List</a>
+</body>
+</html>

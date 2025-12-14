@@ -1,6 +1,7 @@
 package com.example.movie_management_system.service;
 
 import com.example.movie_management_system.model.Hall;
+import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.repository.SeatRepository;
 import jakarta.transaction.Transactional;
@@ -17,10 +18,13 @@ public class SeatService {
 
     private final SeatRepository seatRepository;
     private final HallService hallService;
+    private final ScreeningService screeningService;
 
-    public SeatService(SeatRepository seatRepository, HallService hallService) {
+
+    public SeatService(SeatRepository seatRepository, HallService hallService, ScreeningService screeningService) {
         this.seatRepository = seatRepository;
         this.hallService = hallService;
+        this.screeningService = screeningService;
     }
 
     @Transactional
@@ -81,8 +85,16 @@ public class SeatService {
         return seatRepository.findAll();
     }
 
+//    public List<Seat> findByScreeningId(Long screeningId){
+//        Screening screening = screeningService.findById(screeningId).orElseThrow(() -> new NoSuchElementException("Screening with id " + screeningId + "not found"));
+//        seatRepository.findByHallId(screening.getHall().getId());
+//    }
 
     public Optional<Seat> findById(Long id) {
         return seatRepository.findById(id);
+    }
+
+    public List<Seat> findByHallId(Long hallId) {
+        return seatRepository.findByHallId(hallId);
     }
 }

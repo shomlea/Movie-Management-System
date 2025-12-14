@@ -4,6 +4,8 @@ import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
 import com.example.movie_management_system.model.Ticket;
+import com.example.movie_management_system.service.ScreeningService;
+import com.example.movie_management_system.service.SeatService;
 import com.example.movie_management_system.service.TicketService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -14,14 +16,19 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tickets")
 public class TicketController {
     private final TicketService ticketService;
+    private final SeatService seatService;
+    private final ScreeningService screeningService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(TicketService ticketService, SeatService seatService, ScreeningService screeningService) {
         this.ticketService = ticketService;
+        this.seatService = seatService;
+        this.screeningService = screeningService;
     }
 
     @GetMapping
@@ -37,17 +44,68 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model){
         model.addAttribute("ticket", new Ticket());
         model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
         model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-        model.addAttribute("availableSeats", ticketService.getAvailableSeats()); // Assuming getAvailableSeats() no longer takes ID
+        //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
         return "ticket/form";
     }
 
-    // --- CREATE (Process Form) ---
+    @GetMapping("/buy/{screeningId}")
+    public String showBuyForm(Model model, @PathVariable Long screeningId){
+        Optional<Screening> screening = screeningService.findById(screeningId);
+        if (screening.isEmpty()){
+            return "redirect:/screenings";
+        }
+
+        Ticket ticket = new Ticket();
+        ticket.setScreening(screening.get());
+
+        model.addAttribute("ticket", ticket);
+        model.addAttribute("screening", screening.get());
+        model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+        model.addAttribute("availableSeats", ticketService.getAvailableSeats(screeningId));
+        return "ticket/buy";
+    }
+
+    @PostMapping("buy/{screeningId}")
+    public String buyTicket(@ModelAttribute @Valid Ticket ticket, BindingResult result, @PathVariable Long screeningId, Model model){
+        if (result.hasErrors()){
+            Optional<Screening> screening = screeningService.findById(screeningId);
+            if (screening.isEmpty()){
+                return "redirect:/screenings";
+            }
+            ticket.setScreening(screening.get());
+
+            model.addAttribute("ticket", ticket);
+            model.addAttribute("screening", screening.get());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats(screeningId));
+            return "ticket/buy";
+        }
+        try {
+            ticketService.save(ticket);
+        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            Optional<Screening> screening = screeningService.findById(screeningId);
+            if (screening.isEmpty()){
+                return "redirect:/screenings";
+            }
+
+            model.addAttribute("message", e.getMessage());
+
+            ticket.setScreening(screening.get());
+            model.addAttribute("ticket", ticket);
+            model.addAttribute("screening", screening.get());
+            model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
+            model.addAttribute("availableSeats", ticketService.getAvailableSeats(screeningId));
+            return "ticket/buy";
+        }
+
+        return "redirect:/tickets";
+    }
+
     @PostMapping
     public String createTicket(
             @ModelAttribute @Valid Ticket ticket,
@@ -57,7 +115,7 @@ public class TicketController {
         if (result.hasErrors()) {
             model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
             model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
             return "ticket/form";
         }
 
@@ -67,7 +125,7 @@ public class TicketController {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
             model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
             return "ticket/form";
         }
 
@@ -92,7 +150,7 @@ public class TicketController {
                     model.addAttribute("ticket", ticket);
                     model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
                     model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-                    model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+                    //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
                     return "ticket/update";
                 })
                 .orElse("redirect:/tickets");
@@ -109,7 +167,7 @@ public class TicketController {
         if (result.hasErrors()) {
             model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
             model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
             return "ticket/update";
         }
 
@@ -119,7 +177,7 @@ public class TicketController {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             model.addAttribute("availableScreenings", ticketService.getAvailableScreenings());
             model.addAttribute("availableCustomers", ticketService.getAvailableCustomers());
-            model.addAttribute("availableSeats", ticketService.getAvailableSeats());
+            //model.addAttribute("availableSeats", ticketService.getAvailableSeats());
             return "ticket/update";
         }
 
