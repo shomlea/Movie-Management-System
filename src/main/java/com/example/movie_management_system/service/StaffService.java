@@ -19,7 +19,6 @@ public class StaffService {
     public Staff resolveStaffById(Long id) {
         if (id == null) return null;
 
-        // Logic mirroring your Converter:
         Optional<SupportStaff> support = supportStaffService.findById(id);
         if (support.isPresent()) return support.get();
 

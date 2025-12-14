@@ -1,10 +1,14 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.CustomerFilterDto;
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -62,5 +66,12 @@ public class CustomerService {
 
     public List<Customer> findAll() {
         return customerRepository.findAll();
+    }
+
+    public Page<Customer> findAll(CustomerFilterDto filter, Pageable pageable) {
+        if (filter.getNameQuery() == null || filter.getNameQuery().trim().isEmpty()) {
+            return customerRepository.findAll(pageable);
+        }
+        return customerRepository.findByNameContainingIgnoreCase(filter.getNameQuery(), pageable);
     }
 }

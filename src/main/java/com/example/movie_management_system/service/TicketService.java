@@ -1,5 +1,6 @@
 package com.example.movie_management_system.service;
 
+import com.example.movie_management_system.dto.TicketFilterDto;
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
@@ -7,6 +8,9 @@ import com.example.movie_management_system.model.Ticket;
 import com.example.movie_management_system.repository.TicketRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -131,6 +135,42 @@ public class TicketService {
 
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
+    }
+
+    private Specification<Ticket> buildTicketSpecification(TicketFilterDto filter) {
+        Specification<Ticket> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getCustomerNameQuery() != null && !filter.getCustomerNameQuery().trim().isEmpty()) {
+            String name = "%" + filter.getCustomerNameQuery().trim().toLowerCase() + "%";
+
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("customer").get("name")), name)
+            );
+        }
+
+        if (filter.getMinPrice() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("price"), filter.getMinPrice())
+            );
+        }
+
+        if (filter.getMaxPrice() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("price"), filter.getMaxPrice())
+            );
+        }
+
+        return spec;
+    }
+
+    public Page<Ticket> findAll(TicketFilterDto filter, Pageable pageable) {
+        if (filter.isEmpty()) {
+            return ticketRepository.findAll(pageable);
+        }
+
+        Specification<Ticket> spec = buildTicketSpecification(filter);
+
+        return ticketRepository.findAll(spec, pageable);
     }
     public Optional<Ticket> findById(Long id) {
         return ticketRepository.findById(id);

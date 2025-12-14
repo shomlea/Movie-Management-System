@@ -1,10 +1,14 @@
 package com.example.movie_management_system.service;
 
 
+import com.example.movie_management_system.dto.TheatreFilterDto;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.repository.TheatreRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -56,40 +60,40 @@ public class TheatreService {
         return theatreRepository.findAll();
     }
 
-    //    @Transactional
-//    public void addHall(Long theatreId, Hall hall) {
-//        Theatre theatre = theatreRepository.findById(theatreId)
-//                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
-//
-//        theatre.addHall(hall);
-//
-//        theatreRepository.save(theatre);
-//    }
-//
-//    @Transactional
-//    public boolean removeHall(String theatreId, String hallId) {
-//        Theatre theatre = theatreRepository.findById(theatreId)
-//                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
-//
-//        boolean removed = theatre.removeHall(hallId);
-//
-//        if (removed) {
-//            theatreRepository.save(theatre);
-//        }
-//        return removed;
-//    }
-//
-//    @Transactional
-//    public boolean updateHall(String theatreId, String hallId, Hall updatedHall) {
-//        Theatre theatre = theatreRepository.findById(theatreId)
-//                .orElseThrow(() -> new NoSuchElementException("Theatre with ID " + theatreId + " not found."));
-//
-//        boolean updated = theatre.updateHall(hallId, updatedHall);
-//
-//        if (updated) {
-//            theatreRepository.save(theatre);
-//        }
-//        return updated;
-//    }
+    public Page<Theatre> findAll(TheatreFilterDto filter, Pageable pageable) {
 
+        if (filter.isEmpty()) {
+            return theatreRepository.findAll(pageable);
+        }
+
+        Specification<Theatre> spec = (root, query, cb) -> cb.conjunction();
+
+        if (filter.getNameQuery() != null && !filter.getNameQuery().trim().isEmpty()) {
+            final String namePattern = "%" + filter.getNameQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("name")), namePattern)
+            );
+        }
+
+        if (filter.getCityQuery() != null && !filter.getCityQuery().trim().isEmpty()) {
+            final String cityPattern = "%" + filter.getCityQuery().trim().toLowerCase() + "%";
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("city")), cityPattern)
+            );
+        }
+
+        if (filter.getMinParkingCapacity() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("parkingCapacity"), filter.getMinParkingCapacity())
+            );
+        }
+
+        if (filter.getMaxParkingCapacity() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("parkingCapacity"), filter.getMaxParkingCapacity())
+            );
+        }
+
+        return theatreRepository.findAll(spec, pageable);
+    }
 }

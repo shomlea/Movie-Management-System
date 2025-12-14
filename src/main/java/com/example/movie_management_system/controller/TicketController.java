@@ -1,5 +1,7 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.CustomerFilterDto;
+import com.example.movie_management_system.dto.TicketFilterDto;
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.model.Seat;
@@ -8,6 +10,9 @@ import com.example.movie_management_system.service.ScreeningService;
 import com.example.movie_management_system.service.SeatService;
 import com.example.movie_management_system.service.TicketService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,9 +37,10 @@ public class TicketController {
     }
 
     @GetMapping
-    public String getAllTickets(Model model) {
-        List<Ticket> tickets = ticketService.findAll();
-        model.addAttribute("tickets", tickets);
+    public String getAllTickets(TicketFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+        Page<Ticket> ticketPage = ticketService.findAll(filter, pageable);
+        model.addAttribute("ticketPage", ticketPage);
+        model.addAttribute("filter", filter);
         return "ticket/index";
     }
 

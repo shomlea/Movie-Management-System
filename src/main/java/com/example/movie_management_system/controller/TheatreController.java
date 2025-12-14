@@ -1,8 +1,12 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.TheatreFilterDto;
 import com.example.movie_management_system.model.Theatre;
 import com.example.movie_management_system.service.TheatreService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,9 +26,10 @@ public class TheatreController {
     }
 
     @GetMapping
-    public String getAllTheatres(Model model) {
-        List<Theatre> theatres = theatreService.findAll();
-        model.addAttribute("theatres", theatres);
+    public String getAllTheatres(TheatreFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+        Page<Theatre> theatrePage = theatreService.findAll(filter, pageable);
+        model.addAttribute("theatrePage", theatrePage);
+        model.addAttribute("filter", filter);
         return "theatre/index";
     }
 

@@ -1,7 +1,12 @@
 package com.example.movie_management_system.controller;
 
+import com.example.movie_management_system.dto.CustomerFilterDto;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import com.example.movie_management_system.model.Customer;
 import com.example.movie_management_system.service.CustomerService;
@@ -19,10 +24,14 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
+
     @GetMapping
-    public String GetAllCustomers(Model model) {
-        List<Customer> customers = customerService.findAll();
-        model.addAttribute("customers", customers);
+    public String GetAllCustomers(CustomerFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+        Page<Customer> customerPage = customerService.findAll(filter, pageable);
+        model.addAttribute("customerPage", customerPage);
+
+        model.addAttribute("filter", filter);
+        //model.addAttribute("customers", customers);
         return "customer/index";
     }
     
