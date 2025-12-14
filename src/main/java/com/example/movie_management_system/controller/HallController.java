@@ -38,9 +38,9 @@ public class HallController {
     }
 
     @GetMapping("/add")
-    public String showAddForm(Model model) { // Signature updated to include Model
-        model.addAttribute("hall", new Hall()); // Required for th:object binding
-        model.addAttribute("availableTheatres", theatreService.findAll()); // Required for dropdown
+    public String showAddForm(Model model) {
+        model.addAttribute("hall", new Hall());
+        model.addAttribute("availableTheatres", theatreService.findAll());
         return "hall/form";
     }
 

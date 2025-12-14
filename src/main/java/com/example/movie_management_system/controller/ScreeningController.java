@@ -4,6 +4,7 @@ import com.example.movie_management_system.model.Screening;
 import com.example.movie_management_system.service.ScreeningService;
 import com.example.movie_management_system.service.HallService; // NEW: Required for dropdown data
 import com.example.movie_management_system.service.MovieService; // NEW: Required for dropdown data
+import com.example.movie_management_system.service.SeatService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +20,15 @@ import java.util.NoSuchElementException;
 @RequestMapping("/screenings")
 public class ScreeningController {
     private final ScreeningService screeningService;
-    private final HallService hallService; // NEW
-    private final MovieService movieService; // NEW
+    private final HallService hallService;
+    private final MovieService movieService;
+    private final SeatService seatService;
 
-    public ScreeningController(ScreeningService screeningService, HallService hallService, MovieService movieService) {
+    public ScreeningController(ScreeningService screeningService, HallService hallService, MovieService movieService, SeatService seatService) {
         this.screeningService = screeningService;
         this.hallService = hallService;
         this.movieService = movieService;
+        this.seatService = seatService;
     }
 
     @GetMapping
@@ -41,7 +44,6 @@ public class ScreeningController {
         return "redirect:/screenings";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model){
         model.addAttribute("screening", new Screening());
@@ -50,7 +52,6 @@ public class ScreeningController {
         return "screening/form";
     }
 
-    // --- CREATE (Process Form) ---
     @PostMapping
     public String createScreening(
             @ModelAttribute @Valid Screening screening,
@@ -85,7 +86,6 @@ public class ScreeningController {
                 .orElse("redirect:/screenings");
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return screeningService.findById(id)
@@ -98,7 +98,7 @@ public class ScreeningController {
                 .orElse("redirect:/screenings");
     }
 
-    // --- UPDATE (Process Form) ---
+
     @PostMapping("/update/{id}")
     public String updateScreening(
             @PathVariable Long id,

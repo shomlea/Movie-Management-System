@@ -9,10 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
@@ -111,10 +109,25 @@ public class TicketService {
         return customerService.findAll();
     }
 
-    public List<Seat> getAvailableSeats() {
-        return seatService.findAll();
-//        return seatService.findAll().stream().filter(screening -> screening.getId().equals(screeningId)).toList();
+    public List<Seat> getAvailableSeats(Long screeningId) {
+        Screening screening = screeningService.findById(screeningId).orElseThrow(() -> new NoSuchElementException("Screening with ID " + screeningId + " not found."));
+        List<Seat> allSeats = seatService.findByHallId(screening.getHall().getId());
+        List<Ticket> allTicketsByScreeningId = ticketRepository.findByScreeningId(screeningId);
+
+        Set<Long> takenSeatIds = allTicketsByScreeningId.stream()
+                .map(ticket -> ticket.getSeat().getId())
+                .collect(Collectors.toSet());
+
+
+        List<Seat> availableSeats = allSeats.stream()
+                .filter(seat -> !takenSeatIds.contains(seat.getId()))
+                .collect(Collectors.toList());
+
+        return availableSeats;
+
     }
+
+
 
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
@@ -122,6 +135,7 @@ public class TicketService {
     public Optional<Ticket> findById(Long id) {
         return ticketRepository.findById(id);
     }
+
 
 
 }
