@@ -6,28 +6,49 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Customer Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${customer.id}"></span></p>
-<p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+<a th:href="@{/customers}">Back to Customer List</a>
+<br><br>
 
-<h2>Tickets:</h2>
+<!-- Customer details card -->
+<div class="add-form">
 
-<div th:if="${#lists.isEmpty(customer.tickets)}">
-    <p>No tickets purchased by this customer.</p>
+    <label>ID</label>
+    <input type="text" th:value="${customer.id}" disabled>
+
+    <label>Name</label>
+    <input type="text" th:value="${customer.name}" disabled>
+
 </div>
 
-<ul th:unless="${#lists.isEmpty(customer.tickets)}">
-    <li th:each="ticket : ${customer.tickets}">
-        <strong>Ticket ID: </strong><span th:text="${ticket.id}"></span> |
-        <strong>Screening ID: </strong><span th:text="${ticket.screening.id}"></span> |
-        <strong>Seat ID: </strong><span th:text="${ticket.seat.id}"></span> |
-        <strong>Price: </strong><span th:text="${ticket.price}"></span>
-    </li>
-</ul>
+<h2>Tickets</h2>
 
-<br>
-<a th:href="@{/customers}">Back to Customer List</a>
+<!-- No tickets -->
+<div th:if="${customer.tickets == null or #lists.isEmpty(customer.tickets)}">
+    <p class="subtitle">No tickets purchased by this customer.</p>
+</div>
+
+<!-- Tickets table -->
+<table th:if="${customer.tickets != null and !#lists.isEmpty(customer.tickets)}">
+    <thead>
+    <tr>
+        <th>Ticket ID</th>
+        <th>Screening ID</th>
+        <th>Seat ID</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${customer.tickets}">
+        <td th:text="${ticket.id}"></td>
+        <td th:text="${ticket.screening.id}"></td>
+        <td th:text="${ticket.seat.id}"></td>
+        <td th:text="${ticket.price}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

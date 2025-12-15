@@ -6,19 +6,35 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Seat Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${seat.id}"></span></p>
-<p>
-    <strong>Hall ID:</strong> <span th:text="${seat.hall.id}"></span>
-    (Name: <span th:text="${seat.hall.name}"></span>)
-</p>
-<p><strong>Theatre:</strong> <span th:text="${seat.hall.theatre.name}"></span></p>
-<p><strong>Row:</strong> <span th:text="${seat.seatRow}"></span></p>
-<p><strong>Column:</strong> <span th:text="${seat.seatColumn}"></span></p>
+<a th:href="@{/seats}">Back to Seat List</a>
+<br><br>
 
-<br>
-<a th:href="@{/seats}">Back to seat List</a>
+<!-- Seat details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${seat.id}" disabled>
+
+    <label>Hall</label>
+    <input type="text"
+           th:value="${seat.hall.name + ' (ID: ' + seat.hall.id + ')'}"
+           disabled>
+
+    <label>Theatre</label>
+    <input type="text"
+           th:value="${seat.hall.theatre.name}"
+           disabled>
+
+    <label>Row</label>
+    <input type="text" th:value="${seat.seatRow}" disabled>
+
+    <label>Column</label>
+    <input type="text" th:value="${seat.seatColumn}" disabled>
+
+</div>
 
 </body>
 </html>

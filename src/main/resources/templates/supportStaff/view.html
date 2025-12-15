@@ -6,15 +6,28 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Support Staff Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${supportStaff.id}"></span></p>
-<p><strong>Name:</strong> <span th:text="${supportStaff.name}"></span></p>
-<p><strong>Salary:</strong> <span th:text="${supportStaff.salary}"></span></p>
-<p><strong>Role:</strong> <span th:text="${supportStaff.role}"></span></p>
+<a th:href="@{/support-staff}">Back to Support Staff List</a>
+<br><br>
 
-<br>
-<a th:href="@{/support-staff}">Back to support staff List</a>
+<!-- Support Staff details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${supportStaff.id}" disabled>
+
+    <label>Name</label>
+    <input type="text" th:value="${supportStaff.name}" disabled>
+
+    <label>Salary</label>
+    <input type="text" th:value="${supportStaff.salary}" disabled>
+
+    <label>Role</label>
+    <input type="text" th:value="${supportStaff.role}" disabled>
+
+</div>
 
 </body>
 </html>
