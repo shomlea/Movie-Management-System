@@ -37,7 +37,7 @@ public class TicketController {
     }
 
     @GetMapping
-    public String getAllTickets(TicketFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String getAllTickets(TicketFilterDto filter, Model model, Pageable pageable) {
         Page<Ticket> ticketPage = ticketService.findAll(filter, pageable);
         model.addAttribute("ticketPage", ticketPage);
         model.addAttribute("filter", filter);

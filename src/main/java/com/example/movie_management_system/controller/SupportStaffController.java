@@ -31,7 +31,7 @@ public class SupportStaffController {
     }
 
     @GetMapping
-    public String listAll(SupportStaffFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+    public String listAll(SupportStaffFilterDto filter, Pageable pageable, Model model) {
         Page<SupportStaff> staffPage = supportStaffService.findAll(filter, pageable);
         model.addAttribute("allRoles", Role.values());
         model.addAttribute("staffPage", staffPage);

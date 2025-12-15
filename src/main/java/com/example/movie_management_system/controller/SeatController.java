@@ -29,7 +29,7 @@ public class SeatController {
     }
 
     @GetMapping
-    public String getAllSeats(SeatFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+    public String getAllSeats(SeatFilterDto filter, Pageable pageable, Model model) {
         Page<Seat> seatPage = seatService.findAll(filter, pageable);
         model.addAttribute("seatPage", seatPage);
         model.addAttribute("filter", filter);

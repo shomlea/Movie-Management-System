@@ -36,7 +36,7 @@ public class ScreeningController {
     }
 
     @GetMapping
-    public String getAllScreenings(ScreeningFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+    public String getAllScreenings(ScreeningFilterDto filter, Pageable pageable, Model model) {
         Page<Screening> screeningPage = screeningService.findAll(filter, pageable);
         model.addAttribute("screeningPage", screeningPage);
         model.addAttribute("filter", filter);

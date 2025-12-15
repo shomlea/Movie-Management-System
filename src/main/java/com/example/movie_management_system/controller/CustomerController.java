@@ -26,7 +26,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    public String GetAllCustomers(CustomerFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String GetAllCustomers(CustomerFilterDto filter, Model model, Pageable pageable) {
         Page<Customer> customerPage = customerService.findAll(filter, pageable);
         model.addAttribute("customerPage", customerPage);
 
