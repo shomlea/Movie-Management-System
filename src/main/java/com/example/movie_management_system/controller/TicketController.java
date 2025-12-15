@@ -148,7 +148,6 @@ public class TicketController {
                 .orElse("redirect:/tickets");
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return ticketService.findById(id)
@@ -162,7 +161,6 @@ public class TicketController {
                 .orElse("redirect:/tickets");
     }
 
-    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateTicket(
             @PathVariable Long id,

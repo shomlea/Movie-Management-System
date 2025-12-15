@@ -39,7 +39,6 @@ public class SupportStaffController {
         return "supportStaff/index";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("supportStaff", new SupportStaff());
@@ -47,7 +46,6 @@ public class SupportStaffController {
         return "supportStaff/form";
     }
 
-    // --- CREATE (Process Form) ---
     @PostMapping
     public String addSupportStaff(
             @ModelAttribute @Valid SupportStaff supportStaff,
@@ -87,7 +85,6 @@ public class SupportStaffController {
         }
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return supportStaffService.findById(id)
@@ -99,7 +96,6 @@ public class SupportStaffController {
                 .orElse("redirect:/support-staff");
     }
 
-    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateSupportStaff(
             @PathVariable Long id,

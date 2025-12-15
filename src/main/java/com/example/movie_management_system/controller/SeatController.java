@@ -42,7 +42,6 @@ public class SeatController {
         return "redirect:/seats";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("seat", new Seat());
@@ -50,7 +49,6 @@ public class SeatController {
         return "seat/form";
     }
 
-    // --- CREATE (Process Form) ---
     @PostMapping
     public String createSeat(
             @ModelAttribute @Valid Seat seat,
@@ -83,7 +81,6 @@ public class SeatController {
                 .orElse("redirect:/seats");
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return seatService.findById(id)
@@ -95,7 +92,6 @@ public class SeatController {
                 .orElse("redirect:/seats");
     }
 
-    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateSeat(
             @PathVariable Long id,

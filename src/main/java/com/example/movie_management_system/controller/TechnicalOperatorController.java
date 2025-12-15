@@ -83,7 +83,6 @@ public class TechnicalOperatorController {
                 .orElse("redirect:/technical-operators");
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return technicalOperatorService.findById(id)
@@ -95,7 +94,6 @@ public class TechnicalOperatorController {
                 .orElse("redirect:/technical-operators");
     }
 
-    // --- UPDATE (Process Form) ---
     @PostMapping("/update/{id}")
     public String updateTechnicalOperator(
             @PathVariable Long id,

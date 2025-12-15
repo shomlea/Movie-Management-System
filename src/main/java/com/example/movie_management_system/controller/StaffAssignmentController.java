@@ -54,7 +54,6 @@ public class StaffAssignmentController {
         return "staffAssignment/index";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model) {
         SupportStaff placeholderStaff = new SupportStaff();
@@ -68,31 +67,6 @@ public class StaffAssignmentController {
         model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff()); // Uses service helper
         return "staffAssignment/form";
     }
-
-
-    // --- CREATE (Process Form) ---
-//    @PostMapping
-//    public String addStaffAssignment(
-//            @ModelAttribute @Valid StaffAssignment staffAssignment,
-//            BindingResult result,
-//            Model model
-//    ) {
-//        if (result.hasErrors()) {
-//            model.addAttribute("availableScreenings", screeningService.findAll());
-//            model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
-//            return "staffAssignment/form";
-//        }
-//
-//        try {
-//            staffAssignmentService.save(staffAssignment);
-//        } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
-//            model.addAttribute("errorMessage", "Error: " + e.getMessage());
-//            model.addAttribute("availableScreenings", screeningService.findAll());
-//            model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
-//            return "staffAssignment/form";
-//        }
-//        return "redirect:/staff-assignments";
-//    }
 
     @PostMapping
     public String addStaffAssignment(
@@ -130,7 +104,6 @@ public class StaffAssignmentController {
 
 
         if (result.hasErrors()) {
-            // Reload all necessary model attributes
             model.addAttribute("availableScreenings", screeningService.findAll());
             model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
             return "staffAssignment/form";
@@ -140,7 +113,6 @@ public class StaffAssignmentController {
         try {
             staffAssignmentService.save(staffAssignment);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
-            // Handle service-level exceptions
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             model.addAttribute("availableScreenings", screeningService.findAll());
             model.addAttribute("availableStaff", staffAssignmentService.getAvailableStaff());
@@ -167,7 +139,6 @@ public class StaffAssignmentController {
                 .orElse("redirect:/staff-assignments");
     }
 
-    // --- UPDATE (Show Form) ---
     @GetMapping("/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
         return staffAssignmentService.findById(id)
