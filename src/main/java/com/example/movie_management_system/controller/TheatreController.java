@@ -26,7 +26,7 @@ public class TheatreController {
     }
 
     @GetMapping
-    public String getAllTheatres(TheatreFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String getAllTheatres(TheatreFilterDto filter, Model model, Pageable pageable) {
         Page<Theatre> theatrePage = theatreService.findAll(filter, pageable);
         model.addAttribute("theatrePage", theatrePage);
         model.addAttribute("filter", filter);

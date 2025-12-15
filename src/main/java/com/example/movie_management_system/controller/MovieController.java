@@ -26,7 +26,7 @@ public class MovieController {
     }
 
     @GetMapping
-    public String getAllMovies(MovieFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String getAllMovies(MovieFilterDto filter, Model model, Pageable pageable) {
         Page<Movie> moviePage = movieService.findAll(filter, pageable);
         model.addAttribute("moviePage", moviePage);
         model.addAttribute("filter", filter);

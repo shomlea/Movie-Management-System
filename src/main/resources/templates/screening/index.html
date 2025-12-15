@@ -33,7 +33,7 @@
         </div>
 
         <div style="flex-grow: 1;">
-            <label for="theatreNameQuery">Theatre Name (for Filter):</label>
+            <label for="theatreNameQuery">Theatre Name:</label>
             <input type="text" id="theatreNameQuery" th:field="*{theatreNameQuery}" placeholder="Enter theatre name..."/>
         </div>
     </div>
@@ -151,6 +151,7 @@
                     </button>
                 </form>
                 <a th:href="@{|/screenings/update/${screening.id}|}">Update</a>
+                <a th:href="@{|/tickets/buy/${screening.id}|}">Buy Ticket</a>
             </td>
         </tr>
         </tbody>

@@ -47,7 +47,7 @@ public class StaffAssignmentController {
     }
 
     @GetMapping
-    public String listAll(StaffAssignmentFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+    public String listAll(StaffAssignmentFilterDto filter, Pageable pageable, Model model) {
         Page<StaffAssignment> assignmentPage = staffAssignmentService.findAll(filter, pageable);
         model.addAttribute("assignmentPage", assignmentPage);
         model.addAttribute("filter", filter);

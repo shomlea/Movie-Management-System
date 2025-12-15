@@ -28,7 +28,7 @@ public class TechnicalOperatorController {
     }
 
     @GetMapping
-    public String listAll(TechnicalOperatorFilterDto filter, @PageableDefault(size = 15) Pageable pageable, Model model) {
+    public String listAll(TechnicalOperatorFilterDto filter, Pageable pageable, Model model) {
         Page<TechnicalOperator> operatorPage = technicalOperatorService.findAll(filter, pageable);
         model.addAttribute("allSpecializations", Specialization.values());
         model.addAttribute("operatorPage", operatorPage);

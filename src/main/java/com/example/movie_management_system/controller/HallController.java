@@ -29,7 +29,7 @@ public class HallController {
     }
 
     @GetMapping
-    public String getAllHalls(HallFilterDto filter, Model model, @PageableDefault(size = 15) Pageable pageable) {
+    public String getAllHalls(HallFilterDto filter, Model model, Pageable pageable) {
         Page<Hall> hallPage = hallService.findAll(filter, pageable);
         model.addAttribute("hallPage", hallPage);
         model.addAttribute("filter", filter);
