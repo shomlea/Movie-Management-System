@@ -2,32 +2,55 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>View Theatres</title>
+    <title>View Theatre</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
 <h1>Theatre Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${theatre.id}"></span></p>
-<p><strong>Name:</strong> <span th:text="${theatre.name}"></span></p>
-<p><strong>City:</strong> <span th:text="${theatre.city}"></span></p>
-<p><strong>Parking Capacity:</strong> <span th:text="${theatre.parkingCapacity}"></span></p>
+<a th:href="@{/theatres}">Back to Theatre List</a>
+<br><br>
 
-<h2>Associated Halls:</h2>
-<div th:if="${#lists.isEmpty(theatre.halls)}">
-    <p>No halls associated with this theatre.</p>
+<!-- Theatre details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${theatre.id}" disabled>
+
+    <label>Name</label>
+    <input type="text" th:value="${theatre.name}" disabled>
+
+    <label>City</label>
+    <input type="text" th:value="${theatre.city}" disabled>
+
+    <label>Parking Capacity</label>
+    <input type="text" th:value="${theatre.parkingCapacity}" disabled>
+
 </div>
 
-<ul th:unless="${#lists.isEmpty(theatre.halls)}">
-    <li th:each="hall : ${theatre.halls}">
-        ID: <span th:text="${hall.id}"></span> |
-        Name: <span th:text="${hall.name}"></span> |
-        Capacity: <span th:text="${hall.capacity}"></span>
-    </li>
-</ul>
+<h2>Associated Halls</h2>
 
-<br>
-<a th:href="@{/theatres}">Back to theatre List</a>
+<div th:if="${theatre.halls == null or #lists.isEmpty(theatre.halls)}">
+    <p class="subtitle">No halls associated with this theatre.</p>
+</div>
+
+<table th:if="${theatre.halls != null and !#lists.isEmpty(theatre.halls)}">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Capacity</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="hall : ${theatre.halls}">
+        <td th:text="${hall.id}"></td>
+        <td th:text="${hall.name}"></td>
+        <td th:text="${hall.capacity}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

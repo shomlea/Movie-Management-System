@@ -2,32 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>View Tickets</title>
+    <title>View Ticket</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Tickets Details</h1>
 
-<p><strong>ID:</strong> <span th:text="${ticket.id}"></span></p>
-<p>
-    <strong>Screening ID:</strong>
-    <span th:text="${ticket.screening.id}"></span>
-    (Date: <span th:text="${ticket.screening.date}"></span>)
-</p>
-<p>
-    <strong>Customer ID:</strong>
-    <span th:text="${ticket.customer.id}"></span>
-    (Name: <span th:text="${ticket.customer.name}"></span>)
-</p>
-<p>
-    <strong>Seat ID:</strong>
-    <span th:text="${ticket.seat.id}"></span>
-    (Location: <span th:text="${ticket.seat.seatRow} + ${ticket.seat.seatColumn}"></span>)
-</p>
-<p><strong>Price:</strong> <span th:text="${ticket.price}"></span></p>
+<h1>Ticket Details</h1>
 
-<br>
-<a th:href="@{/tickets}">Back to ticket List</a>
+<a th:href="@{/tickets}">Back to Ticket List</a>
+<br><br>
+
+<!-- Ticket details card -->
+<div class="add-form">
+
+    <label>ID</label>
+    <input type="text" th:value="${ticket.id}" disabled>
+
+    <label>Screening</label>
+    <input type="text"
+           th:value="${ticket.screening.movie.title + ' on ' + ticket.screening.date + ' in hall ' + ticket.screening.hall.name}"
+           disabled>
+
+    <label>Customer</label>
+    <input type="text" th:value="${ticket.customer.name}" disabled>
+
+    <label>Seat</label>
+    <input type="text"
+           th:value="${'Row: ' + ticket.seat.seatRow + ' - ' + 'Column: ' + ticket.seat.seatColumn}"
+           disabled>
+
+    <label>Price</label>
+    <input type="text" th:value="${ticket.price}" disabled>
+
+</div>
 
 </body>
 </html>
