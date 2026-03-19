@@ -25,7 +25,7 @@ public class TheatreService {
     public Theatre save(Theatre theatre) {
         Optional<Theatre> foundTheatre = theatreRepository.findByName(theatre.getName());
         if(foundTheatre.isPresent())
-            throw new DataIntegrityViolationException("There is already a Theatre with that name");
+            throw new DataIntegrityViolationException("There is already a Theatre with that name in that city");
         return theatreRepository.save(theatre);
     }
     @Transactional
@@ -35,7 +35,7 @@ public class TheatreService {
 
         Optional<Theatre> foundTheatre = theatreRepository.findByName(updatedTheatre.getName());
         if (foundTheatre.isPresent() && !foundTheatre.get().getId().equals(existingTheatre.getId())) {
-            throw new DataIntegrityViolationException("There is already a Theatre with that name.");
+            throw new DataIntegrityViolationException("There is already a Theatre with that name in that city");
         }
 
         existingTheatre.setName(updatedTheatre.getName());

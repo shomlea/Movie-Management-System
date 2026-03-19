@@ -39,18 +39,17 @@ public class TheatreController {
         return "redirect:/theatres";
     }
 
-    // --- CREATE (Show Form) ---
     @GetMapping("/add")
     public String showAddForm(Model model){
         model.addAttribute("theatre", new Theatre());
         return "theatre/form";
     }
 
-    // --- CREATE (Process Form) ---
     @PostMapping
     public String createTheatre(
             @ModelAttribute @Valid Theatre theatre,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         if (result.hasErrors()) {
             return "theatre/form";
@@ -59,6 +58,7 @@ public class TheatreController {
         try {
             theatreService.save(theatre);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "theatre/form";
         }
 
@@ -91,7 +91,8 @@ public class TheatreController {
     public String updateTheatre(
             @PathVariable Long id,
             @ModelAttribute @Valid Theatre theatre,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
         if (result.hasErrors()) {
             return "theatre/update";
@@ -100,6 +101,7 @@ public class TheatreController {
         try {
             theatreService.update(id, theatre);
         } catch (NoSuchElementException | DataIntegrityViolationException | IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "theatre/update";
         }
 
